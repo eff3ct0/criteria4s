@@ -180,6 +180,42 @@ class SQLExprSpec extends munit.FunSuite {
     assertEquals(b.value, "true")
   }
 
+  // -- Symbol extensions --
+
+  test("extension .:< delegates to LT") {
+    val result = col[SQL]("x") :< lit[SQL, Int](5)
+    assertEquals(result.value, "'x' < 5")
+  }
+
+  test("extension .:> delegates to GT") {
+    val result = col[SQL]("x") :> lit[SQL, Int](5)
+    assertEquals(result.value, "'x' > 5")
+  }
+
+  test("extension .:<= delegates to LEQ") {
+    val result = col[SQL]("x") :<= lit[SQL, Int](5)
+    assertEquals(result.value, "'x' <= 5")
+  }
+
+  test("extension .:>= delegates to GEQ") {
+    val result = col[SQL]("x") :>= lit[SQL, Int](5)
+    assertEquals(result.value, "'x' >= 5")
+  }
+
+  test("extension .:& delegates to AND") {
+    val a      = ===[SQL, Column, Int](col("a"), lit(1))
+    val b      = ===[SQL, Column, Int](col("b"), lit(2))
+    val result = a :& b
+    assertEquals(result.value, "('a' = 1) AND ('b' = 2)")
+  }
+
+  test("extension .:| delegates to OR") {
+    val a      = ===[SQL, Column, Int](col("a"), lit(1))
+    val b      = ===[SQL, Column, Int](col("b"), lit(2))
+    val result = a :| b
+    assertEquals(result.value, "('a' = 1) OR ('b' = 2)")
+  }
+
   // -- Composed expressions --
 
   test("complex composed expression renders correctly") {

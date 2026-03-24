@@ -5,7 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'Criteria4s',
   tagline: 'Type-safe, data-store-agnostic criteria expressions for Scala 3',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/r-favicon.png',
 
   future: {
     v4: true,
@@ -58,8 +58,9 @@ const config: Config = {
     navbar: {
       title: 'Criteria4s',
       logo: {
-        alt: 'eff3ct0 logo',
-        src: 'img/org-avatar-200.png',
+        alt: 'Rafael Fernandez logo',
+        src: 'img/r-logo.png',
+        srcDark: 'img/r-logo-dark.png',
       },
       items: [
         {

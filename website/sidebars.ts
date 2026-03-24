@@ -12,7 +12,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'User Guide',
-      items: ['guides/predicates', 'guides/conjunctions', 'guides/transforms', 'guides/clauses', 'guides/extensions-vs-functions'],
+      items: ['guides/predicates', 'guides/conjunctions', 'guides/transforms', 'guides/clauses', 'guides/extensions-vs-functions', 'guides/hexagonal-architecture'],
     },
     {
       type: 'category',

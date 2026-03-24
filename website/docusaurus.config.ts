@@ -3,7 +3,7 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-  title: 'Criteria4s',
+  title: 'Rafael Fernández',
   tagline: 'Type-safe, data-store-agnostic criteria expressions for Scala 3',
   favicon: 'img/r-favicon.png',
 

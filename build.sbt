@@ -1,4 +1,4 @@
-import Dependencies.ProjectOps
+import Dependencies.{ProjectOps, munit}
 
 lazy val criteria4s: Project =
   project
@@ -12,23 +12,29 @@ lazy val criteria4s: Project =
 lazy val core: Project =
   (project in file("core"))
     .settings(
-      name           := "criteria4s-core",
-      publish / skip := false
+      name                := "criteria4s-core",
+      publish / skip      := false,
+      libraryDependencies += munit % Test,
+      testFrameworks      += new TestFramework("munit.Framework")
     )
 
 lazy val sql: Project =
   (project in file("sql"))
     .settings(
-      name           := "criteria4s-sql",
-      publish / skip := false
+      name                := "criteria4s-sql",
+      publish / skip      := false,
+      libraryDependencies += munit % Test,
+      testFrameworks      += new TestFramework("munit.Framework")
     )
     .dependsOn(core)
 
 lazy val mongodb: Project =
   (project in file("mongodb"))
     .settings(
-      name := "criteria4s-mongodb",
-      publish / skip := false
+      name                := "criteria4s-mongodb",
+      publish / skip      := false,
+      libraryDependencies += munit % Test,
+      testFrameworks      += new TestFramework("munit.Framework")
     )
     .dependsOn(core)
 

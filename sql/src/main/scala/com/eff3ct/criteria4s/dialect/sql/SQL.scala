@@ -112,6 +112,19 @@ object SQL {
     implicit val concatTransform: CONCAT[T] = new CONCAT[T] {
       def apply(left: String, right: String): String = transformExpr2("CONCAT")(left, right)
     }
+
+    implicit val orderAsc: OrderAsc[T] = new OrderAsc[T] {
+      def eval(ref: String): String = s"$ref ASC"
+    }
+    implicit val orderDesc: OrderDesc[T] = new OrderDesc[T] {
+      def eval(ref: String): String = s"$ref DESC"
+    }
+    implicit val limitBuilder: LimitBuilder[T] = new LimitBuilder[T] {
+      def eval(n: Int): String = s"LIMIT $n"
+    }
+    implicit val offsetBuilder: OffsetBuilder[T] = new OffsetBuilder[T] {
+      def eval(n: Int): String = s"OFFSET $n"
+    }
   }
 
 }

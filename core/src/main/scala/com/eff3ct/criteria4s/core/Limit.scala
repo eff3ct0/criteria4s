@@ -22,33 +22,38 @@
  * SOFTWARE.
  */
 
-package com.eff3ct.criteria4s
+package com.eff3ct.criteria4s.core
 
-import com.eff3ct.criteria4s.core.*
+/** A LIMIT expression. */
+trait LimitExpr[T <: CriteriaTag] {
+  def value: String
+  override def toString: String = value
+}
 
-package object functions extends predicates with conjunctions with transforms with clauses {
+object LimitExpr {
+  def apply[T <: CriteriaTag](v: String): LimitExpr[T] = new LimitExpr[T] {
+    override def value: String = v
+  }
+}
 
-  def pred[T <: CriteriaTag, H <: PredicateBinary[T], L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
-      H: H,
-      showL: Show[L, T],
-      showR: Show[R, T]
-  ): Criteria[T] =
-    H.eval(cr1, cr2)
+/** A OFFSET expression. */
+trait OffsetExpr[T <: CriteriaTag] {
+  def value: String
+  override def toString: String = value
+}
 
-  def pred[T <: CriteriaTag, H <: PredicateUnary[T], V](ref: Ref[T, V])(implicit
-      H: H,
-      show: Show[V, T]
-  ): Criteria[T] =
-    H.eval(ref)
+object OffsetExpr {
+  def apply[T <: CriteriaTag](v: String): OffsetExpr[T] = new OffsetExpr[T] {
+    override def value: String = v
+  }
+}
 
-  def cond[T <: CriteriaTag, H <: ConjunctionBinary[T]](cr1: Criteria[T], cr2: Criteria[T])(implicit
-      H: H
-  ): Criteria[T] =
-    H.eval(cr1, cr2)
+/** Type class for building LIMIT expression. */
+trait LimitBuilder[T <: CriteriaTag] {
+  def eval(n: Int): String
+}
 
-  def cond[T <: CriteriaTag, H <: ConjunctionUnary[T]](cr: Criteria[T])(implicit
-      H: H
-  ): Criteria[T] =
-    H.eval(cr)
-
+/** Type class for building OFFSET expression. */
+trait OffsetBuilder[T <: CriteriaTag] {
+  def eval(n: Int): String
 }

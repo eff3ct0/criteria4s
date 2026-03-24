@@ -22,33 +22,29 @@
  * SOFTWARE.
  */
 
-package com.eff3ct.criteria4s
+package com.eff3ct.criteria4s.functions
 
 import com.eff3ct.criteria4s.core.*
 
-package object functions extends predicates with conjunctions with transforms with clauses {
+private[functions] trait clauses {
 
-  def pred[T <: CriteriaTag, H <: PredicateBinary[T], L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
-      H: H,
-      showL: Show[L, T],
-      showR: Show[R, T]
-  ): Criteria[T] =
-    H.eval(cr1, cr2)
-
-  def pred[T <: CriteriaTag, H <: PredicateUnary[T], V](ref: Ref[T, V])(implicit
-      H: H,
+  def asc[T <: CriteriaTag, V](ref: Ref[T, V])(implicit
+      H: OrderAsc[T],
       show: Show[V, T]
-  ): Criteria[T] =
-    H.eval(ref)
+  ): Order[T] =
+    Order(H.eval(ref.asString))
 
-  def cond[T <: CriteriaTag, H <: ConjunctionBinary[T]](cr1: Criteria[T], cr2: Criteria[T])(implicit
-      H: H
-  ): Criteria[T] =
-    H.eval(cr1, cr2)
+  def desc[T <: CriteriaTag, V](ref: Ref[T, V])(implicit
+      H: OrderDesc[T],
+      show: Show[V, T]
+  ): Order[T] =
+    Order(H.eval(ref.asString))
 
-  def cond[T <: CriteriaTag, H <: ConjunctionUnary[T]](cr: Criteria[T])(implicit
-      H: H
-  ): Criteria[T] =
-    H.eval(cr)
+  def limit[T <: CriteriaTag](n: Int)(implicit H: LimitBuilder[T]): LimitExpr[T] =
+    LimitExpr(H.eval(n))
 
+  def offset[T <: CriteriaTag](n: Int)(implicit H: OffsetBuilder[T]): OffsetExpr[T] =
+    OffsetExpr(H.eval(n))
 }
+
+object clauses extends clauses

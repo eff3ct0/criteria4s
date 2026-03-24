@@ -1,5 +1,5 @@
-import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.{HeaderLicense, headerLicense}
-import de.heikoseeberger.sbtheader.{HeaderPlugin, License}
+import sbtheader.HeaderPlugin.autoImport.{HeaderLicense, headerLicense}
+import sbtheader.{HeaderPlugin, License}
 import sbt.Keys._
 import sbt._
 import sbt.plugins.JvmPlugin

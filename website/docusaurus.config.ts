@@ -11,8 +11,8 @@ const config: Config = {
     v4: true,
   },
 
-  url: 'https://criteria4s.rafaelfernandez.dev',
-  baseUrl: '/',
+  url: 'https://eff3ct0.github.io',
+  baseUrl: '/criteria4s/',
 
   organizationName: 'eff3ct0',
   projectName: 'criteria4s',

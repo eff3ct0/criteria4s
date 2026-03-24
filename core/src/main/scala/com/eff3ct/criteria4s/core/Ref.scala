@@ -67,6 +67,11 @@ object Ref {
       def asString(implicit show: Show[(V, V), D]): String = show.show((left, right))
     }
 
+  private[criteria4s] def raw[V, D <: CriteriaTag](expr: String): Value[D, V] =
+    new Value[D, V] {
+      def asString(implicit show: Show[V, D]): String = expr
+    }
+
   private[criteria4s] def transformed[D <: CriteriaTag, V](
       ref: Ref[D, V],
       transform: TransformUnary[D]

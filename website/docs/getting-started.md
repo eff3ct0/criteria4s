@@ -6,6 +6,8 @@ sidebar_position: 2
 
 ## Installation
 
+![criteria4s module dependency graph](/img/diagram-modules.svg)
+
 Add the core library and the dialect modules you need to your `build.sbt`:
 
 ```scala

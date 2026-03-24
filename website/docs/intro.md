@@ -23,6 +23,8 @@ By encoding predicate operations as **type classes** parameterized by a phantom 
 
 Define a filter once, evaluate it against three different backends:
 
+![One Criteria[T] definition evaluating to SQL, MongoDB, and Elasticsearch](/img/diagram-evaluation.svg)
+
 ```scala
 import com.eff3ct.criteria4s.core.*
 import com.eff3ct.criteria4s.functions as F

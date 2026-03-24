@@ -9,6 +9,8 @@ One of the most compelling uses of criteria4s is in applications that follow a *
 
 This page shows a realistic Scala 3 HTTP API that starts with PostgreSQL and switches to MongoDB by changing a single type — no domain logic changes, no interface changes.
 
+![Hexagonal architecture with criteria4s — Domain, Application, and Infrastructure layers](/img/diagram-hexagonal.svg)
+
 ## Application Structure
 
 Following screaming architecture, each feature lives in its own package and the structure names what the application does, not the frameworks it uses:

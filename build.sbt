@@ -1,10 +1,10 @@
-import Dependencies.munit
+import Dependencies.{munit, mongodbDriverSync, elasticsearchJava}
 
 lazy val criteria4s: Project =
   project
     .in(file("."))
     .disablePlugins(Build, AssemblyPlugin, HeaderPlugin)
-    .aggregate(core, sql, mongodb, postgresql, mysql, sparksql, elasticsearch, examples)
+    .aggregate(core, sql, mongodb, postgresql, mysql, sparksql, elasticsearch, `sql-jdbc`, `mongodb-driver`, `elasticsearch-client`, examples)
     .settings(
       name := "criteria4s"
     )
@@ -77,6 +77,38 @@ lazy val elasticsearch: Project =
       testFrameworks      += new TestFramework("munit.Framework")
     )
     .dependsOn(core)
+
+lazy val `sql-jdbc`: Project =
+  (project in file("sql-jdbc"))
+    .settings(
+      name                := "criteria4s-sql-jdbc",
+      publish / skip      := false,
+      libraryDependencies += munit % Test,
+      testFrameworks      += new TestFramework("munit.Framework")
+    )
+    .dependsOn(sql)
+
+lazy val `mongodb-driver`: Project =
+  (project in file("mongodb-driver"))
+    .settings(
+      name                := "criteria4s-mongodb-driver",
+      publish / skip      := false,
+      libraryDependencies += mongodbDriverSync,
+      libraryDependencies += munit % Test,
+      testFrameworks      += new TestFramework("munit.Framework")
+    )
+    .dependsOn(mongodb)
+
+lazy val `elasticsearch-client`: Project =
+  (project in file("elasticsearch-client"))
+    .settings(
+      name                := "criteria4s-elasticsearch-client",
+      publish / skip      := false,
+      libraryDependencies += elasticsearchJava,
+      libraryDependencies += munit % Test,
+      testFrameworks      += new TestFramework("munit.Framework")
+    )
+    .dependsOn(elasticsearch)
 
 lazy val examples: Project =
   (project in file("examples"))

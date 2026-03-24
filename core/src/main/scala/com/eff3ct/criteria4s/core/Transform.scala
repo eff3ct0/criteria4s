@@ -24,7 +24,8 @@
 
 package com.eff3ct.criteria4s.core
 
-/** A transform wraps a Ref value with a function (e.g. UPPER, LOWER, TRIM).
+/**
+ * A transform wraps a Ref value with a function (e.g. UPPER, LOWER, TRIM).
  *  The result is a new Ref that can be used in predicates.
  */
 trait TransformUnary[T <: CriteriaTag] {

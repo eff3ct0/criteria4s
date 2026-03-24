@@ -102,7 +102,8 @@ object PredicateBinary {
 
   trait NOTIN[T <: CriteriaTag] extends PredicateBinary[T]
 
-  /** Range predicate. Semantics vary by dialect:
+  /**
+   * Range predicate. Semantics vary by dialect:
    *  - SQL: `BETWEEN val1 AND val2` (inclusive both ends)
    *  - MongoDB: `{$gte: val1, $lt: val2}` (inclusive left, exclusive right)
    *  - Elasticsearch: `{"gte": val1, "lt": val2}` (inclusive left, exclusive right)

@@ -25,7 +25,7 @@
 package com.eff3ct.criteria4s.dialect.mongodb.driver
 
 import com.eff3ct.criteria4s.core.*
-import com.eff3ct.criteria4s.dialect.mongodb.{given, *}
+import com.eff3ct.criteria4s.dialect.mongodb.{*, given}
 import com.eff3ct.criteria4s.functions as F
 import org.bson.BsonDocument
 import org.bson.conversions.Bson
@@ -73,8 +73,9 @@ class MongoDriverIntegrationSpec extends munit.FunSuite {
   }
 
   test("toBson converts BETWEEN criteria") {
-    val criteria = F.between[MongoDB, Column, (Int, Int)](F.col("age"), F.range[MongoDB, Int](18, 65))
-    val doc      = criteria.toBsonDocument
+    val criteria =
+      F.between[MongoDB, Column, (Int, Int)](F.col("age"), F.range[MongoDB, Int](18, 65))
+    val doc = criteria.toBsonDocument
     assert(doc.containsKey("age"))
     val ageDoc = doc.getDocument("age")
     assert(ageDoc.containsKey("$gte"))

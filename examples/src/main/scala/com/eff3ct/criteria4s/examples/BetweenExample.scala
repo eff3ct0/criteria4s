@@ -25,7 +25,7 @@
 package com.eff3ct.criteria4s.examples
 
 import com.eff3ct.criteria4s.core.*
-import com.eff3ct.criteria4s.dialect.mongodb.{given, *}
+import com.eff3ct.criteria4s.dialect.mongodb.{*, given}
 import com.eff3ct.criteria4s.examples.datastores.{Postgres, WeirdDatastore}
 import com.eff3ct.criteria4s.extensions.*
 import com.eff3ct.criteria4s.functions as F

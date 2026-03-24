@@ -120,12 +120,12 @@ trait predicates {
 
     def isFalse(using H: ISFALSE[T], show: Show[L, T]): Criteria[T] = F.isFalse(c)
 
-    def upper(using H: UPPER[T], show: Show[L, T]): Ref[T, L]      = F.upper(c)(using H, show)
-    def lower(using H: LOWER[T], show: Show[L, T]): Ref[T, L]      = F.lower(c)(using H, show)
-    def trim(using H: TRIM[T], show: Show[L, T]): Ref[T, L]        = F.trim(c)(using H, show)
+    def upper(using H: UPPER[T], show: Show[L, T]): Ref[T, L] = F.upper(c)(using H, show)
+    def lower(using H: LOWER[T], show: Show[L, T]): Ref[T, L] = F.lower(c)(using H, show)
+    def trim(using H: TRIM[T], show: Show[L, T]): Ref[T, L]   = F.trim(c)(using H, show)
 
-    def asc(using H: OrderAsc[T], show: Show[L, T]): Order[T]      = F.asc(c)(using H, show)
-    def desc(using H: OrderDesc[T], show: Show[L, T]): Order[T]    = F.desc(c)(using H, show)
+    def asc(using H: OrderAsc[T], show: Show[L, T]): Order[T]   = F.asc(c)(using H, show)
+    def desc(using H: OrderDesc[T], show: Show[L, T]): Order[T] = F.desc(c)(using H, show)
   }
 
 }

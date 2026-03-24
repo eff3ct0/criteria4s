@@ -48,13 +48,13 @@ class CriteriaSpec extends munit.FunSuite {
 
   test("Ref.value asString uses Show") {
     given showInt: Show[Int, CriteriaTag] = Show.create(_.toString)
-    val ref                                      = Ref.value[Int, CriteriaTag](42)
+    val ref                               = Ref.value[Int, CriteriaTag](42)
     assertEquals(ref.asString, "42")
   }
 
   test("Ref.col asString uses Show[Column, D]") {
     given showCol: Show[Column, CriteriaTag] = Show.create(c => s"[${c.colName}]")
-    val ref                                         = Ref.col[CriteriaTag](Column("age"))
+    val ref                                  = Ref.col[CriteriaTag](Column("age"))
     assertEquals(ref.asString, "[age]")
   }
 

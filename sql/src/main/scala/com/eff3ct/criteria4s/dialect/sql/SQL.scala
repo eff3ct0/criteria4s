@@ -46,6 +46,9 @@ object SQL {
   implicit val showColumn: Show[Column, SQL] =
     Show.create(col => col.colName)
 
+  implicit val showString: Show[String, SQL] =
+    Show.create(s => s"'${s.replace("'", "''")}'")
+
   implicit def showSeq[V](implicit show: Show[V, SQL]): Show[Seq[V], SQL] =
     Show.create(_.map(show.show).mkString("(", ", ", ")"))
 

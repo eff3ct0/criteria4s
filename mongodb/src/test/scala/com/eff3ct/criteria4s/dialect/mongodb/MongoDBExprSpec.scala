@@ -24,8 +24,8 @@
 
 package com.eff3ct.criteria4s.dialect.mongodb
 
-import com.eff3ct.criteria4s.core._
-import com.eff3ct.criteria4s.functions._
+import com.eff3ct.criteria4s.core.*
+import com.eff3ct.criteria4s.functions.*
 
 class MongoDBExprSpec extends munit.FunSuite {
 

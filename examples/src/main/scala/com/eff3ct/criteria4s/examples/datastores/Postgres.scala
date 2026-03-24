@@ -25,7 +25,7 @@
 package com.eff3ct.criteria4s.examples.datastores
 
 import com.eff3ct.criteria4s.core.{Column, Show}
-import com.eff3ct.criteria4s.dialect.sql.{SQL, _}
+import com.eff3ct.criteria4s.dialect.sql.{SQL, *}
 
 trait Postgres  extends SQL
 object Postgres extends SQLExpr[Postgres] {

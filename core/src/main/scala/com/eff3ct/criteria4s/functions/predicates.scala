@@ -25,9 +25,9 @@
 package com.eff3ct.criteria4s.functions
 
 import com.eff3ct.criteria4s.core.{Column, Criteria, CriteriaTag, Ref, Show}
-import com.eff3ct.criteria4s.core.PredicateBinary._
-import com.eff3ct.criteria4s.core.PredicateUnary._
-import com.eff3ct.criteria4s.core.Ref._
+import com.eff3ct.criteria4s.core.PredicateBinary.*
+import com.eff3ct.criteria4s.core.PredicateUnary.*
+import com.eff3ct.criteria4s.core.Ref.*
 
 private[functions] trait predicates {
 
@@ -41,7 +41,7 @@ private[functions] trait predicates {
 
   def col[T <: CriteriaTag](ref: String): Col[T] = Ref.col(Column(ref))
 
-  def array[T <: CriteriaTag, V](vs: V*): Collection[T, V] = Ref.array(vs: _*)
+  def array[T <: CriteriaTag, V](vs: V*): Collection[T, V] = Ref.array(vs*)
 
   def range[T <: CriteriaTag, V](left: V, right: V): Ref.Range[T, V] = Ref.range(left, right)
 

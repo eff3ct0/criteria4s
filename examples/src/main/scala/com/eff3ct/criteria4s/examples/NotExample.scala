@@ -24,11 +24,11 @@
 
 package com.eff3ct.criteria4s.examples
 
-import com.eff3ct.criteria4s.core._
-import com.eff3ct.criteria4s.dialect.mongodb.MongoDB
-import com.eff3ct.criteria4s.examples.datastores._
-import com.eff3ct.criteria4s.extensions._
-import com.eff3ct.criteria4s.functions._
+import com.eff3ct.criteria4s.core.*
+import com.eff3ct.criteria4s.dialect.mongodb.*
+import com.eff3ct.criteria4s.examples.datastores.*
+import com.eff3ct.criteria4s.extensions.*
+import com.eff3ct.criteria4s.functions.*
 
 /** Demonstrates NOT negation: function-style, symbol-style, and extension-style. */
 object NotExample extends App {
@@ -43,13 +43,15 @@ object NotExample extends App {
   val notActive: Criteria[Postgres] = (col[Postgres]("active") === lit(true)).not
 
   // Polymorphic NOT with GT
-  def notAboveThreshold[T <: CriteriaTag: GT: NOT: Show[Column, *]]: Criteria[T] =
+  def notAboveThreshold[T <: CriteriaTag: GT: NOT](implicit
+      sc: Show[Column, T]
+  ): Criteria[T] =
     not(col[T]("score") gt lit(100))
 
   // Polymorphic NOT combined with AND
-  def notAboveButBelow[
-      T <: CriteriaTag: NOT: GT: LEQ: AND: Show[Column, *]
-  ]: Criteria[T] =
+  def notAboveButBelow[T <: CriteriaTag: NOT: GT: LEQ: AND](implicit
+      sc: Show[Column, T]
+  ): Criteria[T] =
     not(col[T]("score") gt lit(2)) && (col[T]("score") leq lit(10))
 
   println("=== NOT Examples ===")

@@ -24,10 +24,10 @@
 
 package com.eff3ct.criteria4s.extensions
 
-import com.eff3ct.criteria4s.{functions => F}
+import com.eff3ct.criteria4s.functions as F
 import com.eff3ct.criteria4s.core.{Criteria, CriteriaTag, Ref, Show}
-import com.eff3ct.criteria4s.core.PredicateBinary._
-import com.eff3ct.criteria4s.core.PredicateUnary._
+import com.eff3ct.criteria4s.core.PredicateBinary.*
+import com.eff3ct.criteria4s.core.PredicateUnary.*
 import com.eff3ct.criteria4s.core.Ref.Collection
 
 trait predicates {

@@ -24,7 +24,7 @@
 
 package com.eff3ct.criteria4s.core
 
-import com.eff3ct.criteria4s.core.Criteria._
+import com.eff3ct.criteria4s.core.Criteria.*
 import com.eff3ct.criteria4s.instances.builder.{BuilderBinary, BuilderUnary}
 
 sealed trait Predicate[T <: CriteriaTag]

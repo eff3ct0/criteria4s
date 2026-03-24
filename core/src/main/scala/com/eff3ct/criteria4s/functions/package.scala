@@ -24,7 +24,7 @@
 
 package com.eff3ct.criteria4s
 
-import com.eff3ct.criteria4s.core._
+import com.eff3ct.criteria4s.core.*
 
 package object functions extends predicates with conjunctions {
 

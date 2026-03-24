@@ -24,8 +24,8 @@
 
 package com.eff3ct.criteria4s.examples.datastores
 
-import com.eff3ct.criteria4s.core._
-import com.eff3ct.criteria4s.instances._
+import com.eff3ct.criteria4s.core.*
+import com.eff3ct.criteria4s.instances.*
 
 trait WeirdDatastore extends CriteriaTag
 

@@ -24,11 +24,11 @@
 
 package com.eff3ct.criteria4s.examples
 
-import com.eff3ct.criteria4s.core._
-import com.eff3ct.criteria4s.dialect.mongodb.MongoDB
+import com.eff3ct.criteria4s.core.*
+import com.eff3ct.criteria4s.dialect.mongodb.*
 import com.eff3ct.criteria4s.examples.datastores.{MySQL, Postgres, WeirdDatastore}
-import com.eff3ct.criteria4s.extensions._
-import com.eff3ct.criteria4s.functions._
+import com.eff3ct.criteria4s.extensions.*
+import com.eff3ct.criteria4s.functions.*
 
 import java.util.UUID
 
@@ -39,9 +39,8 @@ import java.util.UUID
 object FilterByUserExample extends App {
 
   /** Build a criteria that matches a given field against a UUID. */
-  def filterByUser[T <: CriteriaTag: EQ: Show[Column, *]](
-      fieldName: String,
-      userId: UUID
+  def filterByUser[T <: CriteriaTag: EQ](fieldName: String, userId: UUID)(implicit
+      sc: Show[Column, T]
   ): Criteria[T] =
     col[T](fieldName) === lit(userId.toString)
 

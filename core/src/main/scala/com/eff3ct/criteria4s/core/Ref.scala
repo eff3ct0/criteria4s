@@ -37,13 +37,19 @@ object Ref {
   trait Range[D <: CriteriaTag, V]      extends Ref[D, (V, V)]
 
   private[criteria4s] def nothing[T <: CriteriaTag]: Value[T, Nothing] =
-    (_: Show[Nothing, T]) => ""
+    new Value[T, Nothing] {
+      def asString(implicit show: Show[Nothing, T]): String = ""
+    }
 
   private[criteria4s] def value[V, D <: CriteriaTag](v: V): Value[D, V] =
-    (show: Show[V, D]) => show.show(v)
+    new Value[D, V] {
+      def asString(implicit show: Show[V, D]): String = show.show(v)
+    }
 
   private[criteria4s] def col[D <: CriteriaTag](v: Column): Col[D] =
-    (show: Show[Column, D]) => show.show(v)
+    new Col[D] {
+      def asString(implicit show: Show[Column, D]): String = show.show(v)
+    }
 
   private[criteria4s] def bool[D <: CriteriaTag](v: Boolean): Bool[D] =
     new Bool[D] {
@@ -52,10 +58,14 @@ object Ref {
     }
 
   private[criteria4s] def array[V, D <: CriteriaTag](vs: V*): Collection[D, V] =
-    (show: Show[Seq[V], D]) => show.show(vs)
+    new Collection[D, V] {
+      def asString(implicit show: Show[Seq[V], D]): String = show.show(vs)
+    }
 
   private[criteria4s] def range[V, D <: CriteriaTag](left: V, right: V): Range[D, V] =
-    (show: Show[(V, V), D]) => show.show((left, right))
+    new Range[D, V] {
+      def asString(implicit show: Show[(V, V), D]): String = show.show((left, right))
+    }
 
 }
 

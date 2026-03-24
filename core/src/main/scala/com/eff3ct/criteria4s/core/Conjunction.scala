@@ -25,8 +25,8 @@
 package com.eff3ct.criteria4s.core
 
 import com.eff3ct.criteria4s.core
-import com.eff3ct.criteria4s.core.Criteria._
-import com.eff3ct.criteria4s.instances.builder._
+import com.eff3ct.criteria4s.core.Criteria.*
+import com.eff3ct.criteria4s.instances.builder.*
 
 trait ConjunctionBinary[T <: CriteriaTag] {
   def eval(cr1: Criteria[T], cr2: Criteria[T]): Criteria[T]
@@ -49,12 +49,18 @@ object ConjunctionBinary {
 
   implicit val orBuilder: BuilderBinary[OR] = new BuilderBinary[OR] {
     override def build[T <: CriteriaTag](F: (String, String) => String): OR[T] =
-      (cr1: Criteria[T], cr2: Criteria[T]) => pure(F(cr1.value, cr2.value))
+      new OR[T] {
+        def eval(cr1: Criteria[T], cr2: Criteria[T]): Criteria[T] =
+          pure(F(cr1.value, cr2.value))
+      }
   }
 
   implicit val andBuilder: BuilderBinary[AND] = new BuilderBinary[AND] {
     override def build[T <: CriteriaTag](F: (String, String) => String): AND[T] =
-      (cr1: Criteria[T], cr2: Criteria[T]) => pure(F(cr1.value, cr2.value))
+      new AND[T] {
+        def eval(cr1: Criteria[T], cr2: Criteria[T]): Criteria[T] =
+          pure(F(cr1.value, cr2.value))
+      }
   }
 
 }
@@ -65,7 +71,9 @@ object ConjunctionUnary {
 
   implicit val notBuilder: BuilderUnary[NOT] = new BuilderUnary[NOT] {
     override def build[T <: core.CriteriaTag](F: String => String): NOT[T] =
-      (cr: Criteria[T]) => pure(F(cr.value))
+      new NOT[T] {
+        def eval(cr: Criteria[T]): Criteria[T] = pure(F(cr.value))
+      }
   }
 
 }

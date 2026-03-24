@@ -24,9 +24,9 @@
 
 package com.eff3ct.criteria4s.examples
 
-import com.eff3ct.criteria4s.core._
+import com.eff3ct.criteria4s.core.*
 import com.eff3ct.criteria4s.examples.datastores.Postgres
-import com.eff3ct.criteria4s.functions._
+import com.eff3ct.criteria4s.functions.*
 
 /** Demonstrates the function-style API for building criteria expressions. */
 object FunctionStyleExample extends App {

@@ -24,7 +24,7 @@
 
 package com.eff3ct.criteria4s.functions
 
-import com.eff3ct.criteria4s.core._
+import com.eff3ct.criteria4s.core.*
 
 private[functions] trait conjunctions {
 

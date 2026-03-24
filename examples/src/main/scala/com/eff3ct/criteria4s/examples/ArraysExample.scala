@@ -24,10 +24,10 @@
 
 package com.eff3ct.criteria4s.examples
 
-import com.eff3ct.criteria4s.core._
-import com.eff3ct.criteria4s.dialect.mongodb.MongoDB
+import com.eff3ct.criteria4s.core.*
+import com.eff3ct.criteria4s.dialect.mongodb.*
 import com.eff3ct.criteria4s.examples.datastores.{Postgres, WeirdDatastore}
-import com.eff3ct.criteria4s.functions._
+import com.eff3ct.criteria4s.functions.*
 
 /** Demonstrates IS NULL, IN, NOT IN, and array operations. */
 object ArraysExample extends App {
@@ -42,10 +42,13 @@ object ArraysExample extends App {
   val withActiveCheck: Criteria[Postgres] = or(nullOrInList, ===(col("active"), lit(true)))
 
   // Polymorphic versions
-  def nullCheck[T <: CriteriaTag: ISNULL: Show[Column, *]]: Criteria[T] =
+  def nullCheck[T <: CriteriaTag: ISNULL](implicit sc: Show[Column, T]): Criteria[T] =
     isNull(col("email"))
 
-  def membershipCheck[T <: CriteriaTag: IN: Show[Column, *]: Show[Seq[Int], *]]: Criteria[T] =
+  def membershipCheck[T <: CriteriaTag: IN](implicit
+      sc: Show[Column, T],
+      ss: Show[Seq[Int], T]
+  ): Criteria[T] =
     in(col("id"), array[T, Int](1, 2, 3))
 
   println("=== Arrays & Null Examples ===")

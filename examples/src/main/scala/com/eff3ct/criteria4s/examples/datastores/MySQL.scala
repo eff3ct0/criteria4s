@@ -24,10 +24,10 @@
 
 package com.eff3ct.criteria4s.examples.datastores
 
-import com.eff3ct.criteria4s.core.PredicateBinary._
+import com.eff3ct.criteria4s.core.PredicateBinary.*
 import com.eff3ct.criteria4s.core.{Column, Show}
-import com.eff3ct.criteria4s.instances._
-import com.eff3ct.criteria4s.dialect.sql._
+import com.eff3ct.criteria4s.instances.*
+import com.eff3ct.criteria4s.dialect.sql.*
 
 trait MySQL extends SQL
 

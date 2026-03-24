@@ -1,0 +1,44 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2024 Rafael Fernandez
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package com.eff3ct.criteria4s.dialect.sparksql
+
+import com.eff3ct.criteria4s.core.{Column, Show}
+import com.eff3ct.criteria4s.dialect.sql.SQL
+
+/** Spark SQL dialect extending the base SQL interpreter. */
+trait SparkSQL extends SQL
+
+object SparkSQL extends SQL.SQLExpr[SparkSQL] {
+
+  /** Spark SQL uses backtick-quoted column identifiers. */
+  implicit val showColumn: Show[Column, SparkSQL] =
+    Show.create(col => s"`${col.colName}`")
+
+  implicit def showSeq[V](implicit show: Show[V, SparkSQL]): Show[Seq[V], SparkSQL] =
+    Show.create(_.map(show.show).mkString("(", ", ", ")"))
+
+  implicit def showTuple[V](implicit show: Show[V, SparkSQL]): Show[(V, V), SparkSQL] =
+    Show.create { case (l, r) => s"${show.show(l)} AND ${show.show(r)}" }
+}

@@ -110,6 +110,21 @@ lazy val `elasticsearch-client`: Project =
     )
     .dependsOn(elasticsearch)
 
+lazy val docs: Project =
+  (project in file("criteria4s-docs"))
+    .enablePlugins(MdocPlugin)
+    .disablePlugins(Build, AssemblyPlugin, HeaderPlugin)
+    .settings(
+      name       := "criteria4s-docs",
+      mdocIn     := (ThisBuild / baseDirectory).value / "docs",
+      mdocOut    := (ThisBuild / baseDirectory).value / "website" / "docs",
+      mdocVariables := Map(
+        "VERSION" -> "1.0.0"
+      ),
+      publish / skip := true
+    )
+    .dependsOn(core, sql, mongodb, postgresql, mysql, sparksql, elasticsearch, `sql-jdbc`, `mongodb-driver`, `elasticsearch-client`)
+
 lazy val examples: Project =
   (project in file("examples"))
     .settings(

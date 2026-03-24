@@ -35,9 +35,9 @@ object Postgres extends SQLExpr[Postgres] {
    * default implementation
    */
 
-  implicit val showColumn: Show[Column, Postgres] = Show.create(col => s"'${col.colName}'")
-  implicit def showSeq[T](implicit show: Show[T, Postgres]): Show[Seq[T], Postgres] =
+  given showColumn: Show[Column, Postgres] = Show.create(col => s"'${col.colName}'")
+  given showSeq[T](using show: Show[T, Postgres]): Show[Seq[T], Postgres] =
     Show.create(_.map(show.show).mkString("(", ", ", ")"))
-  implicit def betweenShow[T](implicit show: Show[T, Postgres]): Show[(T, T), Postgres] =
+  given betweenShow[T](using show: Show[T, Postgres]): Show[(T, T), Postgres] =
     Show.create { case (l, r) => s"${show.show(l)} TO ${show.show(r)}" }
 }

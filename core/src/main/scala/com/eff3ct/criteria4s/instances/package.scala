@@ -28,12 +28,12 @@ import com.eff3ct.criteria4s.core.CriteriaTag
 import com.eff3ct.criteria4s.instances.builder.{BuilderBinary, BuilderUnary}
 
 package object instances {
-  def build[T <: CriteriaTag, H[_ <: CriteriaTag]](F: (String, String) => String)(implicit
+  def build[T <: CriteriaTag, H[_ <: CriteriaTag]](F: (String, String) => String)(using
       BH: BuilderBinary[H]
   ): H[T] =
     BH.build(F)
 
-  def build[T <: CriteriaTag, H[_ <: CriteriaTag]](F: String => String)(implicit
+  def build[T <: CriteriaTag, H[_ <: CriteriaTag]](F: String => String)(using
       BH: BuilderUnary[H]
   ): H[T] =
     BH.build(F)

@@ -81,13 +81,13 @@ object Elasticsearch {
 
   // -- Show instances --
 
-  implicit val showColumn: Show[Column, Elasticsearch] =
+  given showColumn: Show[Column, Elasticsearch] =
     Show.create(col => s""""${col.colName}"""")
 
-  implicit def showSeq[V](implicit show: Show[V, Elasticsearch]): Show[Seq[V], Elasticsearch] =
+  given showSeq[V](using show: Show[V, Elasticsearch]): Show[Seq[V], Elasticsearch] =
     Show.create(_.map(show.show).mkString("[", ", ", "]"))
 
-  implicit def showTuple[V](implicit
+  given showTuple[V](using
       show: Show[V, Elasticsearch]
   ): Show[(V, V), Elasticsearch] =
     Show.create { case (l, r) => s"""{"gte": ${show.show(l)}, "lt": ${show.show(r)}}""" }
@@ -95,26 +95,26 @@ object Elasticsearch {
   // -- Type-class instances --
 
   trait ElasticsearchExpr[T <: Elasticsearch] {
-    implicit val andConj: AND[T]               = build[T, AND](andExpr)
-    implicit val orConj: OR[T]                 = build[T, OR](orExpr)
-    implicit val notConj: NOT[T]               = build[T, NOT](notExpr)
-    implicit val eqPred: EQ[T]                 = build[T, EQ](termExpr)
-    implicit val neqPred: NEQ[T]               = build[T, NEQ](neqExpr)
-    implicit val gtPred: GT[T]                 = build[T, GT](rangeExpr("gt"))
-    implicit val geqPred: GEQ[T]               = build[T, GEQ](rangeExpr("gte"))
-    implicit val ltPred: LT[T]                 = build[T, LT](rangeExpr("lt"))
-    implicit val leqPred: LEQ[T]               = build[T, LEQ](rangeExpr("lte"))
-    implicit val inPred: IN[T]                 = build[T, IN](inExpr)
-    implicit val notInPred: NOTIN[T]           = build[T, NOTIN](notInExpr)
-    implicit val likePred: LIKE[T]             = build[T, LIKE](wildcardExpr)
-    implicit val isNullPred: ISNULL[T]         = build[T, ISNULL](isNullExpr)
-    implicit val isNotNullPred: ISNOTNULL[T]   = build[T, ISNOTNULL](isNotNullExpr)
-    implicit val betweenPred: BETWEEN[T]       = build[T, BETWEEN](betweenExpr)
-    implicit val notBetweenPred: NOTBETWEEN[T] = build[T, NOTBETWEEN](notBetweenExpr)
-    implicit val startswithPred: STARTSWITH[T] = build[T, STARTSWITH](wildcardExpr)
-    implicit val endswithPred: ENDSWITH[T]     = build[T, ENDSWITH](wildcardExpr)
-    implicit val containsPred: CONTAINS[T]     = build[T, CONTAINS](wildcardExpr)
-    implicit val istruePred: ISTRUE[T]         = build[T, ISTRUE](isTrueExpr)
-    implicit val isfalsePred: ISFALSE[T]       = build[T, ISFALSE](isFalseExpr)
+    given andConj: AND[T]               = build[T, AND](andExpr)
+    given orConj: OR[T]                 = build[T, OR](orExpr)
+    given notConj: NOT[T]               = build[T, NOT](notExpr)
+    given eqPred: EQ[T]                 = build[T, EQ](termExpr)
+    given neqPred: NEQ[T]               = build[T, NEQ](neqExpr)
+    given gtPred: GT[T]                 = build[T, GT](rangeExpr("gt"))
+    given geqPred: GEQ[T]               = build[T, GEQ](rangeExpr("gte"))
+    given ltPred: LT[T]                 = build[T, LT](rangeExpr("lt"))
+    given leqPred: LEQ[T]               = build[T, LEQ](rangeExpr("lte"))
+    given inPred: IN[T]                 = build[T, IN](inExpr)
+    given notInPred: NOTIN[T]           = build[T, NOTIN](notInExpr)
+    given likePred: LIKE[T]             = build[T, LIKE](wildcardExpr)
+    given isNullPred: ISNULL[T]         = build[T, ISNULL](isNullExpr)
+    given isNotNullPred: ISNOTNULL[T]   = build[T, ISNOTNULL](isNotNullExpr)
+    given betweenPred: BETWEEN[T]       = build[T, BETWEEN](betweenExpr)
+    given notBetweenPred: NOTBETWEEN[T] = build[T, NOTBETWEEN](notBetweenExpr)
+    given startswithPred: STARTSWITH[T] = build[T, STARTSWITH](wildcardExpr)
+    given endswithPred: ENDSWITH[T]     = build[T, ENDSWITH](wildcardExpr)
+    given containsPred: CONTAINS[T]     = build[T, CONTAINS](wildcardExpr)
+    given istruePred: ISTRUE[T]         = build[T, ISTRUE](isTrueExpr)
+    given isfalsePred: ISFALSE[T]       = build[T, ISFALSE](isFalseExpr)
   }
 }

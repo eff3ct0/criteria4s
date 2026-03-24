@@ -45,76 +45,76 @@ private[functions] trait predicates {
 
   def range[T <: CriteriaTag, V](left: V, right: V): Ref.Range[T, V] = Ref.range(left, right)
 
-  def lt[T <: CriteriaTag: LT, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+  def lt[T <: CriteriaTag: LT, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
     pred[T, LT[T], L, R](cr1, cr2)
 
-  def gt[T <: CriteriaTag: GT, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+  def gt[T <: CriteriaTag: GT, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
     pred[T, GT[T], L, R](cr1, cr2)
 
-  def ===[T <: CriteriaTag: EQ, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+  def ===[T <: CriteriaTag: EQ, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
     pred[T, EQ[T], L, R](cr1, cr2)
 
-  def eqv[T <: CriteriaTag: EQ, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+  def eqv[T <: CriteriaTag: EQ, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
     pred[T, EQ[T], L, R](cr1, cr2)
 
-  def =!=[T <: CriteriaTag: NEQ, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+  def =!=[T <: CriteriaTag: NEQ, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
     pred[T, NEQ[T], L, R](cr1, cr2)
 
-  def neq[T <: CriteriaTag: NEQ, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+  def neq[T <: CriteriaTag: NEQ, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
     pred[T, NEQ[T], L, R](cr1, cr2)
 
-  def geq[T <: CriteriaTag: GEQ, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+  def geq[T <: CriteriaTag: GEQ, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
     pred[T, GEQ[T], L, R](cr1, cr2)
 
-  def leq[T <: CriteriaTag: LEQ, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+  def leq[T <: CriteriaTag: LEQ, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
     pred[T, LEQ[T], L, R](cr1, cr2)
 
-  def like[T <: CriteriaTag: LIKE, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+  def like[T <: CriteriaTag: LIKE, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
     pred[T, LIKE[T], L, R](cr1, cr2)
 
-  def in[T <: CriteriaTag: IN, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+  def in[T <: CriteriaTag: IN, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
     pred[T, IN[T], L, R](cr1, cr2)
 
-  def notIn[T <: CriteriaTag: NOTIN, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+  def notIn[T <: CriteriaTag: NOTIN, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
     pred[T, NOTIN[T], L, R](cr1, cr2)
 
-  def isNull[T <: CriteriaTag: ISNULL, V](cr1: Ref[T, V])(implicit show: Show[V, T]): Criteria[T] =
+  def isNull[T <: CriteriaTag: ISNULL, V](cr1: Ref[T, V])(using show: Show[V, T]): Criteria[T] =
     pred[T, ISNULL[T], V](cr1)
 
-  def isNotNull[T <: CriteriaTag: ISNOTNULL, V](cr1: Ref[T, V])(implicit
+  def isNotNull[T <: CriteriaTag: ISNOTNULL, V](cr1: Ref[T, V])(using
       show: Show[V, T]
   ): Criteria[T] =
     pred[T, ISNOTNULL[T], V](cr1)
@@ -122,7 +122,7 @@ private[functions] trait predicates {
   def between[T <: CriteriaTag: BETWEEN, L, R](
       cr1: Ref[T, L],
       cr2: Ref[T, R]
-  )(implicit
+  )(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
@@ -131,34 +131,34 @@ private[functions] trait predicates {
   def notBetween[T <: CriteriaTag: NOTBETWEEN, L, R](
       cr1: Ref[T, L],
       cr2: Ref[T, R]
-  )(implicit
+  )(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
     pred[T, NOTBETWEEN[T], L, R](cr1, cr2)
 
-  def startsWith[T <: CriteriaTag: STARTSWITH, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+  def startsWith[T <: CriteriaTag: STARTSWITH, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
     pred[T, STARTSWITH[T], L, R](cr1, cr2)
 
-  def endsWith[T <: CriteriaTag: ENDSWITH, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+  def endsWith[T <: CriteriaTag: ENDSWITH, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
     pred[T, ENDSWITH[T], L, R](cr1, cr2)
 
-  def contains[T <: CriteriaTag: CONTAINS, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+  def contains[T <: CriteriaTag: CONTAINS, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
     pred[T, CONTAINS[T], L, R](cr1, cr2)
 
-  def isTrue[T <: CriteriaTag: ISTRUE, V](cr1: Ref[T, V])(implicit show: Show[V, T]): Criteria[T] =
+  def isTrue[T <: CriteriaTag: ISTRUE, V](cr1: Ref[T, V])(using show: Show[V, T]): Criteria[T] =
     pred[T, ISTRUE[T], V](cr1)
 
-  def isFalse[T <: CriteriaTag: ISFALSE, V](cr1: Ref[T, V])(implicit
+  def isFalse[T <: CriteriaTag: ISFALSE, V](cr1: Ref[T, V])(using
       show: Show[V, T]
   ): Criteria[T] =
     pred[T, ISFALSE[T], V](cr1)

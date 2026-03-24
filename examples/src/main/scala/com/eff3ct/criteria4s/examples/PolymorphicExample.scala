@@ -25,10 +25,10 @@
 package com.eff3ct.criteria4s.examples
 
 import com.eff3ct.criteria4s.core.*
-import com.eff3ct.criteria4s.dialect.mongodb.*
+import com.eff3ct.criteria4s.dialect.mongodb.{given, *}
 import com.eff3ct.criteria4s.examples.datastores.{MySQL, Postgres, WeirdDatastore}
 import com.eff3ct.criteria4s.extensions.*
-import com.eff3ct.criteria4s.functions.*
+import com.eff3ct.criteria4s.functions as F
 
 /**
  * Demonstrates the tagless-final / polymorphic approach: a single criteria definition
@@ -37,37 +37,37 @@ import com.eff3ct.criteria4s.functions.*
 object PolymorphicExample extends App {
 
   /** Simple filter: age >= 18 AND active = true */
-  def activeAdults[T <: CriteriaTag: GEQ: EQ: AND](implicit
+  def activeAdults[T <: CriteriaTag: GEQ: EQ: AND](using
       sc: Show[Column, T]
   ): Criteria[T] =
-    (col[T]("age") geq lit(18)) and (col[T]("active") === lit(true))
+    (F.col[T]("age") geq F.lit(18)) and (F.col[T]("active") === F.lit(true))
 
   /** Complex filter using multiple predicates */
-  def searchUsers[T <: CriteriaTag: GEQ: LIKE: ISNULL: NEQ: AND: OR](implicit
+  def searchUsers[T <: CriteriaTag: GEQ: LIKE: ISNULL: NEQ: AND: OR](using
       sc: Show[Column, T]
   ): Criteria[T] =
-    (col[T]("age") geq lit(18))
-      .and(col[T]("name") like lit("%Smith%"))
-      .or(col[T]("email").isNull)
-      .and(col[T]("status") =!= lit("banned"))
+    (F.col[T]("age") geq F.lit(18))
+      .and(F.col[T]("name") like F.lit("%Smith%"))
+      .or(F.col[T]("email").isNull)
+      .and(F.col[T]("status") =!= F.lit("banned"))
 
   /** Filter with IN predicate */
-  def usersByRole[T <: CriteriaTag: IN](implicit
+  def usersByRole[T <: CriteriaTag: IN](using
       sc: Show[Column, T],
       ss: Show[Seq[String], T]
   ): Criteria[T] =
-    in(col("role"), array[T, String]("admin", "editor", "moderator"))
+    F.in(F.col("role"), F.array[T, String]("admin", "editor", "moderator"))
 
   /** Filter with BETWEEN */
-  def scoreInRange[T <: CriteriaTag: BETWEEN](implicit
+  def scoreInRange[T <: CriteriaTag: BETWEEN](using
       sc: Show[Column, T],
       st: Show[(Int, Int), T]
   ): Criteria[T] =
-    col[T]("score") between range[T, Int](70, 100)
+    F.col[T]("score") between F.range[T, Int](70, 100)
 
   /** Filter with NOT */
-  def notInactive[T <: CriteriaTag: EQ: NOT](implicit sc: Show[Column, T]): Criteria[T] =
-    not(col[T]("status") === lit("inactive"))
+  def notInactive[T <: CriteriaTag: EQ: NOT](using sc: Show[Column, T]): Criteria[T] =
+    F.not(F.col[T]("status") === F.lit("inactive"))
 
   // Evaluate each expression against all backends
   val backends = Seq(

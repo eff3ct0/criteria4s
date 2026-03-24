@@ -33,12 +33,12 @@ trait MySQL extends SQL
 object MySQL extends SQL.SQLExpr[MySQL] {
 
   /** MySQL uses backtick-quoted column identifiers. */
-  implicit val showColumn: Show[Column, MySQL] =
+  given showColumn: Show[Column, MySQL] =
     Show.create(col => s"`${col.colName}`")
 
-  implicit def showSeq[V](implicit show: Show[V, MySQL]): Show[Seq[V], MySQL] =
+  given showSeq[V](using show: Show[V, MySQL]): Show[Seq[V], MySQL] =
     Show.create(_.map(show.show).mkString("(", ", ", ")"))
 
-  implicit def showTuple[V](implicit show: Show[V, MySQL]): Show[(V, V), MySQL] =
+  given showTuple[V](using show: Show[V, MySQL]): Show[(V, V), MySQL] =
     Show.create { case (l, r) => s"${show.show(l)} AND ${show.show(r)}" }
 }

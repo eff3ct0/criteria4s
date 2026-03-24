@@ -37,32 +37,32 @@ object WeirdDatastore {
   private def wope1(symbol: String): String => String = (left: String) =>
     s"""{left: $left, opt: $symbol }""".stripMargin
 
-  implicit def showSeq[V](implicit show: Show[V, WeirdDatastore]): Show[Seq[V], WeirdDatastore] =
+  given showSeq[V](using show: Show[V, WeirdDatastore]): Show[Seq[V], WeirdDatastore] =
     Show.create(_.map(show.show).mkString("[", ", ", "]"))
 
-  implicit def showRange[V](implicit show: Show[V, WeirdDatastore]): Show[(V, V), WeirdDatastore] =
+  given showRange[V](using show: Show[V, WeirdDatastore]): Show[(V, V), WeirdDatastore] =
     Show.create { case (l, r) => s"[${show.show(l)}, ${show.show(r)}]" }
 
-  implicit val showColumn: Show[Column, WeirdDatastore] = Show.create(_.colName)
+  given showColumn: Show[Column, WeirdDatastore] = Show.create(_.colName)
 
-  implicit val andConj: AND[WeirdDatastore]       = build[WeirdDatastore, AND](wope("AND"))
-  implicit val orConj: OR[WeirdDatastore]         = build[WeirdDatastore, OR](wope("OR"))
-  implicit val notConj: NOT[WeirdDatastore]       = build[WeirdDatastore, NOT](wope1("NOT"))
-  implicit val eqPred: EQ[WeirdDatastore]         = build[WeirdDatastore, EQ](wope("="))
-  implicit val neqPred: NEQ[WeirdDatastore]       = build[WeirdDatastore, NEQ](wope("!="))
-  implicit val gtPred: GT[WeirdDatastore]         = build[WeirdDatastore, GT](wope(">"))
-  implicit val geqPred: GEQ[WeirdDatastore]       = build[WeirdDatastore, GEQ](wope(">="))
-  implicit val ltPred: LT[WeirdDatastore]         = build[WeirdDatastore, LT](wope("<"))
-  implicit val leqPred: LEQ[WeirdDatastore]       = build[WeirdDatastore, LEQ](wope("<="))
-  implicit val inPred: IN[WeirdDatastore]         = build[WeirdDatastore, IN](wope("IN"))
-  implicit val notinPred: NOTIN[WeirdDatastore]   = build[WeirdDatastore, NOTIN](wope("NOT IN"))
-  implicit val likePred: LIKE[WeirdDatastore]     = build[WeirdDatastore, LIKE](wope("LIKE"))
-  implicit val isnullPred: ISNULL[WeirdDatastore] = build[WeirdDatastore, ISNULL](wope1("IS NULL"))
-  implicit val isnotnullPred: ISNOTNULL[WeirdDatastore] =
+  given andConj: AND[WeirdDatastore]       = build[WeirdDatastore, AND](wope("AND"))
+  given orConj: OR[WeirdDatastore]         = build[WeirdDatastore, OR](wope("OR"))
+  given notConj: NOT[WeirdDatastore]       = build[WeirdDatastore, NOT](wope1("NOT"))
+  given eqPred: EQ[WeirdDatastore]         = build[WeirdDatastore, EQ](wope("="))
+  given neqPred: NEQ[WeirdDatastore]       = build[WeirdDatastore, NEQ](wope("!="))
+  given gtPred: GT[WeirdDatastore]         = build[WeirdDatastore, GT](wope(">"))
+  given geqPred: GEQ[WeirdDatastore]       = build[WeirdDatastore, GEQ](wope(">="))
+  given ltPred: LT[WeirdDatastore]         = build[WeirdDatastore, LT](wope("<"))
+  given leqPred: LEQ[WeirdDatastore]       = build[WeirdDatastore, LEQ](wope("<="))
+  given inPred: IN[WeirdDatastore]         = build[WeirdDatastore, IN](wope("IN"))
+  given notinPred: NOTIN[WeirdDatastore]   = build[WeirdDatastore, NOTIN](wope("NOT IN"))
+  given likePred: LIKE[WeirdDatastore]     = build[WeirdDatastore, LIKE](wope("LIKE"))
+  given isnullPred: ISNULL[WeirdDatastore] = build[WeirdDatastore, ISNULL](wope1("IS NULL"))
+  given isnotnullPred: ISNOTNULL[WeirdDatastore] =
     build[WeirdDatastore, ISNOTNULL](wope1("IS NOT NULL"))
-  implicit val betweenPred: BETWEEN[WeirdDatastore] =
+  given betweenPred: BETWEEN[WeirdDatastore] =
     build[WeirdDatastore, BETWEEN](wope("BETWEEN"))
-  implicit val notbetweenPred: NOTBETWEEN[WeirdDatastore] =
+  given notbetweenPred: NOTBETWEEN[WeirdDatastore] =
     build[WeirdDatastore, NOTBETWEEN](wope("NOT BETWEEN"))
 
 }

@@ -33,12 +33,12 @@ trait PostgreSQL extends SQL
 object PostgreSQL extends SQL.SQLExpr[PostgreSQL] {
 
   /** PostgreSQL uses double quotes for column identifiers. */
-  implicit val showColumn: Show[Column, PostgreSQL] =
+  given showColumn: Show[Column, PostgreSQL] =
     Show.create(col => s""""${col.colName}"""")
 
-  implicit def showSeq[V](implicit show: Show[V, PostgreSQL]): Show[Seq[V], PostgreSQL] =
+  given showSeq[V](using show: Show[V, PostgreSQL]): Show[Seq[V], PostgreSQL] =
     Show.create(_.map(show.show).mkString("(", ", ", ")"))
 
-  implicit def showTuple[V](implicit show: Show[V, PostgreSQL]): Show[(V, V), PostgreSQL] =
+  given showTuple[V](using show: Show[V, PostgreSQL]): Show[(V, V), PostgreSQL] =
     Show.create { case (l, r) => s"${show.show(l)} AND ${show.show(r)}" }
 }

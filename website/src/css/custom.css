@@ -1,45 +1,482 @@
 /**
- * Custom CSS for Criteria4s documentation site.
- * Uses a blue/indigo primary palette with teal accents.
+ * Custom CSS for Criteria4s — Vercel-inspired dark/light design.
+ * Clean neutrals, Inter font, subtle borders, no gradients.
  */
 
+/* ─── Light mode ─────────────────────────────────────────────────────────── */
+
 :root {
-  --ifm-color-primary: #4f46e5;
-  --ifm-color-primary-dark: #4338ca;
-  --ifm-color-primary-darker: #3730a3;
-  --ifm-color-primary-darkest: #312e81;
-  --ifm-color-primary-light: #6366f1;
-  --ifm-color-primary-lighter: #818cf8;
-  --ifm-color-primary-lightest: #a5b4fc;
-  --ifm-code-font-size: 95%;
-  --ifm-font-family-base: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --docusaurus-highlighted-code-line-bg: rgba(79, 70, 229, 0.1);
+  /* Primary: near-black in light mode */
+  --ifm-color-primary: #171717;
+  --ifm-color-primary-dark: #0a0a0a;
+  --ifm-color-primary-darker: #000000;
+  --ifm-color-primary-darkest: #000000;
+  --ifm-color-primary-light: #404040;
+  --ifm-color-primary-lighter: #525252;
+  --ifm-color-primary-lightest: #737373;
+
+  /* Typography */
+  --ifm-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ifm-font-family-monospace: 'Geist Mono', 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+  --ifm-font-size-base: 15px;
+  --ifm-line-height-base: 1.65;
+  --ifm-code-font-size: 87.5%;
+
+  /* Layout */
+  --ifm-navbar-height: 56px;
+  --ifm-toc-border-color: #e5e5e5;
+  --ifm-hr-border-color: #e5e5e5;
+
+  /* Backgrounds */
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #fafafa;
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.8);
+  --ifm-footer-background-color: #fafafa;
+  --ifm-sidebar-background-color: #fafafa;
+
+  /* Borders */
+  --ifm-color-emphasis-100: #f5f5f5;
+  --ifm-color-emphasis-200: #e5e5e5;
+  --ifm-color-emphasis-300: #d4d4d4;
+  --ifm-color-emphasis-400: #a3a3a3;
+  --ifm-color-emphasis-500: #737373;
+  --ifm-color-emphasis-600: #525252;
+  --ifm-color-emphasis-700: #404040;
+  --ifm-color-emphasis-800: #262626;
+  --ifm-color-emphasis-900: #171717;
+  --ifm-navbar-shadow: none;
+
+  /* Cards and code */
+  --ifm-card-background-color: #ffffff;
+  --ifm-code-background: #f4f4f5;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.06);
+
+  /* Buttons */
+  --ifm-button-border-radius: 6px;
+  --ifm-button-padding-horizontal: 14px;
+  --ifm-button-padding-vertical: 7px;
+
+  /* Links */
+  --ifm-link-color: #171717;
+  --ifm-link-hover-color: #525252;
+
+  /* Spacing */
+  --ifm-global-radius: 6px;
+
+  /* Menu */
+  --ifm-menu-color-active: #171717;
+  --ifm-menu-color-background-active: #f4f4f5;
+  --ifm-menu-color-background-hover: #f4f4f5;
+
+  /* Admonitions */
+  --ifm-color-info-dark: #0369a1;
+  --ifm-color-info: #0284c7;
+  --ifm-color-success-dark: #15803d;
+  --ifm-color-warning-dark: #b45309;
+  --ifm-color-danger-dark: #b91c1c;
 }
+
+/* ─── Dark mode ──────────────────────────────────────────────────────────── */
 
 [data-theme='dark'] {
-  --ifm-color-primary: #818cf8;
-  --ifm-color-primary-dark: #6366f1;
-  --ifm-color-primary-darker: #4f46e5;
-  --ifm-color-primary-darkest: #4338ca;
-  --ifm-color-primary-light: #a5b4fc;
-  --ifm-color-primary-lighter: #c7d2fe;
-  --ifm-color-primary-lightest: #e0e7ff;
-  --docusaurus-highlighted-code-line-bg: rgba(129, 140, 248, 0.15);
+  /* Primary: near-white in dark mode */
+  --ifm-color-primary: #e5e5e5;
+  --ifm-color-primary-dark: #d4d4d4;
+  --ifm-color-primary-darker: #a3a3a3;
+  --ifm-color-primary-darkest: #737373;
+  --ifm-color-primary-light: #f5f5f5;
+  --ifm-color-primary-lighter: #fafafa;
+  --ifm-color-primary-lightest: #ffffff;
+
+  /* Backgrounds */
+  --ifm-background-color: #0a0a0a;
+  --ifm-background-surface-color: #111111;
+  --ifm-navbar-background-color: rgba(10, 10, 10, 0.8);
+  --ifm-footer-background-color: #111111;
+  --ifm-sidebar-background-color: #0a0a0a;
+
+  /* Borders */
+  --ifm-color-emphasis-100: #171717;
+  --ifm-color-emphasis-200: #262626;
+  --ifm-color-emphasis-300: #404040;
+  --ifm-color-emphasis-400: #525252;
+  --ifm-color-emphasis-500: #737373;
+  --ifm-color-emphasis-600: #a3a3a3;
+  --ifm-color-emphasis-700: #d4d4d4;
+  --ifm-color-emphasis-800: #e5e5e5;
+  --ifm-color-emphasis-900: #fafafa;
+  --ifm-toc-border-color: #262626;
+  --ifm-hr-border-color: #262626;
+  --ifm-navbar-shadow: none;
+
+  /* Cards and code */
+  --ifm-card-background-color: #111111;
+  --ifm-code-background: #1a1a1a;
+  --docusaurus-highlighted-code-line-bg: rgba(255, 255, 255, 0.06);
+
+  /* Text */
+  --ifm-font-color-base: #e5e5e5;
+  --ifm-font-color-secondary: #a3a3a3;
+
+  /* Links */
+  --ifm-link-color: #e5e5e5;
+  --ifm-link-hover-color: #a3a3a3;
+
+  /* Menu */
+  --ifm-menu-color: #a3a3a3;
+  --ifm-menu-color-active: #e5e5e5;
+  --ifm-menu-color-background-active: #1a1a1a;
+  --ifm-menu-color-background-hover: #171717;
 }
 
-/* Teal accent for links in content area */
+/* ─── Navbar ──────────────────────────────────────────────────────────────── */
+
+.navbar {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  padding: 0 1rem;
+}
+
+.navbar__brand {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.navbar__logo {
+  height: 22px;
+}
+
+.navbar__link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ifm-color-emphasis-600);
+  transition: color 0.15s ease;
+}
+
+.navbar__link:hover,
+.navbar__link--active {
+  color: var(--ifm-color-primary);
+  background: none;
+}
+
+[data-theme='dark'] .navbar__link {
+  color: var(--ifm-color-emphasis-600);
+}
+
+[data-theme='dark'] .navbar__link:hover,
+[data-theme='dark'] .navbar__link--active {
+  color: var(--ifm-color-primary);
+}
+
+/* ─── Sidebar ────────────────────────────────────────────────────────────── */
+
+.theme-doc-sidebar-container {
+  border-right: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.menu {
+  padding: 1rem 0.75rem;
+  font-size: 13.5px;
+}
+
+.menu__link {
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-weight: 450;
+  color: var(--ifm-color-emphasis-600);
+  transition: color 0.12s ease, background-color 0.12s ease;
+}
+
+.menu__link:hover {
+  color: var(--ifm-color-primary);
+  background-color: var(--ifm-menu-color-background-hover);
+}
+
+.menu__link--active {
+  color: var(--ifm-menu-color-active);
+  font-weight: 500;
+  background-color: var(--ifm-menu-color-background-active);
+}
+
+.menu__list-item-collapsible > .menu__link {
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ifm-color-emphasis-500);
+}
+
+.menu__list-item-collapsible > .menu__link:hover {
+  background: none;
+  color: var(--ifm-color-emphasis-700);
+}
+
+/* ─── Content ────────────────────────────────────────────────────────────── */
+
+.container {
+  max-width: 1200px;
+}
+
+article h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+}
+
+article h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+article h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
 .markdown a {
-  color: #0d9488;
-}
-
-[data-theme='dark'] .markdown a {
-  color: #2dd4bf;
+  color: var(--ifm-color-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--ifm-color-emphasis-300);
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.15s ease;
 }
 
 .markdown a:hover {
-  color: #0f766e;
+  text-decoration-color: var(--ifm-color-primary);
+}
+
+[data-theme='dark'] .markdown a {
+  color: var(--ifm-color-primary);
+  text-decoration-color: var(--ifm-color-emphasis-400);
 }
 
 [data-theme='dark'] .markdown a:hover {
-  color: #5eead4;
+  text-decoration-color: var(--ifm-color-primary);
+}
+
+/* ─── Code blocks — dark in both modes ───────────────────────────────────── */
+
+/* Force dark background for code blocks in light mode, preserving token colors */
+:root .prism-code,
+:root pre[class*='language-'] {
+  background: #0e0e10 !important;
+}
+
+.theme-code-block {
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+[data-theme='dark'] .theme-code-block {
+  border-color: #262626;
+}
+
+.theme-code-block-highlighted-line {
+  background-color: rgba(255, 255, 255, 0.05);
+  display: block;
+  margin: 0 -1rem;
+  padding: 0 1rem;
+}
+
+/* Inline code */
+code:not([class]) {
+  background: var(--ifm-code-background);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  font-size: 87.5%;
+  color: var(--ifm-color-primary);
+}
+
+[data-theme='dark'] code:not([class]) {
+  background: #1a1a1a;
+  border-color: #262626;
+  color: #e5e5e5;
+}
+
+/* ─── Tables ─────────────────────────────────────────────────────────────── */
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+
+th {
+  background: var(--ifm-background-surface-color);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ifm-color-emphasis-500);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+td, th {
+  border: none;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  padding: 8px 12px;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* ─── Admonitions ────────────────────────────────────────────────────────── */
+
+.admonition {
+  border-radius: 6px;
+  border-left: 3px solid;
+  background: var(--ifm-background-surface-color);
+  box-shadow: none;
+}
+
+.admonition-heading h5 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
+
+.footer {
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  padding: 2rem 0;
+}
+
+.footer__title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ifm-color-emphasis-500);
+}
+
+.footer__link-item {
+  font-size: 14px;
+  color: var(--ifm-color-emphasis-600);
+  transition: color 0.15s ease;
+}
+
+.footer__link-item:hover {
+  color: var(--ifm-color-primary);
+}
+
+.footer__copyright {
+  font-size: 13px;
+  color: var(--ifm-color-emphasis-500);
+}
+
+/* ─── Buttons ────────────────────────────────────────────────────────────── */
+
+.button--primary {
+  background: var(--ifm-color-primary);
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-background-color);
+  font-weight: 500;
+  font-size: 14px;
+  transition: opacity 0.15s ease;
+}
+
+.button--primary:hover {
+  opacity: 0.85;
+  background: var(--ifm-color-primary);
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-background-color);
+}
+
+/* ─── Pagination ─────────────────────────────────────────────────────────── */
+
+.pagination-nav__link {
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 6px;
+  transition: border-color 0.15s ease;
+}
+
+.pagination-nav__link:hover {
+  border-color: var(--ifm-color-emphasis-400);
+}
+
+/* ─── TOC ────────────────────────────────────────────────────────────────── */
+
+.table-of-contents {
+  font-size: 13px;
+  border-left: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.table-of-contents__link {
+  color: var(--ifm-color-emphasis-500);
+  transition: color 0.12s ease;
+}
+
+.table-of-contents__link:hover,
+.table-of-contents__link--active {
+  color: var(--ifm-color-primary);
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ifm-color-emphasis-300);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ifm-color-emphasis-400);
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background: #262626;
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+  background: #404040;
+}
+
+/* ─── Breadcrumbs ────────────────────────────────────────────────────────── */
+
+.breadcrumbs__item--active .breadcrumbs__link {
+  color: var(--ifm-color-primary);
+  background: none;
+  font-weight: 500;
+}
+
+.breadcrumbs__link {
+  font-size: 13px;
+  color: var(--ifm-color-emphasis-500);
+}
+
+/* ─── Search ─────────────────────────────────────────────────────────────── */
+
+.navbar__search-input {
+  background: var(--ifm-color-emphasis-100);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+/* ─── Smooth transitions ─────────────────────────────────────────────────── */
+
+html[data-theme='dark'],
+html:not([data-theme='dark']) {
+  transition: background-color 0.2s ease, color 0.2s ease;
 }

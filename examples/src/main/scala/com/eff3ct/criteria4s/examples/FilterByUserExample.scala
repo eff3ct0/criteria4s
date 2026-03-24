@@ -32,28 +32,26 @@ import com.eff3ct.criteria4s.functions._
 
 import java.util.UUID
 
+/**
+ * Realistic use case: parameterized criteria for filtering by a user ID.
+ * Shows how to build reusable, polymorphic query fragments.
+ */
 object FilterByUserExample extends App {
 
-  def expr[T <: CriteriaTag: EQ: Show[Column, *]](fieldName: String, id: UUID): Criteria[T] =
-    col[T](fieldName) === lit(id.toString)
+  /** Build a criteria that matches a given field against a UUID. */
+  def filterByUser[T <: CriteriaTag: EQ: Show[Column, *]](
+      fieldName: String,
+      userId: UUID
+  ): Criteria[T] =
+    col[T](fieldName) === lit(userId.toString)
 
-  println {
-    s"""Examples for Postgres instances
-       |
-       |expr[Postgres]: ${expr[Postgres]("USER_ID", UUID.randomUUID())}
-       |
-       |Examples for MySQL instances
-       |
-       |expr[MySQL]: ${expr[MySQL]("USER_ID", UUID.randomUUID())}
-       |
-       |Examples for WeirdDatastore instances
-       |
-       |expr[WeirdDatastore]: ${expr[WeirdDatastore]("USER_ID", UUID.randomUUID())}
-       |
-       |Examples for MongoDB instances
-       |
-       |expr[MongoDB]: ${expr[MongoDB]("USER_ID", UUID.randomUUID())}
-       |
-       |""".stripMargin
-  }
+  val sampleUserId: UUID = UUID.randomUUID()
+
+  println("=== Filter By User Example ===")
+  println(s"userId: $sampleUserId")
+  println()
+  println(s"Postgres:       ${filterByUser[Postgres]("user_id", sampleUserId)}")
+  println(s"MySQL:          ${filterByUser[MySQL]("user_id", sampleUserId)}")
+  println(s"WeirdDatastore: ${filterByUser[WeirdDatastore]("user_id", sampleUserId)}")
+  println(s"MongoDB:        ${filterByUser[MongoDB]("user_id", sampleUserId)}")
 }

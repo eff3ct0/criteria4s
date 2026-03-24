@@ -30,38 +30,40 @@ import com.eff3ct.criteria4s.examples.datastores._
 import com.eff3ct.criteria4s.extensions._
 import com.eff3ct.criteria4s.functions._
 
+/** Demonstrates NOT negation: function-style, symbol-style, and extension-style. */
 object NotExample extends App {
 
-  val simpleNot: Criteria[Postgres] = not(col[Postgres]("a").between(range(1, 10)))
+  // Function-style not()
+  val notInRange: Criteria[Postgres] = not(col[Postgres]("age").between(range(1, 10)))
 
-  val symbolNot: Criteria[Postgres] = !!(col[Postgres]("a").between(range(1, 10)))
+  // Symbol-style !!()
+  val notInRangeSymbol: Criteria[Postgres] = !!(col[Postgres]("age").between(range(1, 10)))
 
-  def taglessFinalNotExample[
-      T <: CriteriaTag: GT: NOT: Show[Column, *]: Show[(Int, Int), *]
+  // Extension-style .not
+  val notActive: Criteria[Postgres] = (col[Postgres]("active") === lit(true)).not
+
+  // Polymorphic NOT with GT
+  def notAboveThreshold[T <: CriteriaTag: GT: NOT: Show[Column, *]]: Criteria[T] =
+    not(col[T]("score") gt lit(100))
+
+  // Polymorphic NOT combined with AND
+  def notAboveButBelow[
+      T <: CriteriaTag: NOT: GT: LEQ: AND: Show[Column, *]
   ]: Criteria[T] =
-    not(col[T]("column") gt lit(100))
+    not(col[T]("score") gt lit(2)) && (col[T]("score") leq lit(10))
 
-  def taglessFinalNotSymbolExample[
-      T <: CriteriaTag: BETWEEN: NOT: Show[Column, *]: Show[(Int, Int), *]
-  ]: Criteria[T] =
-    !!(col[T]("column") between range(100, 150))
-
-  def weirdExampleWithNot[
-      T <: CriteriaTag: NOT: GT: LEQ: AND: Show[Column, *]: Show[(Int, Int), *]
-  ]: Criteria[T] =
-    not(col[T]("column") gt lit(2)) && (col[T]("column") leq lit(10))
-
-  println(simpleNot)
-  println(symbolNot)
-  println(taglessFinalNotExample[Postgres])
-  println(taglessFinalNotExample[WeirdDatastore])
-  println(taglessFinalNotExample[MongoDB])
-
-  println(taglessFinalNotSymbolExample[Postgres])
-  println(taglessFinalNotSymbolExample[WeirdDatastore])
-  println(taglessFinalNotSymbolExample[MongoDB])
-
-  println(weirdExampleWithNot[Postgres])
-  println(weirdExampleWithNot[WeirdDatastore])
-  println(weirdExampleWithNot[MongoDB])
+  println("=== NOT Examples ===")
+  println(s"notInRange:        $notInRange")
+  println(s"notInRangeSymbol:  $notInRangeSymbol")
+  println(s"notActive:         $notActive")
+  println()
+  println("notAboveThreshold (polymorphic):")
+  println(s"  Postgres:       ${notAboveThreshold[Postgres]}")
+  println(s"  WeirdDatastore: ${notAboveThreshold[WeirdDatastore]}")
+  println(s"  MongoDB:        ${notAboveThreshold[MongoDB]}")
+  println()
+  println("notAboveButBelow (polymorphic):")
+  println(s"  Postgres:       ${notAboveButBelow[Postgres]}")
+  println(s"  WeirdDatastore: ${notAboveButBelow[WeirdDatastore]}")
+  println(s"  MongoDB:        ${notAboveButBelow[MongoDB]}")
 }

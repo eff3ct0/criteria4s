@@ -1,47 +1,33 @@
 <svg width="760" height="216" viewBox="0 0 760 216" xmlns="http://www.w3.org/2000/svg">
   <style>
     text { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-    .mono { font-family: ui-monospace, 'Cascadia Code', 'JetBrains Mono', monospace; }
-    .label { font-size: 10px; fill: #737373; font-weight: 600; letter-spacing: 0.08em; }
-    .title { font-size: 15px; fill: #171717; font-weight: 600; }
-    .sub   { font-size: 11px; fill: #a3a3a3; }
-    .code  { font-size: 12px; fill: #171717; }
+    .mono  { font-family: ui-monospace, 'Cascadia Code', 'JetBrains Mono', monospace; }
+    .label { font-size: 10px; fill: #71717a; font-weight: 600; letter-spacing: 0.08em; }
+    .title { font-size: 15px; fill: #27272a; font-weight: 600; }
+    .sub   { font-size: 11px; fill: #a1a1aa; }
+    .code  { font-size: 12px; fill: #27272a; }
   </style>
   <defs>
     <marker id="arr" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto">
-      <polygon points="0 0, 7 3.5, 0 7" fill="#a3a3a3"/>
+      <polygon points="0 0, 7 3.5, 0 7" fill="#a1a1aa"/>
     </marker>
   </defs>
-
-  <!-- ── Criteria[T] source box ─────────────────────────────── -->
-  <rect x="20" y="60" width="200" height="96" rx="6"
-        fill="#f4f4f5" stroke="#e5e5e5" stroke-width="1"/>
+  <rect x="20" y="60" width="200" height="96" rx="6" fill="none" stroke="#71717a" stroke-width="1"/>
   <text x="120" y="90"  text-anchor="middle" class="label">ONE DEFINITION</text>
   <text x="120" y="116" text-anchor="middle" class="title mono">Criteria[T]</text>
   <text x="120" y="138" text-anchor="middle" class="sub">T &lt;: CriteriaTag</text>
-
-  <!-- ── Fork connector ─────────────────────────────────────── -->
-  <line x1="220" y1="108" x2="270" y2="108" stroke="#d4d4d4" stroke-width="1.5"/>
-  <line x1="270" y1="36"  x2="270" y2="180" stroke="#d4d4d4" stroke-width="1.5"/>
-  <line x1="270" y1="36"  x2="328" y2="36"  stroke="#d4d4d4" stroke-width="1.5" marker-end="url(#arr)"/>
-  <line x1="270" y1="108" x2="328" y2="108" stroke="#d4d4d4" stroke-width="1.5" marker-end="url(#arr)"/>
-  <line x1="270" y1="180" x2="328" y2="180" stroke="#d4d4d4" stroke-width="1.5" marker-end="url(#arr)"/>
-
-  <!-- ── SQL output ─────────────────────────────────────────── -->
-  <rect x="336" y="12" width="404" height="48" rx="6"
-        fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+  <line x1="220" y1="108" x2="270" y2="108" stroke="#a1a1aa" stroke-width="1.5"/>
+  <line x1="270" y1="36"  x2="270" y2="180" stroke="#a1a1aa" stroke-width="1.5"/>
+  <line x1="270" y1="36"  x2="328" y2="36"  stroke="#a1a1aa" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="270" y1="108" x2="328" y2="108" stroke="#a1a1aa" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="270" y1="180" x2="328" y2="180" stroke="#a1a1aa" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="336" y="12" width="404" height="48" rx="6" fill="none" stroke="#71717a" stroke-width="1"/>
   <text x="356" y="31" class="label">SQL</text>
   <text x="356" y="50" class="code mono">(age &gt;= 18) AND (active = true)</text>
-
-  <!-- ── MongoDB output ─────────────────────────────────────── -->
-  <rect x="336" y="84" width="404" height="48" rx="6"
-        fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+  <rect x="336" y="84" width="404" height="48" rx="6" fill="none" stroke="#71717a" stroke-width="1"/>
   <text x="356" y="103" class="label">MONGODB</text>
   <text x="356" y="122" class="code mono">{$and: [{"age": {$gte: 18}}, ...]}</text>
-
-  <!-- ── Elasticsearch output ───────────────────────────────── -->
-  <rect x="336" y="156" width="404" height="48" rx="6"
-        fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+  <rect x="336" y="156" width="404" height="48" rx="6" fill="none" stroke="#71717a" stroke-width="1"/>
   <text x="356" y="175" class="label">ELASTICSEARCH</text>
   <text x="356" y="194" class="code mono">{"bool": {"must": [{"range": ...}]}}</text>
 </svg>

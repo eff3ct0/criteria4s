@@ -3,10 +3,10 @@
 The formal definition of the Criteria4s' type-classes (expressions) is as follows:
 
 ```text
-Criteria    :=  Conjuction Criteria Criteria | Predicate | Value<Boolean>
+Criteria    :=  Conjunction Criteria Criteria | Predicate | Value<Boolean>
 Predicate   :=  UnaryPred Ref | BinaryPred Ref Ref
 Ref         :=  Value<T> | Col
-Conjuction  :=  AND | OR
+Conjunction :=  AND | OR | NOT
 UnaryPred   :=  IS_NULL | IS_NOT_NULL ...
 BinaryPred  :=  EQ | NEQ | GT | LT | GEQ | LEQ | IN | LIKE ...
 ```
@@ -14,7 +14,7 @@ BinaryPred  :=  EQ | NEQ | GT | LT | GEQ | LEQ | IN | LIKE ...
 Where:
 
 - `Criteria` is the main expression of the DSL
-- `Conjuction` is the conjunction operator expression
+- `Conjunction` is the conjunction operator expression
 - `UnaryPredOp` is the unary predicate operator expression
 - `BinaryPredOp` is the binary predicate operator expression
 - `Ref` is a reference to a value or a column

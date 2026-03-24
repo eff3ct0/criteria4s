@@ -1,0 +1,56 @@
+<svg width="640" height="210" viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    text { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .mono  { font-family: ui-monospace, 'Cascadia Code', monospace; }
+    .badge { font-size: 10px; fill: #71717a; font-weight: 600; letter-spacing: 0.06em; }
+    .title { font-size: 12px; fill: #27272a; font-weight: 600; }
+    .code  { font-size: 11px; fill: #27272a; }
+    .dim   { font-size: 10px; fill: #a1a1aa; }
+    .note  { font-size: 11px; fill: #71717a; font-style: italic; text-anchor: middle; }
+    .hi    { fill: #27272a; font-weight: 700; }
+  </style>
+
+  <!-- ── Left panel: T = PostgreSQL ────────────────────────── -->
+  <rect x="20" y="16" width="264" height="172" rx="6" fill="none" stroke="#71717a" stroke-width="1"/>
+  <text x="40" y="38" class="badge">T = POSTGRESQL</text>
+
+  <rect x="36" y="46" width="232" height="36" rx="4" fill="none" stroke="#a1a1aa" stroke-width="1"/>
+  <text x="152" y="61" text-anchor="middle" class="code mono">UserService[IO, <tspan class="hi">PostgreSQL</tspan>]</text>
+  <text x="152" y="75" text-anchor="middle" class="dim">service layer</text>
+
+  <rect x="36" y="94" width="232" height="36" rx="4" fill="none" stroke="#a1a1aa" stroke-width="1"/>
+  <text x="152" y="109" text-anchor="middle" class="code mono">PostgreSQLUserRepo[IO]</text>
+  <text x="152" y="123" text-anchor="middle" class="dim">adapter</text>
+
+  <rect x="36" y="142" width="232" height="34" rx="4" fill="none" stroke="#a1a1aa" stroke-width="1"/>
+  <text x="152" y="157" text-anchor="middle" class="code mono">Criteria[<tspan class="hi">PostgreSQL</tspan>]</text>
+  <text x="152" y="170" text-anchor="middle" class="dim">"(age &gt;= 18) AND ..."</text>
+
+  <!-- ── Center: switch annotation ─────────────────────────── -->
+  <text x="320" y="96" class="note">change</text>
+  <text x="320" y="110" class="note" font-size="16" fill="#27272a" font-weight="600">T</text>
+  <text x="320" y="126" class="note">to switch</text>
+  <line x1="284" y1="102" x2="304" y2="102" stroke="#a1a1aa" stroke-width="1.5"/>
+  <line x1="336" y1="102" x2="356" y2="102" stroke="#a1a1aa" stroke-width="1.5"/>
+  <polygon points="284,99 284,105 278,102" fill="#a1a1aa"/>
+  <polygon points="356,99 356,105 362,102" fill="#a1a1aa"/>
+
+  <!-- ── Right panel: T = MongoDB ───────────────────────────── -->
+  <rect x="356" y="16" width="264" height="172" rx="6" fill="none" stroke="#71717a" stroke-width="1"/>
+  <text x="376" y="38" class="badge">T = MONGODB</text>
+
+  <rect x="372" y="46" width="232" height="36" rx="4" fill="none" stroke="#a1a1aa" stroke-width="1"/>
+  <text x="488" y="61" text-anchor="middle" class="code mono">UserService[IO, <tspan class="hi">MongoDB</tspan>]</text>
+  <text x="488" y="75" text-anchor="middle" class="dim">service layer</text>
+
+  <rect x="372" y="94" width="232" height="36" rx="4" fill="none" stroke="#a1a1aa" stroke-width="1"/>
+  <text x="488" y="109" text-anchor="middle" class="code mono">MongoDBUserRepo[IO]</text>
+  <text x="488" y="123" text-anchor="middle" class="dim">adapter</text>
+
+  <rect x="372" y="142" width="232" height="34" rx="4" fill="none" stroke="#a1a1aa" stroke-width="1"/>
+  <text x="488" y="157" text-anchor="middle" class="code mono">Criteria[<tspan class="hi">MongoDB</tspan>]</text>
+  <text x="488" y="170" text-anchor="middle" class="dim">{$and: [{age: {$gte: 18}}, ...]}</text>
+
+  <!-- ── Footer note ────────────────────────────────────────── -->
+  <text x="320" y="200" class="note" fill="#a1a1aa">domain logic, service code, filter structure — unchanged</text>
+</svg>

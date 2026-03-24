@@ -499,6 +499,15 @@ tr:last-child td {
   font-size: 13px;
 }
 
+/* ─── Diagrams — dark mode inversion ────────────────────────────────────── */
+
+/* SVG diagrams are designed for light mode; invert them in dark mode so
+   they remain readable without needing separate dark variants. */
+[data-theme='dark'] .theme-doc-markdown p > img {
+  filter: invert(1);
+  border-radius: 6px;
+}
+
 /* ─── Smooth transitions ─────────────────────────────────────────────────── */
 
 html[data-theme='dark'],

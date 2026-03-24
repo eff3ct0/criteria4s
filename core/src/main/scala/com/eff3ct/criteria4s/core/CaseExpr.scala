@@ -22,34 +22,35 @@
  * SOFTWARE.
  */
 
-package com.eff3ct.criteria4s.functions
+package com.eff3ct.criteria4s.core
 
-import com.eff3ct.criteria4s.core.*
-
-private[functions] trait clauses {
-
-  def asc[T <: CriteriaTag, V](ref: Ref[T, V])(implicit
-      H: OrderAsc[T],
-      show: Show[V, T]
-  ): Order[T] =
-    Order(H.eval(ref.asString))
-
-  def desc[T <: CriteriaTag, V](ref: Ref[T, V])(implicit
-      H: OrderDesc[T],
-      show: Show[V, T]
-  ): Order[T] =
-    Order(H.eval(ref.asString))
-
-  def limit[T <: CriteriaTag](n: Int)(implicit H: LimitBuilder[T]): LimitExpr[T] =
-    LimitExpr(H.eval(n))
-
-  def offset[T <: CriteriaTag](n: Int)(implicit H: OffsetBuilder[T]): OffsetExpr[T] =
-    OffsetExpr(H.eval(n))
-
-  def caseWhen[T <: CriteriaTag, V](condition: Criteria[T], result: Ref[T, V])(implicit
-      show: Show[V, T]
-  ): CaseExpr.WhenBuilder[T] =
-    CaseExpr.when(condition, result)
+/** Type class for rendering CASE expressions in a dialect. */
+trait CaseBuilder[T <: CriteriaTag] {
+  def build(branches: Seq[(String, String)], otherwise: String): String
 }
 
-object clauses extends clauses
+/** A CASE WHEN builder that accumulates branches and produces a Ref. */
+object CaseExpr {
+
+  class WhenBuilder[T <: CriteriaTag] private[CaseExpr] (
+      branches: Vector[(Criteria[T], String)]
+  ) {
+
+    def when[V](condition: Criteria[T], result: Ref[T, V])(implicit show: Show[V, T]): WhenBuilder[T] =
+      new WhenBuilder(branches :+ (condition, result.asString))
+
+    def otherwise[V](result: Ref[T, V])(implicit
+        show: Show[V, T],
+        builder: CaseBuilder[T]
+    ): Ref[T, String] = {
+      val pairs = branches.map { case (cond, value) => (cond.value, value) }
+      val expr  = builder.build(pairs, result.asString)
+      Ref.raw[String, T](expr)
+    }
+  }
+
+  def when[T <: CriteriaTag, V](condition: Criteria[T], result: Ref[T, V])(implicit
+      show: Show[V, T]
+  ): WhenBuilder[T] =
+    new WhenBuilder[T](Vector((condition, result.asString)))
+}

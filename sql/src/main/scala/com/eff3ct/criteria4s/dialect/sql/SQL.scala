@@ -125,6 +125,13 @@ object SQL {
     implicit val offsetBuilder: OffsetBuilder[T] = new OffsetBuilder[T] {
       def eval(n: Int): String = s"OFFSET $n"
     }
+
+    implicit val caseBuilder: CaseBuilder[T] = new CaseBuilder[T] {
+      def build(branches: Seq[(String, String)], otherwise: String): String = {
+        val whenClauses = branches.map { case (cond, value) => s"WHEN $cond THEN $value" }
+        s"CASE ${whenClauses.mkString(" ")} ELSE $otherwise END"
+      }
+    }
   }
 
 }

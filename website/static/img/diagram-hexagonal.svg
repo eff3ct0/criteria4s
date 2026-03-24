@@ -1,0 +1,84 @@
+<svg width="680" height="328" viewBox="0 0 680 328" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    text { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .mono  { font-family: ui-monospace, 'Cascadia Code', monospace; }
+    .band  { font-size: 10px; fill: #737373; font-weight: 600; letter-spacing: 0.08em; }
+    .title { font-size: 13px; fill: #171717; font-weight: 600; }
+    .sub   { font-size: 11px; fill: #737373; }
+    .code  { font-size: 11px; fill: #525252; }
+    .note  { font-size: 11px; fill: #a3a3a3; font-style: italic; }
+  </style>
+  <defs>
+    <marker id="up" markerWidth="7" markerHeight="7" refX="3.5" refY="1.5" orient="auto">
+      <polygon points="3.5 0, 7 7, 0 7" fill="#a3a3a3"/>
+    </marker>
+  </defs>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- DOMAIN LAYER                                           -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <rect x="20" y="16" width="640" height="90" rx="6"
+        fill="#f4f4f5" stroke="#e5e5e5" stroke-width="1"/>
+  <text x="40" y="38" class="band">DOMAIN</text>
+
+  <!-- UserFilter[T] -->
+  <rect x="110" y="28" width="180" height="66" rx="5"
+        fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+  <text x="200" y="53" text-anchor="middle" class="title mono">UserFilter[T]</text>
+  <text x="200" y="72" text-anchor="middle" class="sub">query model</text>
+  <text x="200" y="86" text-anchor="middle" class="code mono">T &lt;: CriteriaTag</text>
+
+  <!-- UserRepository[F[_], T] -->
+  <rect x="330" y="28" width="290" height="66" rx="5"
+        fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+  <text x="475" y="53" text-anchor="middle" class="title mono">UserRepository[F[_], T]</text>
+  <text x="475" y="72" text-anchor="middle" class="sub">port — persistence contract</text>
+  <text x="475" y="86" text-anchor="middle" class="code mono">find(filter: UserFilter[T]): F[List[User]]</text>
+
+  <!-- ── gap connector ─────────────────────────────────────── -->
+  <line x1="340" y1="106" x2="340" y2="126" stroke="#d4d4d4" stroke-width="1.5" marker-end="url(#up)" stroke-dasharray="4,3"/>
+  <text x="350" y="120" class="note">uses</text>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- APPLICATION LAYER                                      -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <rect x="20" y="130" width="640" height="72" rx="6"
+        fill="#f4f4f5" stroke="#e5e5e5" stroke-width="1"/>
+  <text x="40" y="152" class="band">APPLICATION</text>
+
+  <!-- UserService -->
+  <rect x="180" y="142" width="320" height="48" rx="5"
+        fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+  <text x="340" y="163" text-anchor="middle" class="title mono">UserService[IO, T]</text>
+  <text x="340" y="180" text-anchor="middle" class="sub">orchestrates use cases via repo contract</text>
+
+  <!-- ── gap connector ─────────────────────────────────────── -->
+  <line x1="340" y1="202" x2="340" y2="222" stroke="#d4d4d4" stroke-width="1.5" marker-end="url(#up)" stroke-dasharray="4,3"/>
+  <text x="350" y="216" class="note">wired by</text>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- INFRASTRUCTURE LAYER                                   -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <rect x="20" y="226" width="640" height="86" rx="6"
+        fill="#f4f4f5" stroke="#e5e5e5" stroke-width="1"/>
+  <text x="40" y="248" class="band">INFRASTRUCTURE</text>
+
+  <!-- PostgreSQL implementation -->
+  <rect x="60" y="238" width="240" height="62" rx="5"
+        fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+  <text x="180" y="261" text-anchor="middle" class="title">PostgreSQLUserRepo</text>
+  <text x="180" y="278" text-anchor="middle" class="code mono">T = PostgreSQL</text>
+  <text x="180" y="293" text-anchor="middle" class="sub">implements UserRepository[IO, PostgreSQL]</text>
+
+  <!-- MongoDB implementation -->
+  <rect x="380" y="238" width="240" height="62" rx="5"
+        fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+  <text x="500" y="261" text-anchor="middle" class="title">MongoDBUserRepo</text>
+  <text x="500" y="278" text-anchor="middle" class="code mono">T = MongoDB</text>
+  <text x="500" y="293" text-anchor="middle" class="sub">implements UserRepository[IO, MongoDB]</text>
+
+  <!-- ── swap annotation ───────────────────────────────────── -->
+  <line x1="300" y1="269" x2="380" y2="269" stroke="#d4d4d4" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="340" y="264" text-anchor="middle" font-size="10" fill="#a3a3a3">change T</text>
+  <text x="340" y="276" text-anchor="middle" font-size="10" fill="#a3a3a3">to switch</text>
+</svg>

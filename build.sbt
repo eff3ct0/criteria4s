@@ -4,7 +4,7 @@ lazy val criteria4s: Project =
   project
     .in(file("."))
     .disablePlugins(Build, AssemblyPlugin, HeaderPlugin)
-    .aggregate(core, sql, mongodb, examples)
+    .aggregate(core, sql, mongodb, postgresql, examples)
     .settings(
       name := "criteria4s"
     )
@@ -38,10 +38,20 @@ lazy val mongodb: Project =
     )
     .dependsOn(core)
 
+lazy val postgresql: Project =
+  (project in file("postgresql"))
+    .settings(
+      name                := "criteria4s-postgresql",
+      publish / skip      := false,
+      libraryDependencies += munit % Test,
+      testFrameworks      += new TestFramework("munit.Framework")
+    )
+    .dependsOn(sql)
+
 lazy val examples: Project =
   (project in file("examples"))
     .settings(
       name := "criteria4s-examples"
     )
-    .dependsOn(core, sql, mongodb)
+    .dependsOn(core, sql, mongodb, postgresql)
     .withKindProjector

@@ -55,6 +55,12 @@ object SQL {
   implicit def showTuple[V](implicit show: Show[V, SQL]): Show[(V, V), SQL] =
     Show.create { case (l, r) => s"${show.show(l)} AND ${show.show(r)}" }
 
+  private def transformExpr(fn: String): String => String =
+    value => s"$fn($value)"
+
+  private def transformExpr2(fn: String): (String, String) => String =
+    (left, right) => s"$fn($left, $right)"
+
   trait SQLExpr[T <: SQL] {
 
     protected def conjExpr(symbol: String): (String, String) => String =
@@ -90,6 +96,22 @@ object SQL {
     implicit val containsPred: CONTAINS[T]     = build[T, CONTAINS](predExpr("LIKE"))
     implicit val istruePred: ISTRUE[T]         = build[T, ISTRUE](predExpr1("IS TRUE"))
     implicit val isfalsePred: ISFALSE[T]       = build[T, ISFALSE](predExpr1("IS FALSE"))
+
+    implicit val upperTransform: UPPER[T] = new UPPER[T] {
+      def apply(value: String): String = transformExpr("UPPER")(value)
+    }
+    implicit val lowerTransform: LOWER[T] = new LOWER[T] {
+      def apply(value: String): String = transformExpr("LOWER")(value)
+    }
+    implicit val trimTransform: TRIM[T] = new TRIM[T] {
+      def apply(value: String): String = transformExpr("TRIM")(value)
+    }
+    implicit val coalesceTransform: COALESCE[T] = new COALESCE[T] {
+      def apply(left: String, right: String): String = transformExpr2("COALESCE")(left, right)
+    }
+    implicit val concatTransform: CONCAT[T] = new CONCAT[T] {
+      def apply(left: String, right: String): String = transformExpr2("CONCAT")(left, right)
+    }
   }
 
 }

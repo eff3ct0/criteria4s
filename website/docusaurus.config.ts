@@ -96,7 +96,7 @@ const config: Config = {
       copyright: `Copyright © 2024-2026 Rafael Fernandez. Built with Docusaurus.`,
     },
     prism: {
-      theme: prismThemes.vsDark,
+      theme: prismThemes.github,
       darkTheme: prismThemes.vsDark,
       additionalLanguages: ['java', 'bash'],
     },

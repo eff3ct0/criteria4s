@@ -64,7 +64,7 @@ class SQLExprSpec extends munit.FunSuite {
 
   test("SQL LIKE renders correctly") {
     val result = like[SQL, Column, String](col("name"), lit("%John%"))
-    assertEquals(result.value, "name LIKE %John%")
+    assertEquals(result.value, "name LIKE '%John%'")
   }
 
   test("SQL IN renders correctly") {
@@ -163,6 +163,11 @@ class SQLExprSpec extends munit.FunSuite {
     assertEquals(show.show(Column("name")), "name")
   }
 
+  test("Show[String, SQL] escapes single quotes") {
+    val show = implicitly[Show[String, SQL]]
+    assertEquals(show.show("O'Brien"), "'O''Brien'")
+  }
+
   test("Show[Seq[Int], SQL] renders as parenthesized list") {
     val show = implicitly[Show[Seq[Int], SQL]]
     assertEquals(show.show(Seq(1, 2, 3)), "(1, 2, 3)")
@@ -220,17 +225,17 @@ class SQLExprSpec extends munit.FunSuite {
 
   test("SQL STARTSWITH renders as LIKE") {
     val result = startsWith[SQL, Column, String](col("name"), lit("A%"))
-    assertEquals(result.value, "name LIKE A%")
+    assertEquals(result.value, "name LIKE 'A%'")
   }
 
   test("SQL ENDSWITH renders as LIKE") {
     val result = endsWith[SQL, Column, String](col("name"), lit("%z"))
-    assertEquals(result.value, "name LIKE %z")
+    assertEquals(result.value, "name LIKE '%z'")
   }
 
   test("SQL CONTAINS renders as LIKE") {
     val result = contains[SQL, Column, String](col("name"), lit("%mid%"))
-    assertEquals(result.value, "name LIKE %mid%")
+    assertEquals(result.value, "name LIKE '%mid%'")
   }
 
   test("SQL ISTRUE renders correctly") {
@@ -245,7 +250,7 @@ class SQLExprSpec extends munit.FunSuite {
 
   test("extension .startsWith delegates to STARTSWITH") {
     val result = col[SQL]("name").startsWith(lit[SQL, String]("A%"))
-    assertEquals(result.value, "name LIKE A%")
+    assertEquals(result.value, "name LIKE 'A%'")
   }
 
   test("extension .isTrue delegates to ISTRUE") {
@@ -267,7 +272,7 @@ class SQLExprSpec extends munit.FunSuite {
       .or(col[SQL]("active").===(lit[SQL, Boolean](true)))
     assertEquals(
       expr.value,
-      "((age > 18) AND (name LIKE A%)) OR (active = true)"
+      "((age > 18) AND (name LIKE 'A%')) OR (active = true)"
     )
   }
 }

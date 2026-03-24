@@ -31,9 +31,14 @@ trait Criteria[T <: CriteriaTag] {
 }
 
 object Criteria {
-  def pure[T <: CriteriaTag](v: String): Criteria[T] = new Criteria[T] {
 
+  /** Constructs a Criteria from a raw string. Package-private to prevent
+   *  arbitrary string injection from user code — criteria should only be
+   *  built through predicates, conjunctions, and the provided DSL.
+   */
+  private[criteria4s] def pure[T <: CriteriaTag](v: String): Criteria[T] = new Criteria[T] {
     override def value: String = v
   }
+
   private[core] trait CriteriaTag
 }

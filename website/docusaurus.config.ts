@@ -57,6 +57,10 @@ const config: Config = {
     },
     navbar: {
       title: 'Criteria4s',
+      logo: {
+        alt: 'eff3ct0 logo',
+        src: 'img/org-avatar-200.png',
+      },
       items: [
         {
           type: 'docSidebar',

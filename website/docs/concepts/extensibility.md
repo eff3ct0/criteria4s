@@ -8,9 +8,11 @@ criteria4s is designed to be extended in two directions: adding new dialects and
 
 ## Creating a Custom Dialect from Scratch
 
-Suppose you need to target a custom data store -- say, a proprietary query language called "QQL" that uses `WHERE field EQUALS value` syntax. Here is how to build a complete dialect.
+Suppose you need to target a custom data store — say, a proprietary query language called "QQL" that uses `WHERE field EQUALS value` syntax. Here is how to build a complete dialect.
 
 ### Step 1: Define the Tag Type
+
+Every dialect starts with a trait that extends `CriteriaTag`. This is the phantom type that will flow through the type system and identify your dialect:
 
 ```scala
 import com.eff3ct.criteria4s.core.CriteriaTag
@@ -20,7 +22,7 @@ trait QQL extends CriteriaTag
 
 ### Step 2: Provide Show Instances
 
-The `Show` type class tells criteria4s how to render column names and other types in your dialect:
+The `Show` type class tells criteria4s how to render column names and other types in your dialect. You need at least a `Show[Column, QQL]` instance:
 
 ```scala
 import com.eff3ct.criteria4s.core.{Column, Show}
@@ -38,7 +40,7 @@ object QQL:
 
 ### Step 3: Provide Predicate and Conjunction Instances
 
-Use the `build` helper from `com.eff3ct.criteria4s.instances` to construct type class instances from formatting functions:
+Use the `build` helper from `com.eff3ct.criteria4s.instances` to construct type class instances from formatting functions. The function signature you provide is simply `(String, String) => String` for binary predicates, or `String => String` for unary ones:
 
 ```scala
 import com.eff3ct.criteria4s.core.*
@@ -101,7 +103,7 @@ The `PostgreSQL` tag extends `SQL`:
 trait PostgreSQL extends SQL
 ```
 
-The companion object extends `SQL.SQLExpr[PostgreSQL]`, inheriting all predicate, conjunction, and transform instances. It then overrides only the `Show` instances that differ -- in PostgreSQL's case, column names are rendered with double quotes:
+The companion object extends `SQL.SQLExpr[PostgreSQL]`, inheriting all predicate, conjunction, and transform instances automatically. It then overrides only the `Show` instances that differ — in PostgreSQL's case, column names are rendered with double quotes:
 
 ```scala
 object PostgreSQL extends SQL.SQLExpr[PostgreSQL]:
@@ -126,7 +128,7 @@ The result is that PostgreSQL gets all SQL predicates (EQ, GT, AND, ...) for fre
 
 ### Building Your Own SQL Variant
 
-Follow the same pattern to create, say, a ClickHouse dialect:
+Follow the same pattern to create, say, a ClickHouse dialect. ClickHouse uses backtick-quoted identifiers, so you only need to override the column quoting:
 
 ```scala
 import com.eff3ct.criteria4s.core.*

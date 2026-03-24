@@ -17,7 +17,7 @@ import com.eff3ct.criteria4s.functions as F
 
 ## Ordering
 
-Order clauses specify how results should be sorted. They produce an `Order[T]` value.
+Order clauses specify how results should be sorted. They produce an `Order[T]` value that you can inspect with `.value` or pass to your query builder.
 
 ### ASC (ascending)
 
@@ -85,7 +85,7 @@ Pagination clauses control how many rows are returned and where reading begins.
 
 ### LIMIT
 
-Produces a `LimitExpr[T]` that restricts the number of rows returned.
+Produces a `LimitExpr[T]` that restricts the number of rows returned:
 
 ```scala
 val limitExpr = F.limit[SQL](10)
@@ -98,7 +98,7 @@ Renders to SQL: `LIMIT 10`
 
 ### OFFSET
 
-Produces an `OffsetExpr[T]` that skips a number of rows before returning results.
+Produces an `OffsetExpr[T]` that skips a number of rows before returning results:
 
 ```scala
 val offsetExpr = F.offset[SQL](20)
@@ -111,8 +111,7 @@ Renders to SQL: `OFFSET 20`
 
 ### Combining LIMIT and OFFSET
 
-In practice you use both together for pagination. Since they produce separate values, you
-combine them however your query builder expects:
+In practice you use both together for pagination. Since they produce separate values, you combine them however your query builder expects. Here is a typical page calculation:
 
 ```scala
 val page     = 3
@@ -133,7 +132,7 @@ paginationOffset.value
 
 ## CASE WHEN
 
-The CASE expression lets you produce conditional values. It builds through a fluent API:
+The CASE expression lets you produce conditional values inline. It builds through a fluent API:
 
 1. Start with `F.caseWhen(condition, result)` to create the first branch.
 2. Add more branches with `.when(condition, result)`.
@@ -148,7 +147,7 @@ val singleBranch = F
     F.lit[SQL, Int](1)
   )
   .otherwise(F.lit[SQL, Int](0))
-// singleBranch: Ref[SQL, String] = com.eff3ct.criteria4s.core.Ref$$anon$7@14bbc681
+// singleBranch: Ref[SQL, String] = com.eff3ct.criteria4s.core.Ref$$anon$7@4b96462d
 
 singleBranch.asString
 // res9: String = "CASE WHEN status = 'active' THEN 1 ELSE 0 END"
@@ -157,6 +156,8 @@ singleBranch.asString
 Renders to SQL: `CASE WHEN status = 'active' THEN 1 ELSE 0 END`
 
 ### Multiple branches
+
+You can add as many `.when` branches as you need before calling `.otherwise`:
 
 ```scala
 val gradeLabel = F
@@ -173,7 +174,7 @@ val gradeLabel = F
     F.lit[SQL, String]("C")
   )
   .otherwise(F.lit[SQL, String]("F"))
-// gradeLabel: Ref[SQL, String] = com.eff3ct.criteria4s.core.Ref$$anon$7@39d2e9eb
+// gradeLabel: Ref[SQL, String] = com.eff3ct.criteria4s.core.Ref$$anon$7@1f23bd1c
 
 gradeLabel.asString
 // res10: String = "CASE WHEN score > 90 THEN 'A' WHEN score > 80 THEN 'B' WHEN score > 70 THEN 'C' ELSE 'F' END"
@@ -183,7 +184,7 @@ Renders to SQL: `CASE WHEN score > 90 THEN 'A' WHEN score > 80 THEN 'B' WHEN sco
 
 ### Using CASE results in predicates
 
-Since `otherwise` returns a `Ref[T, V]`, you can use the CASE result inside other predicates:
+Since `.otherwise` returns a `Ref[T, V]`, you can use the CASE result inside other predicates:
 
 ```scala
 val tierRef = F
@@ -192,7 +193,7 @@ val tierRef = F
     F.lit[SQL, String]("premium")
   )
   .otherwise(F.lit[SQL, String]("standard"))
-// tierRef: Ref[SQL, String] = com.eff3ct.criteria4s.core.Ref$$anon$7@10a2d9ce
+// tierRef: Ref[SQL, String] = com.eff3ct.criteria4s.core.Ref$$anon$7@480d6c5a
 
 val isPremium = tierRef === F.lit[SQL, String]("premium")
 // isPremium: Criteria[SQL] = CASE WHEN amount > 1000 THEN 'premium' ELSE 'standard' END = 'premium'
@@ -202,8 +203,7 @@ isPremium.value
 
 ## Complete Example
 
-Here is a realistic scenario combining criteria, ordering, and pagination to model a
-paginated user search:
+Here is a realistic scenario that puts criteria, ordering, and pagination together to model a paginated user search:
 
 ```scala
 // Filter: active users in engineering, aged 25-55
@@ -243,6 +243,6 @@ off.value
 |-----------|-----------------------------|-------------------|--------------------------|
 | ASC       | `F.asc(ref)`                | `ref.asc`         | `col ASC`                |
 | DESC      | `F.desc(ref)`               | `ref.desc`        | `col DESC`               |
-| LIMIT     | `F.limit(n)`                | --                | `LIMIT n`                |
-| OFFSET    | `F.offset(n)`               | --                | `OFFSET n`               |
-| CASE WHEN | `F.caseWhen(cond, result).when(...).otherwise(...)` | -- | `CASE WHEN ... END` |
+| LIMIT     | `F.limit(n)`                | (none)            | `LIMIT n`                |
+| OFFSET    | `F.offset(n)`               | (none)            | `OFFSET n`               |
+| CASE WHEN | `F.caseWhen(cond, result).when(...).otherwise(...)` | (none) | `CASE WHEN ... END` |

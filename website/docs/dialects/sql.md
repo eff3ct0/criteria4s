@@ -5,7 +5,7 @@ title: SQL (Base)
 
 # SQL (Base Dialect)
 
-The base SQL dialect renders criteria as standard SQL expressions. It serves as the foundation for all SQL-based dialects -- PostgreSQL, MySQL, and SparkSQL extend it.
+The base SQL dialect renders criteria as standard SQL expressions. It serves as the foundation for all SQL-based dialects — PostgreSQL, MySQL, and SparkSQL extend it.
 
 ## Dependency
 
@@ -28,7 +28,7 @@ The base SQL dialect uses **unquoted** column identifiers. Column names are rend
 
 ```scala
 val column = summon[Show[Column, SQL]]
-// column: Show[Column, SQL] = com.eff3ct.criteria4s.core.Show$$$Lambda$2369/0x00007f9288778de0@778e4093
+// column: Show[Column, SQL] = com.eff3ct.criteria4s.core.Show$$$Lambda$2369/0x00007f9b00778e10@7ce6bbfb
 column.show(Column("user_name"))
 // res0: String = "user_name"
 ```
@@ -37,12 +37,14 @@ String values are wrapped in single quotes, with internal single quotes escaped 
 
 ```scala
 val str = summon[Show[String, SQL]]
-// str: Show[String, SQL] = com.eff3ct.criteria4s.core.Show$$$Lambda$2369/0x00007f9288778de0@3f41145
+// str: Show[String, SQL] = com.eff3ct.criteria4s.core.Show$$$Lambda$2369/0x00007f9b00778e10@89780db
 str.show("O'Brien")
 // res1: String = "'O''Brien'"
 ```
 
 ## Predicate Reference
+
+Here is the full set of predicates available in the SQL dialect.
 
 ### Comparison Predicates
 

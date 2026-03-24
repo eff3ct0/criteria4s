@@ -47,10 +47,21 @@ activeAdults[MongoDB].value
 | `criteria4s-postgresql`     | PostgreSQL    |
 | `criteria4s-mysql`          | MySQL         |
 | `criteria4s-sparksql`       | Spark SQL     |
+| `criteria4s-duckdb`         | DuckDB        |
+| `criteria4s-clickhouse`     | ClickHouse    |
 | `criteria4s-mongodb`        | MongoDB       |
 | `criteria4s-elasticsearch`  | Elasticsearch |
 
-For the full API reference, guides, and integration examples see the **[documentation site](https://eff3ct0.github.io/criteria4s/)**.
+## Client Integrations
+
+| Module                              | Client                        |
+|-------------------------------------|-------------------------------|
+| `criteria4s-sql-jdbc`               | JDBC (all SQL dialects)       |
+| `criteria4s-mongodb-driver`         | MongoDB Java Driver           |
+| `criteria4s-elasticsearch-client`   | Elasticsearch Java Client     |
+| `criteria4s-clickhouse-client`      | ClickHouse Native Client (v2) |
+
+For the full API reference, guides, and integration examples see the **[documentation site](https://criteria4s.rafaelfernandez.dev/)**.
 
 ## License
 

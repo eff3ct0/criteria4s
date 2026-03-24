@@ -39,7 +39,7 @@ This is the classic **Expression Problem**: you cannot extend both the set of op
 
 ### The Type Class Approach
 
-criteria4s solves this with type classes. Instead of a single sealed ADT, each operation is defined as an independent trait parameterized by a dialect tag:
+criteria4s solves this with type classes. Instead of a single sealed ADT, each operation is defined as an independent trait parameterized by a dialect tag. Each dialect then provides `given` instances for the operations it supports:
 
 ```scala
 // Each predicate is a trait parameterized by a tag type
@@ -52,8 +52,6 @@ trait GT[T]:
 trait AND[T]:
   def eval(left: String, right: String): String
 ```
-
-Each dialect provides `given` instances for the operations it supports:
 
 ```scala
 // SQL instances
@@ -105,7 +103,7 @@ trait PredicateBinary[T <: CriteriaTag]:
 trait EQ[T <: CriteriaTag] extends PredicateBinary[T]
 ```
 
-A dialect like SQL provides a `given EQ[SQL]` that renders `left = right`. MongoDB provides a `given EQ[MongoDB]` that renders `{left: {$eq: right}}`. The key point is that **the `EQ` trait itself never changes** -- only new instances are added.
+A dialect like SQL provides a `given EQ[SQL]` that renders `left = right`. MongoDB provides a `given EQ[MongoDB]` that renders `{left: {$eq: right}}`. The key point is that **the `EQ` trait itself never changes** — only new instances are added.
 
 ## Concrete Comparison
 
@@ -145,7 +143,7 @@ usersFilter[MongoDB].value
 // res1: String = "{$and: [{\"name\": {$eq: Alice}}, {\"role\": {$eq: admin}}]}"
 ```
 
-The type class version required zero changes to the core library to work with both SQL and MongoDB. And if you add Elasticsearch tomorrow, you only need to import its given instances -- `usersFilter` works unchanged.
+The type class version required zero changes to the core library to work with both SQL and MongoDB. And if you add Elasticsearch tomorrow, you only need to import its given instances — `usersFilter` works unchanged.
 
 ## Summary
 

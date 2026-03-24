@@ -17,12 +17,12 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Dialects',
-      items: ['dialects/sql', 'dialects/postgresql', 'dialects/mysql', 'dialects/sparksql', 'dialects/mongodb', 'dialects/elasticsearch'],
+      items: ['dialects/sql', 'dialects/postgresql', 'dialects/mysql', 'dialects/sparksql', 'dialects/duckdb', 'dialects/clickhouse', 'dialects/mongodb', 'dialects/elasticsearch'],
     },
     {
       type: 'category',
       label: 'Client Integrations',
-      items: ['integrations/jdbc', 'integrations/mongodb-driver', 'integrations/elasticsearch-client'],
+      items: ['integrations/jdbc', 'integrations/mongodb-driver', 'integrations/elasticsearch-client', 'integrations/clickhouse-client'],
     },
     {
       type: 'category',

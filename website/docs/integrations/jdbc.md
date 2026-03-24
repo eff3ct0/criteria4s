@@ -13,7 +13,7 @@ The `criteria4s-sql-jdbc` module provides extension methods and implicit convers
 libraryDependencies += "com.eff3ct" %% "criteria4s-sql-jdbc" % "1.0.0"
 ```
 
-This module depends on `criteria4s-sql` and works with any SQL-based dialect (`SQL`, `PostgreSQL`, `MySQL`, `SparkSQL`).
+This module depends on `criteria4s-sql` and works with any SQL-based dialect (`SQL`, `PostgreSQL`, `MySQL`, `SparkSQL`, `DuckDB`, `ClickHouse`).
 
 ## Import Pattern
 
@@ -30,7 +30,7 @@ The key import is `com.eff3ct.criteria4s.dialect.sql.jdbc.*`, which brings in th
 
 ### `.toWhereClause`
 
-Returns the criteria as a full `WHERE` clause (with the `WHERE` keyword):
+Returns the criteria as a full `WHERE` clause, including the `WHERE` keyword:
 
 ```scala
 val filter = F.and[SQL](
@@ -45,7 +45,7 @@ filter.toWhereClause
 
 ### `.toSqlFragment`
 
-Returns the criteria as a SQL fragment without the `WHERE` keyword:
+Returns the criteria as a SQL fragment without the `WHERE` keyword. Useful when you need to compose the clause yourself:
 
 ```scala
 filter.toSqlFragment
@@ -54,7 +54,7 @@ filter.toSqlFragment
 
 ### `.appendTo`
 
-Appends a `WHERE` clause to an existing SQL string:
+Appends a `WHERE` clause to an existing SQL string. This is the most convenient method for building complete query strings:
 
 ```scala
 filter.appendTo("SELECT * FROM users")
@@ -113,7 +113,7 @@ connection.close()
 
 ## Using with Different SQL Dialects
 
-The JDBC integration works with any `T <: SQL` dialect. When using PostgreSQL or MySQL, remember to import both the dialect givens and the JDBC givens:
+The JDBC integration works with any `T <: SQL` dialect. When using a specific dialect, remember to import both the dialect givens and the JDBC givens:
 
 ```scala
 // PostgreSQL
@@ -125,4 +125,18 @@ import com.eff3ct.criteria4s.dialect.sql.jdbc.given
 import com.eff3ct.criteria4s.dialect.mysql.{*, given}
 import com.eff3ct.criteria4s.dialect.mysql.MySQL.given
 import com.eff3ct.criteria4s.dialect.sql.jdbc.given
+
+// DuckDB
+import com.eff3ct.criteria4s.dialect.duckdb.{*, given}
+import com.eff3ct.criteria4s.dialect.duckdb.DuckDB.given
+import com.eff3ct.criteria4s.dialect.sql.jdbc.given
+
+// ClickHouse (via JDBC)
+import com.eff3ct.criteria4s.dialect.clickhouse.{*, given}
+import com.eff3ct.criteria4s.dialect.clickhouse.ClickHouse.given
+import com.eff3ct.criteria4s.dialect.sql.jdbc.given
 ```
+
+:::tip
+For ClickHouse, you can also use the dedicated [ClickHouse Client](clickhouse-client.md) integration which bridges with the official native Java client (`com.clickhouse:client-v2`).
+:::

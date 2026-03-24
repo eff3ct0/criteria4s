@@ -5,7 +5,7 @@ title: PostgreSQL
 
 # PostgreSQL Dialect
 
-The PostgreSQL dialect extends the base SQL dialect with **double-quoted** column identifiers. It inherits all SQL predicates, conjunctions, transforms, and clauses.
+The PostgreSQL dialect extends the base SQL dialect with **double-quoted** column identifiers. It inherits all SQL predicates, conjunctions, transforms, and clauses — the only thing that differs from the base SQL dialect is how column names are rendered.
 
 ## Dependency
 
@@ -24,16 +24,14 @@ import com.eff3ct.criteria4s.extensions.*
 
 ## Column Quoting
 
-PostgreSQL uses double-quoted identifiers, which allows reserved words and special characters in column names:
+PostgreSQL uses double-quoted identifiers, which allows reserved words and special characters in column names. This means every column reference in an expression will be wrapped in double quotes:
 
 ```scala
 val column = summon[Show[Column, PostgreSQL]]
-// column: Show[Column, PostgreSQL] = com.eff3ct.criteria4s.core.Show$$$Lambda$2369/0x00007f9288778de0@56f290fa
+// column: Show[Column, PostgreSQL] = com.eff3ct.criteria4s.core.Show$$$Lambda$2369/0x00007f9b00778e10@74d1a8
 column.show(Column("user_name"))
 // res0: String = "\"user_name\""
 ```
-
-This means all predicates render column names with double quotes:
 
 ```scala
 F.===[PostgreSQL, Column, Int](F.col("age"), F.lit(30)).value
@@ -42,7 +40,7 @@ F.===[PostgreSQL, Column, Int](F.col("age"), F.lit(30)).value
 
 ## Inherited Operations
 
-PostgreSQL inherits every operation from the base SQL dialect. All predicates, conjunctions, transforms, ordering, LIMIT/OFFSET, and CASE WHEN work identically -- only the column quoting differs.
+PostgreSQL inherits every operation from the base SQL dialect. All predicates, conjunctions, transforms, ordering, LIMIT/OFFSET, and CASE WHEN work identically — only the column quoting differs.
 
 ## Predicate Examples
 

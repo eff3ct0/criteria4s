@@ -9,7 +9,7 @@ One of the most compelling uses of criteria4s is in applications that follow a *
 
 This page shows a realistic Scala 3 HTTP API that starts with PostgreSQL and switches to MongoDB by changing a single type — no domain logic changes, no interface changes.
 
-![Hexagonal architecture with criteria4s — Domain, Application, and Infrastructure layers](/img/diagram-hexagonal.svg)
+![Hexagonal architecture layers — Domain, Application, Infrastructure](/img/diagram-hexagonal.svg)
 
 ## Application Structure
 
@@ -254,6 +254,8 @@ def userRoutes[T <: CriteriaTag](service: UserService[IO, T]): HttpRoutes[IO] =
 ## The Wiring — Where the Type Gets Fixed
 
 The only place where `T` gets resolved to a concrete type is in the application's main entry point. To switch databases, you change exactly one line:
+
+![Switching between PostgreSQL and MongoDB by changing T](/img/diagram-usecase.svg)
 
 ```scala
 // Main.scala

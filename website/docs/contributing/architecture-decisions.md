@@ -11,7 +11,7 @@ This page documents the key design decisions behind criteria4s and the reasoning
 
 criteria4s uses type classes (`given` instances) to define how each predicate renders in each dialect, rather than an algebraic data type (ADT) with pattern matching.
 
-**Rationale**: An ADT approach would require a central `render` function that matches on every dialect, meaning adding a new dialect requires modifying the core module. The type class approach allows each dialect module to provide its own rendering instances without touching core code. This follows the expression problem solution -- new data types (dialects) and new operations (predicates) can be added independently.
+**Rationale**: An ADT approach would require a central `render` function that matches on every dialect, meaning adding a new dialect requires modifying the core module. The type class approach allows each dialect module to provide its own rendering instances without touching core code. This follows the expression problem solution — new data types (dialects) and new operations (predicates) can be added independently.
 
 In practice, adding a new dialect means creating a new module with `given` instances. No existing code needs to change.
 
@@ -31,7 +31,7 @@ All dialect instances are defined as `given` values inside traits (like `SQLExpr
 
 **Rationale**: Scala 3's `given`/`using` pattern is the idiomatic way to provide type class instances. By putting them in a trait, SQL-based dialects can inherit all instances simply by extending the trait. The package object for each dialect extends the appropriate `Expr` trait, which exports all `given` instances.
 
-**The `final` limitation**: Scala 3 does not allow `given` definitions in traits to be marked `final`. This means a subtype dialect could technically shadow a parent given. In practice, this is not a problem because SQL-based dialects (PostgreSQL, MySQL, SparkSQL) only override `Show` instances for column quoting -- they inherit all predicate/conjunction givens unchanged.
+**The `final` limitation**: Scala 3 does not allow `given` definitions in traits to be marked `final`. This means a subtype dialect could technically shadow a parent given. In practice, this is not a problem because SQL-based dialects (PostgreSQL, MySQL, SparkSQL) only override `Show` instances for column quoting — they inherit all predicate/conjunction givens unchanged.
 
 ## Why `import functions as F`
 
@@ -59,7 +59,7 @@ SQL `BETWEEN` is inclusive on both ends (`>= AND <=`). MongoDB and Elasticsearch
 
 The `Show[(V, V), T]` instance for each dialect controls this rendering:
 
-- SQL: `Show.create { case (l, r) => s"${show.show(l)} AND ${show.show(r)}" }` -- the `BETWEEN` keyword handles inclusivity
+- SQL: `Show.create { case (l, r) => s"${show.show(l)} AND ${show.show(r)}" }` — the `BETWEEN` keyword handles inclusivity
 - MongoDB: `Show.create { case (l, r) => s"{ $$gte: ${show.show(l)}, $$lt: ${show.show(r)} }" }`
 - Elasticsearch: `Show.create { case (l, r) => s"""{"gte": ${show.show(l)}, "lt": ${show.show(r)}}""" }`
 

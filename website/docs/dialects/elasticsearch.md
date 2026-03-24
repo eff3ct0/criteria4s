@@ -5,7 +5,7 @@ title: Elasticsearch
 
 # Elasticsearch Dialect
 
-The Elasticsearch dialect renders criteria as Elasticsearch Query DSL JSON. Like MongoDB, it extends `CriteriaTag` directly rather than the SQL trait.
+The Elasticsearch dialect renders criteria as Elasticsearch Query DSL JSON. Like MongoDB, it extends `CriteriaTag` directly rather than the SQL trait, and each predicate maps to the appropriate Elasticsearch query type.
 
 ## Dependency
 
@@ -28,7 +28,7 @@ Elasticsearch renders field names with double quotes, consistent with JSON:
 
 ```scala
 val column = summon[Show[Column, Elasticsearch]]
-// column: Show[Column, Elasticsearch] = com.eff3ct.criteria4s.core.Show$$$Lambda$2369/0x00007f9288778de0@679af10d
+// column: Show[Column, Elasticsearch] = com.eff3ct.criteria4s.core.Show$$$Lambda$2369/0x00007f9b00778e10@678e3d36
 column.show(Column("user_name"))
 // res0: String = "\"user_name\""
 ```
@@ -36,6 +36,8 @@ column.show(Column("user_name"))
 ## Predicate Reference
 
 ### Term Queries (Equality)
+
+Equality predicates map to Elasticsearch `term` queries:
 
 ```scala
 // term query
@@ -48,6 +50,8 @@ F.=!=[Elasticsearch, Column, Int](F.col("age"), F.lit(30)).value
 ```
 
 ### Range Queries
+
+Comparison predicates map to Elasticsearch `range` queries:
 
 ```scala
 // gt
@@ -68,6 +72,8 @@ F.leq[Elasticsearch, Column, Int](F.col("age"), F.lit(99)).value
 ```
 
 ### Wildcard Queries (Pattern Matching)
+
+Pattern predicates map to Elasticsearch `wildcard` queries:
 
 ```scala
 // wildcard (LIKE equivalent)
@@ -121,6 +127,10 @@ F.isFalse[Elasticsearch, Column](F.col("active")).value
 
 ### Range Queries (BETWEEN)
 
+:::warning
+Like MongoDB, Elasticsearch BETWEEN uses `gte` (inclusive left) and `lt` (exclusive right), which differs from SQL's fully inclusive `BETWEEN`.
+:::
+
 ```scala
 // BETWEEN: gte (inclusive) and lt (exclusive right)
 F.between[Elasticsearch, Column, (Int, Int)](
@@ -135,13 +145,9 @@ F.notBetween[Elasticsearch, Column, (Int, Int)](
 // res16: String = "{\"bool\": {\"must_not\": [{\"range\": {\"age\": {\"gte\": 0, \"lt\": 17}}}]}}"
 ```
 
-:::warning
-Like MongoDB, Elasticsearch BETWEEN uses `gte` (inclusive) and `lt` (exclusive right), which differs from SQL's fully inclusive `BETWEEN`.
-:::
-
 ### Bool Queries (Conjunctions)
 
-The Elasticsearch dialect maps logical operators to the `bool` query structure:
+The Elasticsearch dialect maps logical operators to the `bool` query structure. Each conjunction wraps its operands inside a `bool` query with the appropriate clause:
 
 ```scala
 val left  = F.===[Elasticsearch, Column, Int](F.col("a"), F.lit(1))
@@ -161,8 +167,6 @@ F.or[Elasticsearch](left, right).value
 F.not[Elasticsearch](left).value
 // res19: String = "{\"bool\": {\"must_not\": [{\"term\": {\"a\": 1}}]}}"
 ```
-
-Note the nested JSON structure: each conjunction wraps its operands inside a `bool` query with the appropriate clause (`must`, `should`, or `must_not`).
 
 ## Practical Examples
 

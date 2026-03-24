@@ -21,61 +21,61 @@ These transforms wrap a single reference.
 
 ### UPPER
 
-Converts a column or value to uppercase.
+Converts a column or value to uppercase. You can use either the function or extension style:
 
 ```scala
 // Function-style
 val upperFunc = F.upper[SQL, Column](F.col("name"))
-// upperFunc: Ref[SQL, Column] = com.eff3ct.criteria4s.core.Ref$$anon$8@eff791f
+// upperFunc: Ref[SQL, Column] = com.eff3ct.criteria4s.core.Ref$$anon$8@24c74775
 
 // Extension-style
 val upperExt = F.col[SQL]("name").upper
-// upperExt: Ref[SQL, Column] = com.eff3ct.criteria4s.core.Ref$$anon$8@77d501de
+// upperExt: Ref[SQL, Column] = com.eff3ct.criteria4s.core.Ref$$anon$8@364d9ab0
 ```
 
 ### LOWER
 
-Converts a column or value to lowercase.
+Converts a column or value to lowercase:
 
 ```scala
 // Function-style
 val lowerFunc = F.lower[SQL, Column](F.col("name"))
-// lowerFunc: Ref[SQL, Column] = com.eff3ct.criteria4s.core.Ref$$anon$8@f3e967e
+// lowerFunc: Ref[SQL, Column] = com.eff3ct.criteria4s.core.Ref$$anon$8@4e0c871b
 
 // Extension-style
 val lowerExt = F.col[SQL]("name").lower
-// lowerExt: Ref[SQL, Column] = com.eff3ct.criteria4s.core.Ref$$anon$8@745636be
+// lowerExt: Ref[SQL, Column] = com.eff3ct.criteria4s.core.Ref$$anon$8@5b28a051
 ```
 
 ### TRIM
 
-Removes leading and trailing whitespace from a column or value.
+Removes leading and trailing whitespace from a column or value:
 
 ```scala
 // Function-style
 val trimFunc = F.trim[SQL, Column](F.col("name"))
-// trimFunc: Ref[SQL, Column] = com.eff3ct.criteria4s.core.Ref$$anon$8@143a18bd
+// trimFunc: Ref[SQL, Column] = com.eff3ct.criteria4s.core.Ref$$anon$8@5508abf0
 
 // Extension-style
 val trimExt = F.col[SQL]("name").trim
-// trimExt: Ref[SQL, Column] = com.eff3ct.criteria4s.core.Ref$$anon$8@6a3af60b
+// trimExt: Ref[SQL, Column] = com.eff3ct.criteria4s.core.Ref$$anon$8@1b904d48
 ```
 
 ## Binary Transforms
 
-These transforms combine two references.
+These transforms combine two references into a single `Ref` value.
 
 ### COALESCE
 
-Returns the first non-null value from two references. Useful for providing fallback columns.
+Returns the first non-null value from two references. Useful for providing a fallback column when one might be null:
 
 ```scala
 // Function-style
 val coalesceFunc = F.coalesce[SQL, Column](F.col("nickname"), F.col("name"))
-// coalesceFunc: Ref[SQL, Column] = com.eff3ct.criteria4s.core.Ref$$anon$9@26b75892
+// coalesceFunc: Ref[SQL, Column] = com.eff3ct.criteria4s.core.Ref$$anon$9@42723b0e
 ```
 
-Use it in a predicate to test the coalesced value:
+Once you have a coalesced reference, you use it in a predicate just like any other `Ref`:
 
 ```scala
 val coalesceExpr = F.coalesce[SQL, Column](F.col("nickname"), F.col("name")) === F.lit[SQL, String]("John")
@@ -88,22 +88,21 @@ Renders to SQL: `COALESCE(nickname, name) = 'John'`
 
 ### CONCAT
 
-Concatenates two values together.
+Concatenates two values together:
 
 ```scala
 // Function-style -- concatenating two literals
 val concatLiterals = F.concat[SQL, String](F.lit("Hello"), F.lit(" World"))
-// concatLiterals: Ref[SQL, String] = com.eff3ct.criteria4s.core.Ref$$anon$9@4ededbb8
+// concatLiterals: Ref[SQL, String] = com.eff3ct.criteria4s.core.Ref$$anon$9@57b685d1
 
 // Function-style -- concatenating two columns
 val concatCols = F.concat[SQL, Column](F.col("first_name"), F.col("last_name"))
-// concatCols: Ref[SQL, Column] = com.eff3ct.criteria4s.core.Ref$$anon$9@4a276cf5
+// concatCols: Ref[SQL, Column] = com.eff3ct.criteria4s.core.Ref$$anon$9@518ce3c2
 ```
 
 ## Composing Transforms with Predicates
 
-The real power of transforms is that they return `Ref` values, so they plug directly into any
-predicate. This lets you write case-insensitive comparisons, trimmed matches, and more.
+The real power of transforms is that they return `Ref` values, so they plug directly into any predicate. This lets you write case-insensitive comparisons, trimmed matches, and more without any special syntax.
 
 ### Case-insensitive equality
 
@@ -140,7 +139,7 @@ Renders to SQL: `LOWER(email) LIKE '%@example.com'`
 
 ### Extension syntax composition
 
-With extension-style, transforms chain naturally before predicates:
+With extension-style, transforms chain naturally before predicates, so the code reads almost like plain prose:
 
 ```scala
 val extComposed = F.col[SQL]("name").upper === F.lit[SQL, String]("ALICE")
@@ -161,6 +160,8 @@ extTrim.value
 
 ### Combining transforms in a filter
 
+You can mix transforms with regular predicates in a single compound expression:
+
 ```scala
 val searchFilter =
   (F.col[SQL]("name").upper === F.lit[SQL, String]("JOHN"))
@@ -179,5 +180,5 @@ searchFilter.value
 | UPPER     | `F.upper(ref)`                     | `ref.upper`           | `UPPER(col)`            |
 | LOWER     | `F.lower(ref)`                     | `ref.lower`           | `LOWER(col)`            |
 | TRIM      | `F.trim(ref)`                      | `ref.trim`            | `TRIM(col)`             |
-| COALESCE  | `F.coalesce(ref1, ref2)`           | --                    | `COALESCE(a, b)`        |
-| CONCAT    | `F.concat(ref1, ref2)`             | --                    | `CONCAT(a, b)`          |
+| COALESCE  | `F.coalesce(ref1, ref2)`           | (no extension alias)  | `COALESCE(a, b)`        |
+| CONCAT    | `F.concat(ref1, ref2)`             | (no extension alias)  | `CONCAT(a, b)`          |

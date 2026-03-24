@@ -14,7 +14,7 @@ libraryDependencies += "com.eff3ct" %% "criteria4s-sparksql" % "1.0.0"
 ```
 
 :::note
-Apache Spark itself currently requires Scala 2.13, but the criteria4s-sparksql module compiles with Scala 3. It generates SQL expression strings that you can pass to Spark's `where()` / `filter()` methods. The criteria4s expression module does not depend on Spark at runtime -- it only produces strings.
+Apache Spark itself currently requires Scala 2.13, but the criteria4s-sparksql module compiles with Scala 3. It generates SQL expression strings that you can pass to Spark's `where()` / `filter()` methods. The criteria4s expression module does not depend on Spark at runtime — it only produces strings.
 :::
 
 ## Import Pattern
@@ -32,7 +32,7 @@ Spark SQL uses backtick-quoted identifiers, identical to MySQL:
 
 ```scala
 val column = summon[Show[Column, SparkSQL]]
-// column: Show[Column, SparkSQL] = com.eff3ct.criteria4s.core.Show$$$Lambda$2369/0x00007f9288778de0@3c7fde15
+// column: Show[Column, SparkSQL] = com.eff3ct.criteria4s.core.Show$$$Lambda$2369/0x00007f9b00778e10@4e5d5388
 column.show(Column("user_name"))
 // res0: String = "`user_name`"
 ```
@@ -46,7 +46,7 @@ F.===[SparkSQL, Column, Int](F.col("age"), F.lit(30)).value
 
 ## Inherited Operations
 
-SparkSQL inherits every operation from the base SQL dialect. All predicates, conjunctions, transforms, ordering, LIMIT/OFFSET, and CASE WHEN work identically -- only the column quoting differs.
+SparkSQL inherits every operation from the base SQL dialect. All predicates, conjunctions, transforms, ordering, LIMIT/OFFSET, and CASE WHEN work identically — only the column quoting differs.
 
 ## Predicate Examples
 
@@ -80,6 +80,8 @@ F.between[SparkSQL, Column, (Int, Int)](
 
 ### DataFrame filter expression
 
+criteria4s generates the filter string, which you then pass to Spark's string-based filter API:
+
 ```scala
 val sparkFilter = F.col[SparkSQL]("age")
   .geq(F.lit[SparkSQL, Int](18))
@@ -90,7 +92,7 @@ sparkFilter.value
 // res7: String = "(`age` >= 18) AND (`country` = US)"
 ```
 
-You would use this with Spark's string-based filter:
+In your Spark 2.13 project, you would use it like this:
 
 ```scala
 // In your Spark 2.13 project:

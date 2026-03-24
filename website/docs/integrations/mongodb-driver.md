@@ -5,7 +5,7 @@ title: MongoDB Driver
 
 # MongoDB Driver Integration
 
-The `criteria4s-mongodb-driver` module provides extension methods and implicit conversions for using criteria with the official MongoDB Java/Scala driver. It converts `Criteria[MongoDB]` directly to `Bson` filter documents.
+The `criteria4s-mongodb-driver` module bridges criteria4s with the official MongoDB Java/Scala driver. It provides extension methods and implicit conversions that turn a `Criteria[MongoDB]` directly into a `Bson` filter document, so you can pass your type-safe criteria straight into the driver's `find()` or aggregation methods.
 
 ## Dependency
 
@@ -48,7 +48,7 @@ val doc: BsonDocument = filter.toBsonDocument
 
 ### Implicit Conversion to `Bson`
 
-The driver package provides a `given Conversion[Criteria[MongoDB], Bson]`, so you can use criteria directly where `Bson` is expected:
+The driver package provides a `given Conversion[Criteria[MongoDB], Bson]`, so you can pass criteria directly wherever `Bson` is expected — no explicit conversion needed:
 
 ```scala
 import com.eff3ct.criteria4s.dialect.mongodb.driver.given
@@ -59,12 +59,12 @@ collection.find(filter) // Criteria[MongoDB] converts to Bson automatically
 
 ## JSON Normalization
 
-The MongoDB expression dialect renders `$`-prefixed operators without quotes for readability (e.g., `$eq`, `$gte`). The driver integration automatically normalizes these to valid Extended JSON before parsing, by quoting all `$`-prefixed operators. For example:
+The MongoDB expression dialect renders `$`-prefixed operators without surrounding quotes for readability (e.g., `$eq`, `$gte`). The driver integration automatically normalizes these to valid Extended JSON before parsing, quoting all `$`-prefixed operators. For example:
 
 - Input: `{"age": {$gte: 18}}`
 - Normalized: `{"age": {"$gte": 18}}`
 
-This happens transparently when calling `.toBson`, `.toBsonDocument`, or using the implicit conversion.
+This normalization happens transparently when calling `.toBson`, `.toBsonDocument`, or using the implicit conversion.
 
 ## Example with MongoCollection
 
@@ -105,7 +105,7 @@ client.close()
 
 ## Combining with Aggregation Pipelines
 
-You can also use criteria as a `$match` stage in aggregation pipelines:
+You can also use criteria as a `$match` stage in aggregation pipelines by converting to `Bson` explicitly:
 
 ```scala
 import com.mongodb.client.model.Aggregates

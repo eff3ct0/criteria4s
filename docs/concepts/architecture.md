@@ -64,7 +64,7 @@ CriteriaTag (phantom type)
 
 ### CriteriaTag
 
-The phantom type that identifies a dialect. Every dialect defines a trait that extends `CriteriaTag`:
+The phantom type that identifies a dialect. Every dialect defines a trait that extends `CriteriaTag`. Since it carries no data, it exists purely to parameterize other types so the compiler can enforce dialect separation:
 
 ```scala
 trait CriteriaTag
@@ -76,8 +76,6 @@ trait Elasticsearch extends CriteriaTag
 trait PostgreSQL    extends SQL    // inherits all SQL instances
 ```
 
-`CriteriaTag` carries no data. It exists purely to parameterize other types so the compiler can enforce dialect separation.
-
 ### Criteria[T]
 
 The result of evaluating a predicate or conjunction. It wraps a rendered `String` value:
@@ -87,7 +85,7 @@ trait Criteria[T <: CriteriaTag]:
   def value: String
 ```
 
-Instances are created internally by predicate and conjunction type classes. The `Criteria.pure` constructor is package-private to prevent arbitrary string injection -- criteria should only be built through the DSL.
+Instances are created internally by predicate and conjunction type classes. The `Criteria.pure` constructor is package-private to prevent arbitrary string injection — criteria should only be built through the DSL.
 
 ### Ref[T, V]
 
@@ -115,9 +113,7 @@ trait Show[-V, D <: CriteriaTag]:
   def show(v: V): String
 ```
 
-Each dialect provides `Show` instances for the types it supports. For example, SQL renders strings with single-quote escaping (`'O''Brien'`), while MongoDB renders column names with double quotes (`"age"`).
-
-Default instances for `String` and `AnyVal` types are provided in the `Show` companion object, so basic types work out of the box.
+Each dialect provides `Show` instances for the types it supports. For example, SQL renders strings with single-quote escaping (`'O''Brien'`), while MongoDB renders column names with double quotes (`"age"`). Default instances for `String` and `AnyVal` types are provided in the `Show` companion object, so basic types work out of the box.
 
 ## Predicate Layer
 
@@ -198,7 +194,7 @@ trait ConjunctionUnary[T <: CriteriaTag]:
 
 ## Transform Layer
 
-Transforms wrap `Ref` values with functions, producing a new `Ref` that can be used in predicates.
+Transforms wrap `Ref` values with functions, producing a new `Ref` that can be used in predicates. Because transforms return `Ref` values, they chain freely with any predicate.
 
 ### TransformUnary[T]
 
@@ -225,7 +221,7 @@ trait TransformBinary[T <: CriteriaTag]:
 | `COALESCE[T]`  | `COALESCE(left, right)`   |
 | `CONCAT[T]`    | `CONCAT(left, right)`     |
 
-Example usage:
+Here are two examples showing transforms composed with predicates:
 
 ```scala mdoc:silent
 import com.eff3ct.criteria4s.core.*
@@ -250,7 +246,7 @@ Beyond predicates, criteria4s supports ordering, pagination, and conditional exp
 
 ### Order[T]
 
-Produced by `OrderAsc[T]` and `OrderDesc[T]` type classes:
+Order expressions are produced by the `OrderAsc[T]` and `OrderDesc[T]` type classes:
 
 ```scala mdoc
 val ordering = F.asc[SQL, Column](F.col("name"))
@@ -262,7 +258,7 @@ descOrder.value
 
 ### LimitExpr[T] and OffsetExpr[T]
 
-Pagination constructs:
+These pagination constructs produce `LimitExpr[T]` and `OffsetExpr[T]` values respectively:
 
 ```scala mdoc
 F.limit[SQL](10).value
@@ -271,7 +267,7 @@ F.offset[SQL](20).value
 
 ### CaseExpr
 
-A builder for CASE WHEN expressions:
+A builder for CASE WHEN expressions. You start with `F.caseWhen`, add branches with `.when`, and finalize with `.otherwise`:
 
 ```scala mdoc
 val grading = F.caseWhen[SQL, String](
@@ -285,7 +281,7 @@ grading.asString
 
 ## Builder Layer
 
-The `BuilderBinary` and `BuilderUnary` traits are the mechanism that allows dialects to construct type class instances from simple functions.
+The `BuilderBinary` and `BuilderUnary` traits are the mechanism that allows dialects to construct type class instances from simple string-formatting functions.
 
 ```scala
 trait BuilderBinary[H[_ <: CriteriaTag]]:
@@ -305,4 +301,4 @@ given eqPred: EQ[MyDialect] = build[MyDialect, EQ]((l, r) => s"$l = $r")
 given notConj: NOT[MyDialect] = build[MyDialect, NOT](expr => s"NOT ($expr)")
 ```
 
-This pattern means that creating a new dialect requires only writing the string-formatting logic -- the builder infrastructure handles the rest.
+This pattern means that creating a new dialect requires only writing the string-formatting logic — the builder infrastructure handles the rest.

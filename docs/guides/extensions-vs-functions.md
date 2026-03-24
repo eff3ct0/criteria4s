@@ -5,7 +5,7 @@ sidebar_position: 5
 # Extensions vs Functions
 
 criteria4s offers two API styles for building expressions. Both produce the same `Criteria[T]` values
-and render identically -- the difference is purely ergonomic.
+and render identically — the difference is purely ergonomic.
 
 ```scala mdoc:silent
 import com.eff3ct.criteria4s.core.*
@@ -28,9 +28,9 @@ val funcExpr = F.and[SQL](
 funcExpr.value
 ```
 
-Key characteristics:
+Key characteristics of this style:
 
-- Every call starts with `F.` -- reads like a builder or factory.
+- Every call starts with `F.`, which reads like a builder or factory.
 - Type parameters are explicit: `F.gt[SQL, Column, Int](...)`.
 - `F.col`, `F.lit`, `F.array`, and `F.range` create typed references with a `CriteriaTag` parameter.
 - Conjunctions are standalone calls: `F.and(a, b)`, `F.or(a, b)`, `F.not(a)`.
@@ -50,7 +50,7 @@ val extExpr =
 extExpr.value
 ```
 
-Key characteristics:
+Key characteristics of this style:
 
 - Predicates are infix methods on `Ref`: `col gt lit`, `col === lit`, `col like lit`.
 - Conjunctions are infix methods on `Criteria`: `a and b`, `a or b`, `a.not`.
@@ -61,8 +61,7 @@ Key characteristics:
 ## Why You Cannot Import Both with Wildcards
 
 The extension-style API defines methods like `lt`, `gt`, `like`, `in`, and so on as Scala 3 extension
-methods on `Ref`. The function-style API defines top-level methods with the same names (`F.lt`, `F.gt`,
-etc.). If you import both with wildcards:
+methods on `Ref`. The function-style API defines top-level methods with the same names. If you try to import both with wildcards:
 
 ```scala
 // DO NOT do this -- name collisions
@@ -98,8 +97,8 @@ import com.eff3ct.criteria4s.functions.*
 
 ### Function-style is better for:
 
-- **Polymorphic / generic code** -- when you write methods parameterized by `T <: CriteriaTag`,
-  explicit type parameters make the compiler's job easier:
+**Polymorphic / generic code** — when you write methods parameterized by `T <: CriteriaTag`,
+explicit type parameters make the compiler's job easier:
 
 ```scala mdoc
 def activeFilter[T <: CriteriaTag](using
@@ -112,7 +111,7 @@ def activeFilter[T <: CriteriaTag](using
 activeFilter[SQL].value
 ```
 
-- **Nested expressions** -- deeply composed criteria can be clearer with function nesting:
+**Nested expressions** — deeply composed criteria can be clearer with function nesting because the structure of the code mirrors the structure of the expression:
 
 ```scala mdoc
 val deeplyNested = F.or[SQL](
@@ -129,8 +128,8 @@ deeplyNested.value
 
 ### Extension-style is better for:
 
-- **Concrete DSL code** -- when you are working with a known dialect and want readable,
-  SQL-like syntax:
+**Concrete DSL code** — when you are working with a known dialect and want readable,
+SQL-like syntax:
 
 ```scala mdoc
 val readableFilter =
@@ -142,14 +141,13 @@ val readableFilter =
 readableFilter.value
 ```
 
-- **Quick prototyping** -- less ceremony, more natural reading order.
+**Quick prototyping** — less ceremony, more natural reading order.
 
 ## Side-by-Side Comparison
 
 Here is the same complex expression written in both styles.
 
-**Requirement:** Find users who are either (active adults with verified email) or (admins),
-excluding banned users.
+**Requirement:** Find users who are either (active adults with verified email) or (admins), excluding banned users.
 
 ### Function-style
 

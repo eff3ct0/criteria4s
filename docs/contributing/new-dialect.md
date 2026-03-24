@@ -20,7 +20,7 @@ couchdb/
 
 ## Step 2: Define the Dialect Trait
 
-Create a trait that extends `CriteriaTag`. If your dialect is SQL-based, extend `SQL` instead.
+Create a trait that extends `CriteriaTag`. If your dialect is SQL-based, extend `SQL` instead:
 
 ```scala
 // couchdb/src/main/scala/com/eff3ct/criteria4s/dialect/couchdb/CouchDB.scala
@@ -38,7 +38,7 @@ trait CouchDB extends CriteriaTag
 
 ## Step 3: Create the Companion Object with Given Instances
 
-Define `Show` instances for your dialect (how columns, strings, sequences, and tuples are rendered) and an inner trait with all the predicate/conjunction `given` instances.
+Define `Show` instances for your dialect (how columns, strings, sequences, and tuples are rendered) and an inner trait with all the predicate/conjunction `given` instances. The `build` function from `com.eff3ct.criteria4s.instances.*` constructs type class instances from simple render functions:
 
 ```scala
 object CouchDB {
@@ -94,11 +94,9 @@ object CouchDB {
 }
 ```
 
-The `build` function comes from `com.eff3ct.criteria4s.instances.*` and uses the `BuilderBinary`/`BuilderUnary` type class mechanism to construct predicate instances from render functions.
-
 ## Step 4: Create the Package Object
 
-The package object extends your inner `Expr` trait to export all `given` instances:
+The package object extends your inner `Expr` trait to export all `given` instances. This is what users import to get all dialect-specific instances into scope:
 
 ```scala
 // couchdb/src/main/scala/com/eff3ct/criteria4s/dialect/couchdb/package.scala
@@ -106,8 +104,6 @@ package com.eff3ct.criteria4s.dialect
 
 package object couchdb extends CouchDB.CouchDBExpr[CouchDB]
 ```
-
-This is what users import to get all dialect-specific instances into scope.
 
 ## Step 5: Add to build.sbt
 
@@ -125,7 +121,7 @@ lazy val couchdb: Project =
     .dependsOn(core)  // or .dependsOn(sql) for SQL-based dialects
 ```
 
-Add it to the root aggregate:
+Then add it to the root aggregate so it is included in `sbt compile` and `sbt test`:
 
 ```scala
 lazy val criteria4s: Project =
@@ -139,7 +135,7 @@ If you want the docs project to compile mdoc blocks for this dialect, also add i
 
 ## Step 6: Write Tests
 
-Create a test suite that verifies every predicate renders correctly:
+Create a test suite that verifies every predicate renders correctly. Testing the full surface area upfront makes it easy to catch regressions later:
 
 ```scala
 // couchdb/src/test/scala/com/eff3ct/criteria4s/dialect/couchdb/CouchDBExprSpec.scala
@@ -171,7 +167,7 @@ class CouchDBExprSpec extends munit.FunSuite {
 
 ## Step 7: For SQL-Based Dialects
 
-If your dialect is SQL-based, the process is simpler. You only need to override the `Show[Column, T]` instance and optionally the `Show[Seq[V], T]` and `Show[(V, V), T]` instances:
+If your dialect is SQL-based, the process is simpler. You only need to override the `Show[Column, T]` instance and optionally the `Show[Seq[V], T]` and `Show[(V, V), T]` instances. All predicates, conjunctions, and transforms are inherited from `SQL.SQLExpr`:
 
 ```scala
 trait MyNewSQL extends SQL
@@ -188,8 +184,6 @@ object MyNewSQL extends SQL.SQLExpr[MyNewSQL] {
     Show.create { case (l, r) => s"${show.show(l)} AND ${show.show(r)}" }
 }
 ```
-
-All predicates, conjunctions, transforms, ordering, LIMIT/OFFSET, and CASE WHEN are inherited from `SQL.SQLExpr`.
 
 ## Complete Minimal Example
 
@@ -223,4 +217,4 @@ package com.eff3ct.criteria4s.dialect
 package object newsql extends sql.SQL.SQLExpr[NewSQL]
 ```
 
-That is all you need -- the SQL base provides every predicate, conjunction, and transform automatically.
+That is all you need — the SQL base provides every predicate, conjunction, and transform automatically.

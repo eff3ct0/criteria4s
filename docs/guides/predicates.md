@@ -4,13 +4,12 @@ sidebar_position: 1
 
 # Predicates
 
-Predicates are the fundamental building blocks of criteria4s. Each predicate compares a column reference
-against a value (or another column) and produces a `Criteria[T]` that renders to your target dialect.
+Predicates are the fundamental building blocks of criteria4s. Each predicate compares a column reference against a value (or another column) and produces a `Criteria[T]` that renders to your target dialect.
 
 Every predicate is available in two styles:
 
-- **Function-style** -- prefix calls through the `F` namespace, with explicit type parameters.
-- **Extension-style** -- infix / postfix methods on `Ref` values, using Scala 3 extension methods.
+- **Function-style**: prefix calls through the `F` namespace, with explicit type parameters.
+- **Extension-style**: infix or postfix methods on `Ref` values, using Scala 3 extension methods.
 
 All examples on this page use the generic **SQL** dialect.
 
@@ -25,9 +24,7 @@ import com.eff3ct.criteria4s.functions as F
 
 ### EQ (equals)
 
-Tests whether two values are equal.
-
-**Function-style** -- use `F.===` or its alphabetic alias `F.eqv`:
+Tests whether two values are equal. The symbolic operator `===` avoids conflicting with Scala's built-in `==`, and `eqv` is its alphabetic alias:
 
 ```scala mdoc
 val eqFunc = F.===[SQL, Column, Int](F.col("age"), F.lit(30))
@@ -38,7 +35,7 @@ val eqvFunc = F.eqv[SQL, Column, Int](F.col("age"), F.lit(30))
 eqvFunc.value
 ```
 
-**Extension-style** -- use `.===` or `.eqv` as infix operators:
+The extension style works the same way, letting you write the expression in a more natural left-to-right order:
 
 ```scala mdoc
 val eqExt = F.col[SQL]("age") === F.lit[SQL, Int](30)
@@ -54,8 +51,6 @@ Renders to SQL: `age = 30`
 
 Tests whether two values are different.
 
-**Function-style** -- use `F.=!=` or `F.neq`:
-
 ```scala mdoc
 val neqFunc = F.=!=[SQL, Column, String](F.col("status"), F.lit("inactive"))
 neqFunc.value
@@ -63,8 +58,6 @@ neqFunc.value
 val neqAlias = F.neq[SQL, Column, String](F.col("status"), F.lit("inactive"))
 neqAlias.value
 ```
-
-**Extension-style** -- use `.=!=`:
 
 ```scala mdoc
 val neqExt = F.col[SQL]("status") =!= F.lit[SQL, String]("inactive")
@@ -131,7 +124,7 @@ Renders to SQL: `rating <= 5`
 
 ### Symbol Aliases for Comparison
 
-Extension-style also provides symbolic operators that may feel more natural:
+The extension style also provides symbolic operators that may feel more natural when reading expressions aloud. The colon prefix (`:<`, `:>`, `:<=`, `:>=`) avoids conflicts with Scala's own comparison operators:
 
 ```scala mdoc
 val ltSymbol  = F.col[SQL]("x") :< F.lit[SQL, Int](10)
@@ -167,7 +160,7 @@ Renders to SQL: `name LIKE '%John%'`
 
 ### STARTSWITH
 
-A semantic alias for LIKE that signals prefix matching intent. In the SQL dialect this renders to `LIKE`.
+A semantic alias for LIKE that signals prefix matching intent. In the SQL dialect this renders to `LIKE`:
 
 ```scala mdoc
 // Function-style
@@ -183,7 +176,7 @@ Renders to SQL: `email LIKE 'admin%'`
 
 ### ENDSWITH
 
-A semantic alias for LIKE that signals suffix matching intent.
+A semantic alias for LIKE that signals suffix matching intent:
 
 ```scala mdoc
 // Function-style
@@ -199,7 +192,7 @@ Renders to SQL: `filename LIKE '%.pdf'`
 
 ### CONTAINS
 
-A semantic alias for LIKE that signals substring matching intent.
+A semantic alias for LIKE that signals substring matching intent:
 
 ```scala mdoc
 // Function-style
@@ -217,7 +210,7 @@ Renders to SQL: `bio LIKE '%scala%'`
 
 ### IN
 
-Tests whether a column value is in a given collection.
+Tests whether a column value is in a given collection. Use `F.array` to build the collection:
 
 ```scala mdoc
 // Function-style
@@ -229,8 +222,6 @@ val inExt = F.col[SQL]("id") in F.array[SQL, Int](1, 2, 3)
 inExt.value
 ```
 
-Renders to SQL: `id IN (1, 2, 3)`
-
 You can also use string collections:
 
 ```scala mdoc
@@ -238,9 +229,11 @@ val inStr = F.col[SQL]("role") in F.array[SQL, String]("admin", "editor", "viewe
 inStr.value
 ```
 
+Renders to SQL: `id IN (1, 2, 3)`
+
 ### NOTIN
 
-The negation of `IN`.
+The negation of `IN`:
 
 ```scala mdoc
 // Function-style
@@ -258,7 +251,7 @@ Renders to SQL: `status NOT IN ('banned', 'deleted')`
 
 ### BETWEEN
 
-Tests whether a column value falls within a range (inclusive).
+Tests whether a column value falls within a range (inclusive). Use `F.range` to build the range pair:
 
 ```scala mdoc
 // Function-style
@@ -274,7 +267,7 @@ Renders to SQL: `age BETWEEN 18 AND 65`
 
 ### NOTBETWEEN
 
-The negation of `BETWEEN`.
+The negation of `BETWEEN`:
 
 ```scala mdoc
 // Function-style
@@ -292,7 +285,7 @@ Renders to SQL: `score NOT BETWEEN 0 AND 49`
 
 ### ISNULL
 
-Tests whether a column value is null.
+Tests whether a column value is null:
 
 ```scala mdoc
 // Function-style
@@ -308,7 +301,7 @@ Renders to SQL: `email IS NULL`
 
 ### ISNOTNULL
 
-Tests whether a column value is not null.
+Tests whether a column value is not null:
 
 ```scala mdoc
 // Function-style
@@ -326,7 +319,7 @@ Renders to SQL: `phone IS NOT NULL`
 
 ### ISTRUE
 
-Tests whether a boolean column is true.
+Tests whether a boolean column is true:
 
 ```scala mdoc
 // Function-style
@@ -342,7 +335,7 @@ Renders to SQL: `active IS TRUE`
 
 ### ISFALSE
 
-Tests whether a boolean column is false.
+Tests whether a boolean column is false:
 
 ```scala mdoc
 // Function-style

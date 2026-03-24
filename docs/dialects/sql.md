@@ -5,7 +5,7 @@ title: SQL (Base)
 
 # SQL (Base Dialect)
 
-The base SQL dialect renders criteria as standard SQL expressions. It serves as the foundation for all SQL-based dialects -- PostgreSQL, MySQL, and SparkSQL extend it.
+The base SQL dialect renders criteria as standard SQL expressions. It serves as the foundation for all SQL-based dialects — PostgreSQL, MySQL, and SparkSQL extend it.
 
 ## Dependency
 
@@ -39,6 +39,8 @@ str.show("O'Brien")
 ```
 
 ## Predicate Reference
+
+Here is the full set of predicates available in the SQL dialect.
 
 ### Comparison Predicates
 

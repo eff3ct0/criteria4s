@@ -5,7 +5,7 @@ title: MySQL
 
 # MySQL Dialect
 
-The MySQL dialect extends the base SQL dialect with **backtick-quoted** column identifiers. It inherits all SQL predicates, conjunctions, transforms, and clauses.
+The MySQL dialect extends the base SQL dialect with **backtick-quoted** column identifiers. It inherits all SQL predicates, conjunctions, transforms, and clauses — the only difference from the base SQL dialect is how column names are rendered.
 
 ## Dependency
 
@@ -24,14 +24,12 @@ import com.eff3ct.criteria4s.extensions.*
 
 ## Column Quoting
 
-MySQL uses backtick-quoted identifiers:
+MySQL uses backtick-quoted identifiers, which you can see reflected in every predicate output:
 
 ```scala mdoc
 val column = summon[Show[Column, MySQL]]
 column.show(Column("user_name"))
 ```
-
-This affects all predicate output:
 
 ```scala mdoc
 F.===[MySQL, Column, Int](F.col("age"), F.lit(30)).value
@@ -39,7 +37,7 @@ F.===[MySQL, Column, Int](F.col("age"), F.lit(30)).value
 
 ## Inherited Operations
 
-MySQL inherits every operation from the base SQL dialect. All predicates, conjunctions, transforms, ordering, LIMIT/OFFSET, and CASE WHEN work identically -- only the column quoting differs.
+MySQL inherits every operation from the base SQL dialect. All predicates, conjunctions, transforms, ordering, LIMIT/OFFSET, and CASE WHEN work identically — only the column quoting differs.
 
 ## Predicate Examples
 

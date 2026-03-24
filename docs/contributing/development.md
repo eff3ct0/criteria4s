@@ -21,11 +21,15 @@ sbt compile
 
 ## Running Tests
 
-```bash
-# Run all tests
-sbt test
+To run all tests at once:
 
-# Run tests for a specific module
+```bash
+sbt test
+```
+
+Or target a specific module if you are working on one area:
+
+```bash
 sbt "sql / test"
 sbt "mongodb / test"
 sbt "elasticsearch / test"
@@ -87,7 +91,7 @@ The documentation uses [mdoc](https://scalameta.org/mdoc/) for type-checked Scal
 sbt docs/mdoc
 ```
 
-This compiles all ````scala mdoc` code blocks in `docs/` and outputs the result to `website/docs/`.
+This compiles all ` ```scala mdoc ` code blocks in `docs/` and outputs the result to `website/docs/`.
 
 ### Start the Development Server
 
@@ -133,11 +137,11 @@ sbt headerCheckAll    # CI check
 
 The build enables strict warnings that are treated as guidance:
 
-- `-Wunused:imports` -- unused imports
-- `-Wunused:privates` -- unused private members
-- `-Wunused:locals` -- unused local definitions
-- `-Wunused:params` -- unused parameters
+- `-Wunused:imports`: unused imports
+- `-Wunused:privates`: unused private members
+- `-Wunused:locals`: unused local definitions
+- `-Wunused:params`: unused parameters
 
 ## Publishing
 
-The project publishes to Maven Central via Sonatype. This is handled by CI -- you should not need to publish manually.
+The project publishes to Maven Central via Sonatype. This is handled by CI — you should not need to publish manually.

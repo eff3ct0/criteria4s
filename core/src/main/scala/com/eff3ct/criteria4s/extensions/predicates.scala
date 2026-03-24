@@ -36,14 +36,28 @@ trait predicates {
     def lt[R](
         other: Ref[T, R]
     )(implicit H: LT[T], showL: Show[L, T], showR: Show[R, T]): Criteria[T] = F.lt(c, other)
+    def :<[R](
+        other: Ref[T, R]
+    )(implicit H: LT[T], showL: Show[L, T], showR: Show[R, T]): Criteria[T] = F.lt(c, other)
+
     def gt[R](
         other: Ref[T, R]
     )(implicit H: GT[T], showL: Show[L, T], showR: Show[R, T]): Criteria[T] = F.gt(c, other)
+    def :>[R](
+        other: Ref[T, R]
+    )(implicit H: GT[T], showL: Show[L, T], showR: Show[R, T]): Criteria[T] = F.gt(c, other)
+
     def leq[R](
+        other: Ref[T, R]
+    )(implicit H: LEQ[T], showL: Show[L, T], showR: Show[R, T]): Criteria[T] = F.leq(c, other)
+    def :<=[R](
         other: Ref[T, R]
     )(implicit H: LEQ[T], showL: Show[L, T], showR: Show[R, T]): Criteria[T] = F.leq(c, other)
 
     def geq[R](
+        other: Ref[T, R]
+    )(implicit H: GEQ[T], showL: Show[L, T], showR: Show[R, T]): Criteria[T] = F.geq(c, other)
+    def :>=[R](
         other: Ref[T, R]
     )(implicit H: GEQ[T], showL: Show[L, T], showR: Show[R, T]): Criteria[T] = F.geq(c, other)
 

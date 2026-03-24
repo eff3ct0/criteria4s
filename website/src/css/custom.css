@@ -263,6 +263,32 @@ article h3 {
 
 /* ─── Code blocks ────────────────────────────────────────────────────────── */
 
+/* GitHub-style token colors — light mode */
+.token.keyword                         { color: #cf222e; }
+.token.string, .token.char             { color: #0a3069; }
+.token.number                          { color: #0550ae; }
+.token.boolean                         { color: #0550ae; }
+.token.comment                         { color: #6e7781; font-style: italic; }
+.token.class-name, .token.namespace    { color: #953800; }
+.token.function                        { color: #8250df; }
+.token.operator                        { color: #cf222e; }
+.token.punctuation                     { color: #24292f; }
+.token.plain                           { color: #24292f; }
+
+/* GitHub-style token colors — dark mode */
+[data-theme='dark'] .token.keyword                      { color: #ff7b72; }
+[data-theme='dark'] .token.string,
+[data-theme='dark'] .token.char                         { color: #a5d6ff; }
+[data-theme='dark'] .token.number                       { color: #79c0ff; }
+[data-theme='dark'] .token.boolean                      { color: #79c0ff; }
+[data-theme='dark'] .token.comment                      { color: #8b949e; font-style: italic; }
+[data-theme='dark'] .token.class-name,
+[data-theme='dark'] .token.namespace                    { color: #ffa657; }
+[data-theme='dark'] .token.function                     { color: #d2a8ff; }
+[data-theme='dark'] .token.operator                     { color: #ff7b72; }
+[data-theme='dark'] .token.punctuation                  { color: #c9d1d9; }
+[data-theme='dark'] .token.plain                        { color: #c9d1d9; }
+
 /* Light mode: let Prism github theme render naturally */
 .theme-code-block {
   border: 1px solid var(--ifm-color-emphasis-200);

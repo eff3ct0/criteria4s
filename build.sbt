@@ -4,7 +4,7 @@ lazy val criteria4s: Project =
   project
     .in(file("."))
     .disablePlugins(Build, AssemblyPlugin, HeaderPlugin)
-    .aggregate(core, sql, mongodb, postgresql, sparksql, examples)
+    .aggregate(core, sql, mongodb, postgresql, sparksql, elasticsearch, examples)
     .settings(
       name := "criteria4s"
     )
@@ -58,9 +58,19 @@ lazy val sparksql: Project =
     )
     .dependsOn(sql)
 
+lazy val elasticsearch: Project =
+  (project in file("elasticsearch"))
+    .settings(
+      name                := "criteria4s-elasticsearch",
+      publish / skip      := false,
+      libraryDependencies += munit % Test,
+      testFrameworks      += new TestFramework("munit.Framework")
+    )
+    .dependsOn(core)
+
 lazy val examples: Project =
   (project in file("examples"))
     .settings(
       name := "criteria4s-examples"
     )
-    .dependsOn(core, sql, mongodb, postgresql, sparksql)
+    .dependsOn(core, sql, mongodb, postgresql, sparksql, elasticsearch)

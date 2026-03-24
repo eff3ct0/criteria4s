@@ -29,29 +29,39 @@ import com.eff3ct.criteria4s.dialect.mongodb.MongoDB
 import com.eff3ct.criteria4s.examples.datastores.{Postgres, WeirdDatastore}
 import com.eff3ct.criteria4s.functions._
 
+/** Demonstrates IS NULL, IN, NOT IN, and array operations. */
 object ArraysExample extends App {
-  val aIsNull: Criteria[Postgres] = isNull(col("a"))
-  def aIsNullAlgebra[
-      T <: CriteriaTag: ISNULL: Show[Column, *]
-  ]: Criteria[T] = isNull(col("a"))
 
-  val numberInArray: Criteria[Postgres] = in(col("a"), array(1, 2, 3))
-  def numberInArrayAlgebra[T <: CriteriaTag: IN: Show[Column, *]: Show[Seq[Int], *]]: Criteria[T] =
-    in(col("a"), array(1, 2, 3))
+  // Concrete Postgres expressions
+  val emailIsNull: Criteria[Postgres] = isNull(col("email"))
+  val idInList: Criteria[Postgres]    = in(col("id"), array[Postgres, Int](1, 2, 3))
+  val idNotInList: Criteria[Postgres] = notIn(col("id"), array[Postgres, Int](4, 5, 6))
 
-  val combined: Criteria[Postgres]     = or(aIsNull, numberInArray)
-  val moreCombined: Criteria[Postgres] = or(combined, ===(col("b"), lit(10)))
+  // Combining criteria
+  val nullOrInList: Criteria[Postgres]    = or(emailIsNull, idInList)
+  val withActiveCheck: Criteria[Postgres] = or(nullOrInList, ===(col("active"), lit(true)))
 
-  println(aIsNull)
-  println(aIsNullAlgebra[Postgres])
-  println(aIsNullAlgebra[WeirdDatastore])
-  println(aIsNullAlgebra[MongoDB])
+  // Polymorphic versions
+  def nullCheck[T <: CriteriaTag: ISNULL: Show[Column, *]]: Criteria[T] =
+    isNull(col("email"))
 
-  println(numberInArray)
-  println(numberInArrayAlgebra[Postgres])
-  println(numberInArrayAlgebra[WeirdDatastore])
-  println(numberInArrayAlgebra[MongoDB])
+  def membershipCheck[T <: CriteriaTag: IN: Show[Column, *]: Show[Seq[Int], *]]: Criteria[T] =
+    in(col("id"), array[T, Int](1, 2, 3))
 
-  println(combined)
-  println(moreCombined)
+  println("=== Arrays & Null Examples ===")
+  println(s"emailIsNull:     $emailIsNull")
+  println(s"idInList:        $idInList")
+  println(s"idNotInList:     $idNotInList")
+  println(s"nullOrInList:    $nullOrInList")
+  println(s"withActiveCheck: $withActiveCheck")
+  println()
+  println("nullCheck (polymorphic):")
+  println(s"  Postgres:       ${nullCheck[Postgres]}")
+  println(s"  WeirdDatastore: ${nullCheck[WeirdDatastore]}")
+  println(s"  MongoDB:        ${nullCheck[MongoDB]}")
+  println()
+  println("membershipCheck (polymorphic):")
+  println(s"  Postgres:       ${membershipCheck[Postgres]}")
+  println(s"  WeirdDatastore: ${membershipCheck[WeirdDatastore]}")
+  println(s"  MongoDB:        ${membershipCheck[MongoDB]}")
 }

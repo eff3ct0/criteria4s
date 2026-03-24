@@ -30,18 +30,25 @@ import com.eff3ct.criteria4s.examples.datastores.{Postgres, WeirdDatastore}
 import com.eff3ct.criteria4s.extensions._
 import com.eff3ct.criteria4s.functions._
 
+/** Demonstrates BETWEEN and NOT BETWEEN with range operations. */
 object BetweenExample extends App {
-  val simpleBetween: Criteria[Postgres]    = col[Postgres]("a").between(range(1, 10))
-  val simpleNotBetween: Criteria[Postgres] = col[Postgres]("b").notBetween(range("A", "Z"))
 
-  def taglessFinalBetweenExample[
+  // Concrete Postgres expressions
+  val ageInRange: Criteria[Postgres]      = col[Postgres]("age").between(range(18, 65))
+  val gradeOutOfRange: Criteria[Postgres] = col[Postgres]("grade").notBetween(range("A", "Z"))
+
+  // Polymorphic version
+  def scoreInRange[
       T <: CriteriaTag: BETWEEN: Show[Column, *]: Show[(Int, Int), *]
   ]: Criteria[T] =
-    col[T]("column") between range(100, 150)
+    col[T]("score") between range(70, 100)
 
-  println(simpleBetween)
-  println(simpleNotBetween)
-  println(taglessFinalBetweenExample[Postgres])
-  println(taglessFinalBetweenExample[WeirdDatastore])
-  println(taglessFinalBetweenExample[MongoDB])
+  println("=== Between Examples ===")
+  println(s"ageInRange:      $ageInRange")
+  println(s"gradeOutOfRange: $gradeOutOfRange")
+  println()
+  println("scoreInRange (polymorphic):")
+  println(s"  Postgres:       ${scoreInRange[Postgres]}")
+  println(s"  WeirdDatastore: ${scoreInRange[WeirdDatastore]}")
+  println(s"  MongoDB:        ${scoreInRange[MongoDB]}")
 }

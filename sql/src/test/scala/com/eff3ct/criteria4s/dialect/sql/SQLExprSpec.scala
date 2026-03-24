@@ -332,6 +332,30 @@ class SQLExprSpec extends munit.FunSuite {
     assertEquals(result.value, "OFFSET 20")
   }
 
+  // -- CASE WHEN --
+
+  test("CASE WHEN with single branch") {
+    val result = caseWhen[SQL, Int](
+      col[SQL]("status") === lit[SQL, String]("active"),
+      lit[SQL, Int](1)
+    ).otherwise(lit[SQL, Int](0))
+    assertEquals(result.asString, "CASE WHEN status = 'active' THEN 1 ELSE 0 END")
+  }
+
+  test("CASE WHEN with multiple branches") {
+    val result = caseWhen[SQL, String](
+      col[SQL]("score") gt lit[SQL, Int](90),
+      lit[SQL, String]("A")
+    ).when(
+      col[SQL]("score") gt lit[SQL, Int](80),
+      lit[SQL, String]("B")
+    ).otherwise(lit[SQL, String]("C"))
+    assertEquals(
+      result.asString,
+      "CASE WHEN score > 90 THEN 'A' WHEN score > 80 THEN 'B' ELSE 'C' END"
+    )
+  }
+
   // -- Composed expressions --
 
   test("complex composed expression renders correctly") {

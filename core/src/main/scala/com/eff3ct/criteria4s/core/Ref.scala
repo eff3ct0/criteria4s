@@ -67,6 +67,24 @@ object Ref {
       def asString(implicit show: Show[(V, V), D]): String = show.show((left, right))
     }
 
+  private[criteria4s] def transformed[D <: CriteriaTag, V](
+      ref: Ref[D, V],
+      transform: TransformUnary[D]
+  )(implicit show: Show[V, D]): Ref[D, V] =
+    new Value[D, V] {
+      def asString(implicit s: Show[V, D]): String = transform(ref.asString(show))
+    }
+
+  private[criteria4s] def transformed2[D <: CriteriaTag, V](
+      ref1: Ref[D, V],
+      ref2: Ref[D, V],
+      transform: TransformBinary[D]
+  )(implicit show: Show[V, D]): Ref[D, V] =
+    new Value[D, V] {
+      def asString(implicit s: Show[V, D]): String =
+        transform(ref1.asString(show), ref2.asString(show))
+    }
+
 }
 
 case class Column(colName: String) extends AnyVal

@@ -258,6 +258,41 @@ class SQLExprSpec extends munit.FunSuite {
     assertEquals(result.value, "active IS FALSE")
   }
 
+  // -- Transform functions --
+
+  test("upper() wraps ref in UPPER function") {
+    val result = upper[SQL, Column](col("name")) === lit[SQL, String]("JOHN")
+    assertEquals(result.value, "UPPER(name) = 'JOHN'")
+  }
+
+  test("lower() wraps ref in LOWER function") {
+    val result = lower[SQL, Column](col("name")) === lit[SQL, String]("john")
+    assertEquals(result.value, "LOWER(name) = 'john'")
+  }
+
+  test("trim() wraps ref in TRIM function") {
+    val ref    = trim[SQL, Column](col("name"))
+    val result = ref === lit[SQL, String]("John")
+    assertEquals(result.value, "TRIM(name) = 'John'")
+  }
+
+  test("coalesce() wraps two refs in COALESCE function") {
+    val ref    = coalesce[SQL, Column](col("nickname"), col("name"))
+    val result = ref === lit[SQL, String]("John")
+    assertEquals(result.value, "COALESCE(nickname, name) = 'John'")
+  }
+
+  test("concat() wraps two refs in CONCAT function") {
+    val ref    = concat[SQL, String](lit("Hello"), lit(" World"))
+    val result = ref === lit[SQL, String]("Hello World")
+    assertEquals(result.value, "CONCAT('Hello', ' World') = 'Hello World'")
+  }
+
+  test("extension .upper delegates to UPPER") {
+    val result = col[SQL]("name").upper === lit[SQL, String]("JOHN")
+    assertEquals(result.value, "UPPER(name) = 'JOHN'")
+  }
+
   // -- Composed expressions --
 
   test("complex composed expression renders correctly") {

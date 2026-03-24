@@ -22,33 +22,41 @@
  * SOFTWARE.
  */
 
-package com.eff3ct.criteria4s
+package com.eff3ct.criteria4s.functions
 
 import com.eff3ct.criteria4s.core.*
 
-package object functions extends predicates with conjunctions with transforms {
+private[functions] trait transforms {
 
-  def pred[T <: CriteriaTag, H <: PredicateBinary[T], L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
-      H: H,
-      showL: Show[L, T],
-      showR: Show[R, T]
-  ): Criteria[T] =
-    H.eval(cr1, cr2)
-
-  def pred[T <: CriteriaTag, H <: PredicateUnary[T], V](ref: Ref[T, V])(implicit
-      H: H,
+  def upper[T <: CriteriaTag, V](ref: Ref[T, V])(implicit
+      H: UPPER[T],
       show: Show[V, T]
-  ): Criteria[T] =
-    H.eval(ref)
+  ): Ref[T, V] =
+    Ref.transformed(ref, H)
 
-  def cond[T <: CriteriaTag, H <: ConjunctionBinary[T]](cr1: Criteria[T], cr2: Criteria[T])(implicit
-      H: H
-  ): Criteria[T] =
-    H.eval(cr1, cr2)
+  def lower[T <: CriteriaTag, V](ref: Ref[T, V])(implicit
+      H: LOWER[T],
+      show: Show[V, T]
+  ): Ref[T, V] =
+    Ref.transformed(ref, H)
 
-  def cond[T <: CriteriaTag, H <: ConjunctionUnary[T]](cr: Criteria[T])(implicit
-      H: H
-  ): Criteria[T] =
-    H.eval(cr)
+  def trim[T <: CriteriaTag, V](ref: Ref[T, V])(implicit
+      H: TRIM[T],
+      show: Show[V, T]
+  ): Ref[T, V] =
+    Ref.transformed(ref, H)
 
+  def coalesce[T <: CriteriaTag, V](ref1: Ref[T, V], ref2: Ref[T, V])(implicit
+      H: COALESCE[T],
+      show: Show[V, T]
+  ): Ref[T, V] =
+    Ref.transformed2(ref1, ref2, H)
+
+  def concat[T <: CriteriaTag, V](ref1: Ref[T, V], ref2: Ref[T, V])(implicit
+      H: CONCAT[T],
+      show: Show[V, T]
+  ): Ref[T, V] =
+    Ref.transformed2(ref1, ref2, H)
 }
+
+object transforms extends transforms

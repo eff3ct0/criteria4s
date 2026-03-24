@@ -6,16 +6,16 @@ sidebar_position: 2
 
 ## What Tagless Final Means Here
 
-The term "tagless final" comes from the programming language theory world, where it describes a technique for embedding DSLs using type class constraints instead of algebraic data types. In criteria4s, it means:
+The term "tagless final" comes from the programming language theory world, where it describes a technique for embedding DSLs using type class constraints instead of algebraic data types. In criteria4s, it means two concrete things:
 
-1. **Tagless** -- There is no sealed ADT (no "tags" in a sum type). Expressions are not data you pattern match on; they are produced by calling type class methods.
-2. **Final** -- Expressions are interpreted immediately when constructed. There is no intermediate AST that gets transformed later. When you call `F.col[SQL]("age") :> F.lit(18)`, the result is already the string `"age > 18"` wrapped in a `Criteria[SQL]`.
+1. **Tagless**: There is no sealed ADT (no "tags" in a sum type). Expressions are not data you pattern match on; they are produced by calling type class methods.
+2. **Final**: Expressions are interpreted immediately when constructed. There is no intermediate AST that gets transformed later. When you call `F.col[SQL]("age") :> F.lit(18)`, the result is already the string `"age > 18"` wrapped in a `Criteria[SQL]`.
 
 The practical benefit is that a single function definition, parameterized by a tag type `T`, can produce results for any dialect that provides the required type class instances.
 
 ## The CriteriaTag Phantom Type
 
-At the center of the design is `CriteriaTag`, a trait that serves as a phantom type -- it exists only at the type level and carries no runtime data:
+At the center of the design is `CriteriaTag`, a trait that serves as a phantom type — it exists only at the type level and carries no runtime data:
 
 ```scala
 // From the core library
@@ -36,7 +36,7 @@ trait MongoDB extends CriteriaTag
 trait Elasticsearch extends CriteriaTag
 ```
 
-The tag flows through the type system to prevent mixing:
+The tag flows through the type system to prevent accidentally mixing expressions from different dialects. Here is a valid expression where both sides carry the same `SQL` tag:
 
 ```scala mdoc:silent
 import com.eff3ct.criteria4s.core.*
@@ -66,15 +66,15 @@ This compile-time guarantee eliminates an entire class of bugs where dialect-spe
 
 Every value in the DSL is tagged with the dialect:
 
-- `Ref[T, V]` -- A reference (column, literal, collection) tagged with dialect `T` and value type `V`
-- `Criteria[T]` -- A complete predicate expression tagged with dialect `T`
-- `Order[T]` -- An ordering expression tagged with dialect `T`
+- `Ref[T, V]`: A reference (column, literal, collection) tagged with dialect `T` and value type `V`
+- `Criteria[T]`: A complete predicate expression tagged with dialect `T`
+- `Order[T]`: An ordering expression tagged with dialect `T`
 
-When you write `F.col[SQL]("age")`, you get a `Ref.Col[SQL]`. When you compare it with `F.lit[SQL, Int](18)`, the `gt` type class instance for `SQL` produces a `Criteria[SQL]`. The tag never disappears -- it propagates through every operation.
+When you write `F.col[SQL]("age")`, you get a `Ref.Col[SQL]`. When you compare it with `F.lit[SQL, Int](18)`, the `gt` type class instance for `SQL` produces a `Criteria[SQL]`. The tag never disappears — it propagates through every operation.
 
 ## Writing Polymorphic Functions
 
-The power of the tagless final pattern emerges when you write functions that are **polymorphic in the tag type**. Instead of fixing a specific dialect, you constrain `T` with the type classes your function needs:
+The power of the tagless final pattern emerges when you write functions that are **polymorphic in the tag type**. Instead of fixing a specific dialect, you constrain `T` with the type classes your function needs. The function then compiles against any `T` that satisfies those constraints, and the caller decides which dialect to use:
 
 ```scala mdoc:nest
 import com.eff3ct.criteria4s.core.*
@@ -89,13 +89,13 @@ def activeAdults[T <: CriteriaTag: GEQ: EQ: AND](using
 
 Breaking down the signature:
 
-- `T <: CriteriaTag` -- `T` must be some dialect tag
-- `: GEQ` -- There must be a `given GEQ[T]` in scope (for the `>=` comparison)
-- `: EQ` -- There must be a `given EQ[T]` in scope (for the `=` comparison)
-- `: AND` -- There must be a `given AND[T]` in scope (for boolean conjunction)
-- `Show[Column, T]` -- There must be a way to render column names in dialect `T`
+- `T <: CriteriaTag`: `T` must be some dialect tag
+- `: GEQ`: There must be a `given GEQ[T]` in scope (for the `>=` comparison)
+- `: EQ`: There must be a `given EQ[T]` in scope (for the `=` comparison)
+- `: AND`: There must be a `given AND[T]` in scope (for boolean conjunction)
+- `Show[Column, T]`: There must be a way to render column names in dialect `T`
 
-This function compiles against any `T` that satisfies these constraints. The caller decides which dialect to use by supplying a concrete type argument:
+Now you can call this function with any dialect that provides these instances:
 
 ```scala mdoc
 import com.eff3ct.criteria4s.dialect.sql.{*, given}
@@ -109,7 +109,7 @@ activeAdults[Elasticsearch].value
 
 ## A Worked Example: Define Once, Evaluate Against Three Backends
 
-Here is a more realistic polymorphic filter that combines multiple predicates:
+Here is a more realistic polymorphic filter that combines multiple predicates. Notice that the function has no dependency on any specific database library — all of the dialect-specific rendering happens through type class resolution at compile time:
 
 ```scala mdoc:nest
 import com.eff3ct.criteria4s.core.*
@@ -134,8 +134,6 @@ premiumUsers[SQL].value
 premiumUsers[MongoDB].value
 premiumUsers[Elasticsearch].value
 ```
-
-The function `premiumUsers` has no dependency on any specific database library. It compiles to the correct syntax for each backend purely through type class resolution at compile time.
 
 ## When to Use Polymorphic Definitions
 

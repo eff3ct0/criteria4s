@@ -30,7 +30,7 @@ The key import is `com.eff3ct.criteria4s.dialect.sql.jdbc.*`, which brings in th
 
 ### `.toWhereClause`
 
-Returns the criteria as a full `WHERE` clause (with the `WHERE` keyword):
+Returns the criteria as a full `WHERE` clause, including the `WHERE` keyword:
 
 ```scala mdoc
 val filter = F.and[SQL](
@@ -43,7 +43,7 @@ filter.toWhereClause
 
 ### `.toSqlFragment`
 
-Returns the criteria as a SQL fragment without the `WHERE` keyword:
+Returns the criteria as a SQL fragment without the `WHERE` keyword. Useful when you need to compose the clause yourself:
 
 ```scala mdoc
 filter.toSqlFragment
@@ -51,7 +51,7 @@ filter.toSqlFragment
 
 ### `.appendTo`
 
-Appends a `WHERE` clause to an existing SQL string:
+Appends a `WHERE` clause to an existing SQL string. This is the most convenient method for building complete query strings:
 
 ```scala mdoc
 filter.appendTo("SELECT * FROM users")

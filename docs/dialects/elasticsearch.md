@@ -5,7 +5,7 @@ title: Elasticsearch
 
 # Elasticsearch Dialect
 
-The Elasticsearch dialect renders criteria as Elasticsearch Query DSL JSON. Like MongoDB, it extends `CriteriaTag` directly rather than the SQL trait.
+The Elasticsearch dialect renders criteria as Elasticsearch Query DSL JSON. Like MongoDB, it extends `CriteriaTag` directly rather than the SQL trait, and each predicate maps to the appropriate Elasticsearch query type.
 
 ## Dependency
 
@@ -35,6 +35,8 @@ column.show(Column("user_name"))
 
 ### Term Queries (Equality)
 
+Equality predicates map to Elasticsearch `term` queries:
+
 ```scala mdoc
 // term query
 F.===[Elasticsearch, Column, Int](F.col("age"), F.lit(30)).value
@@ -44,6 +46,8 @@ F.=!=[Elasticsearch, Column, Int](F.col("age"), F.lit(30)).value
 ```
 
 ### Range Queries
+
+Comparison predicates map to Elasticsearch `range` queries:
 
 ```scala mdoc
 // gt
@@ -60,6 +64,8 @@ F.leq[Elasticsearch, Column, Int](F.col("age"), F.lit(99)).value
 ```
 
 ### Wildcard Queries (Pattern Matching)
+
+Pattern predicates map to Elasticsearch `wildcard` queries:
 
 ```scala mdoc
 // wildcard (LIKE equivalent)
@@ -105,6 +111,10 @@ F.isFalse[Elasticsearch, Column](F.col("active")).value
 
 ### Range Queries (BETWEEN)
 
+:::warning
+Like MongoDB, Elasticsearch BETWEEN uses `gte` (inclusive left) and `lt` (exclusive right), which differs from SQL's fully inclusive `BETWEEN`.
+:::
+
 ```scala mdoc
 // BETWEEN: gte (inclusive) and lt (exclusive right)
 F.between[Elasticsearch, Column, (Int, Int)](
@@ -117,13 +127,9 @@ F.notBetween[Elasticsearch, Column, (Int, Int)](
 ).value
 ```
 
-:::warning
-Like MongoDB, Elasticsearch BETWEEN uses `gte` (inclusive) and `lt` (exclusive right), which differs from SQL's fully inclusive `BETWEEN`.
-:::
-
 ### Bool Queries (Conjunctions)
 
-The Elasticsearch dialect maps logical operators to the `bool` query structure:
+The Elasticsearch dialect maps logical operators to the `bool` query structure. Each conjunction wraps its operands inside a `bool` query with the appropriate clause:
 
 ```scala mdoc
 val left  = F.===[Elasticsearch, Column, Int](F.col("a"), F.lit(1))
@@ -138,8 +144,6 @@ F.or[Elasticsearch](left, right).value
 // bool must_not (NOT)
 F.not[Elasticsearch](left).value
 ```
-
-Note the nested JSON structure: each conjunction wraps its operands inside a `bool` query with the appropriate clause (`must`, `should`, or `must_not`).
 
 ## Practical Examples
 

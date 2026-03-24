@@ -18,7 +18,7 @@ import com.eff3ct.criteria4s.functions as F
 
 Combines two criteria so both must be true.
 
-**Function-style** -- `F.and` or its symbolic alias `F.&&`:
+**Function-style** with `F.and` or its symbolic alias `F.&&`:
 
 ```scala mdoc
 val left  = F.gt[SQL, Column, Int](F.col("age"), F.lit(18))
@@ -31,7 +31,7 @@ val andSymbol = F.&&[SQL](left, right)
 andSymbol.value
 ```
 
-**Extension-style** -- `.and`, `.&&`, or `:&`:
+**Extension-style** with `.and`, `.&&`, or `:&`:
 
 ```scala mdoc
 val andExt = left and right
@@ -50,7 +50,7 @@ Renders to SQL: `(age > 18) AND (status = 'active')`
 
 Combines two criteria so at least one must be true.
 
-**Function-style** -- `F.or` or its symbolic alias `F.||`:
+**Function-style** with `F.or` or its symbolic alias `F.||`:
 
 ```scala mdoc
 val orFunc = F.or[SQL](left, right)
@@ -60,7 +60,7 @@ val orSymbol = F.||[SQL](left, right)
 orSymbol.value
 ```
 
-**Extension-style** -- `.or`, `.||`, or `:|`:
+**Extension-style** with `.or`, `.||`, or `:|`:
 
 ```scala mdoc
 val orExt = left or right
@@ -79,7 +79,7 @@ Renders to SQL: `(age > 18) OR (status = 'active')`
 
 Negates a single criteria expression.
 
-**Function-style** -- `F.not` or its symbolic alias `F.!!`:
+**Function-style** with `F.not` or its symbolic alias `F.!!`:
 
 ```scala mdoc
 val notFunc = F.not[SQL](left)
@@ -89,7 +89,7 @@ val notSymbol = F.!![SQL](left)
 notSymbol.value
 ```
 
-**Extension-style** -- `.not`:
+**Extension-style** with `.not`:
 
 ```scala mdoc
 val notExt = left.not
@@ -101,9 +101,11 @@ Renders to SQL: `NOT (age > 18)`
 ## Composing Complex Expressions
 
 Conjunctions return a `Criteria[T]`, so you can chain them to build arbitrarily complex filters.
-Parenthesization is handled automatically -- each conjunction wraps its operands in parentheses.
+Parenthesization is handled automatically — each conjunction wraps its operands in parentheses.
 
 ### Chaining with dot syntax
+
+When you chain `.and` and `.or` calls, each step builds on the previous result. Notice how the first `.and` produces `(age >= 18) AND (role = 'admin')`, and then `.or` wraps that entire result as the left operand:
 
 ```scala mdoc
 val complexChain =
@@ -116,10 +118,9 @@ complexChain.value
 
 This produces: `((age >= 18) AND (role = 'admin')) OR (superuser = true)`
 
-Notice how the first `.and` produces `(age >= 18) AND (role = 'admin')`, and then `.or` wraps
-that entire result as the left operand.
-
 ### Nested function calls
+
+The function-style API makes deeply nested boolean logic read clearly, since the nesting is explicit in the code structure:
 
 ```scala mdoc
 val nested = F.or[SQL](
@@ -137,8 +138,7 @@ nested.value
 
 ### Controlling precedence with explicit grouping
 
-Because `and` and `or` have the same structural precedence in criteria4s (they are just method calls),
-you control evaluation order with parentheses in your Scala code:
+Because `and` and `or` have the same structural precedence in criteria4s (they are just method calls), you control evaluation order with parentheses in your Scala code:
 
 ```scala mdoc
 val a = F.col[SQL]("x") === F.lit[SQL, Int](1)
@@ -156,7 +156,7 @@ rightGrouped.value
 
 ## Real-World Example: User Search Filter
 
-Here is a realistic filter combining multiple predicates and conjunctions:
+Here is a realistic filter combining multiple predicates and conjunctions. It finds users who are in a valid age range, have an allowed status, have a non-null email, and belong to either the admin role or the engineering department:
 
 ```scala mdoc
 val userFilter =

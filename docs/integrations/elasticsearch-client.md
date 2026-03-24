@@ -5,7 +5,7 @@ title: Elasticsearch Client
 
 # Elasticsearch Client Integration
 
-The `criteria4s-elasticsearch-client` module provides extension methods and implicit conversions for using criteria with the official Elasticsearch Java client. It converts `Criteria[Elasticsearch]` to an Elasticsearch `Query` object using the `WrapperQuery` mechanism.
+The `criteria4s-elasticsearch-client` module bridges criteria4s with the official Elasticsearch Java client. It provides extension methods and implicit conversions that turn a `Criteria[Elasticsearch]` into an Elasticsearch `Query` object via the `WrapperQuery` mechanism, so you can use your type-safe criteria directly in search requests.
 
 ## Dependency
 
@@ -40,7 +40,7 @@ val query: Query = filter.toQuery
 
 ### Implicit Conversion to `Query`
 
-The client package provides a `given Conversion[Criteria[Elasticsearch], Query]`, so you can use criteria directly where `Query` is expected:
+The client package provides a `given Conversion[Criteria[Elasticsearch], Query]`, so you can pass criteria directly to the search request builder:
 
 ```scala
 import com.eff3ct.criteria4s.dialect.elasticsearch.client.given
@@ -54,13 +54,13 @@ client.search(s => s.index("users").query(filter), classOf[User])
 
 ## How It Works
 
-The conversion uses Elasticsearch's `WrapperQuery`, which accepts a base64-encoded JSON query string. When you call `.toQuery` or trigger the implicit conversion, criteria4s:
+The conversion uses Elasticsearch's `WrapperQuery`, which accepts a base64-encoded JSON query string. When you call `.toQuery` or trigger the implicit conversion, the steps are:
 
-1. Takes the `Criteria.value` string (a JSON Query DSL expression)
-2. Encodes it as UTF-8 bytes
-3. Base64-encodes those bytes
-4. Wraps them in a `WrapperQuery`
-5. Converts the `WrapperQuery` to a `Query`
+1. Take the `Criteria.value` string (a JSON Query DSL expression)
+2. Encode it as UTF-8 bytes
+3. Base64-encode those bytes
+4. Wrap them in a `WrapperQuery`
+5. Convert the `WrapperQuery` to a `Query`
 
 This means the full Query DSL JSON produced by the Elasticsearch dialect is sent to Elasticsearch as-is, preserving the exact query structure.
 
@@ -105,7 +105,7 @@ val response2 = client.search(
 
 ## Combining Queries
 
-You can compose criteria4s filters with other Elasticsearch queries by converting to `Query` first:
+You can compose criteria4s filters with other Elasticsearch queries by converting to `Query` first and then passing it into a `BoolQuery` builder:
 
 ```scala
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery

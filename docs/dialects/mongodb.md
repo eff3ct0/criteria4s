@@ -5,7 +5,7 @@ title: MongoDB
 
 # MongoDB Dialect
 
-The MongoDB dialect renders criteria as JSON-like filter expressions using MongoDB's `$operator` syntax. Unlike the SQL family, MongoDB is **not** based on the SQL trait -- it extends `CriteriaTag` directly.
+The MongoDB dialect renders criteria as JSON-like filter expressions using MongoDB's `$operator` syntax. Unlike the SQL family, MongoDB is **not** based on the SQL trait — it extends `CriteriaTag` directly and implements its own rendering for each predicate.
 
 ## Dependency
 
@@ -24,7 +24,7 @@ import com.eff3ct.criteria4s.extensions.*
 
 ## Column Quoting
 
-MongoDB renders field names with double quotes:
+MongoDB renders field names with double quotes, consistent with JSON:
 
 ```scala mdoc
 val column = summon[Show[Column, MongoDB]]
@@ -87,6 +87,10 @@ F.isFalse[MongoDB, Column](F.col("active")).value
 
 ### Range Predicates (BETWEEN)
 
+:::warning
+MongoDB BETWEEN semantics differ from SQL. In SQL, `BETWEEN` is inclusive on both ends. In MongoDB, criteria4s renders it as `$gte` (inclusive left) and `$lt` (exclusive right). This follows MongoDB's conventional range query pattern.
+:::
+
 ```scala mdoc
 // BETWEEN: inclusive left ($gte), exclusive right ($lt)
 F.between[MongoDB, Column, (Int, Int)](F.col("age"), F.range[MongoDB, Int](18, 65)).value
@@ -95,11 +99,9 @@ F.between[MongoDB, Column, (Int, Int)](F.col("age"), F.range[MongoDB, Int](18, 6
 F.notBetween[MongoDB, Column, (Int, Int)](F.col("age"), F.range[MongoDB, Int](0, 17)).value
 ```
 
-:::warning
-MongoDB BETWEEN semantics differ from SQL. In SQL, `BETWEEN` is inclusive on both ends. In MongoDB, criteria4s renders it as `$gte` (inclusive) and `$lt` (exclusive right boundary). This follows MongoDB's conventional range query pattern.
-:::
-
 ### Pattern Matching
+
+Pattern predicates in MongoDB render as `$regex` queries:
 
 ```scala mdoc
 // LIKE renders as $regex
@@ -110,6 +112,8 @@ F.startsWith[MongoDB, Column, String](F.col("name"), F.lit("^A")).value
 ```
 
 ### Logical Operators
+
+Conjunctions in MongoDB use the `$and`, `$or` array syntax:
 
 ```scala mdoc
 val left  = F.===[MongoDB, Column, Int](F.col("a"), F.lit(1))

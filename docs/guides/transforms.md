@@ -21,7 +21,7 @@ These transforms wrap a single reference.
 
 ### UPPER
 
-Converts a column or value to uppercase.
+Converts a column or value to uppercase. You can use either the function or extension style:
 
 ```scala mdoc
 // Function-style
@@ -33,7 +33,7 @@ val upperExt = F.col[SQL]("name").upper
 
 ### LOWER
 
-Converts a column or value to lowercase.
+Converts a column or value to lowercase:
 
 ```scala mdoc
 // Function-style
@@ -45,7 +45,7 @@ val lowerExt = F.col[SQL]("name").lower
 
 ### TRIM
 
-Removes leading and trailing whitespace from a column or value.
+Removes leading and trailing whitespace from a column or value:
 
 ```scala mdoc
 // Function-style
@@ -57,18 +57,18 @@ val trimExt = F.col[SQL]("name").trim
 
 ## Binary Transforms
 
-These transforms combine two references.
+These transforms combine two references into a single `Ref` value.
 
 ### COALESCE
 
-Returns the first non-null value from two references. Useful for providing fallback columns.
+Returns the first non-null value from two references. Useful for providing a fallback column when one might be null:
 
 ```scala mdoc
 // Function-style
 val coalesceFunc = F.coalesce[SQL, Column](F.col("nickname"), F.col("name"))
 ```
 
-Use it in a predicate to test the coalesced value:
+Once you have a coalesced reference, you use it in a predicate just like any other `Ref`:
 
 ```scala mdoc
 val coalesceExpr = F.coalesce[SQL, Column](F.col("nickname"), F.col("name")) === F.lit[SQL, String]("John")
@@ -79,7 +79,7 @@ Renders to SQL: `COALESCE(nickname, name) = 'John'`
 
 ### CONCAT
 
-Concatenates two values together.
+Concatenates two values together:
 
 ```scala mdoc
 // Function-style -- concatenating two literals
@@ -91,8 +91,7 @@ val concatCols = F.concat[SQL, Column](F.col("first_name"), F.col("last_name"))
 
 ## Composing Transforms with Predicates
 
-The real power of transforms is that they return `Ref` values, so they plug directly into any
-predicate. This lets you write case-insensitive comparisons, trimmed matches, and more.
+The real power of transforms is that they return `Ref` values, so they plug directly into any predicate. This lets you write case-insensitive comparisons, trimmed matches, and more without any special syntax.
 
 ### Case-insensitive equality
 
@@ -123,7 +122,7 @@ Renders to SQL: `LOWER(email) LIKE '%@example.com'`
 
 ### Extension syntax composition
 
-With extension-style, transforms chain naturally before predicates:
+With extension-style, transforms chain naturally before predicates, so the code reads almost like plain prose:
 
 ```scala mdoc
 val extComposed = F.col[SQL]("name").upper === F.lit[SQL, String]("ALICE")
@@ -137,6 +136,8 @@ extTrim.value
 ```
 
 ### Combining transforms in a filter
+
+You can mix transforms with regular predicates in a single compound expression:
 
 ```scala mdoc
 val searchFilter =
@@ -154,5 +155,5 @@ searchFilter.value
 | UPPER     | `F.upper(ref)`                     | `ref.upper`           | `UPPER(col)`            |
 | LOWER     | `F.lower(ref)`                     | `ref.lower`           | `LOWER(col)`            |
 | TRIM      | `F.trim(ref)`                      | `ref.trim`            | `TRIM(col)`             |
-| COALESCE  | `F.coalesce(ref1, ref2)`           | --                    | `COALESCE(a, b)`        |
-| CONCAT    | `F.concat(ref1, ref2)`             | --                    | `CONCAT(a, b)`          |
+| COALESCE  | `F.coalesce(ref1, ref2)`           | (no extension alias)  | `COALESCE(a, b)`        |
+| CONCAT    | `F.concat(ref1, ref2)`             | (no extension alias)  | `CONCAT(a, b)`          |

@@ -28,7 +28,8 @@ import com.eff3ct.criteria4s.core.Criteria
 import org.bson.BsonDocument
 import org.bson.conversions.Bson
 
-/** MongoDB driver integration.
+/**
+ * MongoDB driver integration.
  *
  *  Import this package to use `Criteria[MongoDB]` directly where `Bson` is expected:
  *  {{{
@@ -40,7 +41,8 @@ import org.bson.conversions.Bson
  */
 package object driver {
 
-  /** Normalizes the MongoDB expression string to valid extended JSON.
+  /**
+   * Normalizes the MongoDB expression string to valid extended JSON.
    *  Quotes unquoted `$`-prefixed operators like `$eq`, `$gte`, etc.
    */
   private def toExtendedJson(mongoExpr: String): String =

@@ -27,7 +27,8 @@ package com.eff3ct.criteria4s.dialect.sql
 import com.eff3ct.criteria4s.core.Criteria
 import java.sql.PreparedStatement
 
-/** JDBC integration for SQL-based dialects.
+/**
+ * JDBC integration for SQL-based dialects.
  *
  *  Import this package to use `Criteria[T <: SQL]` directly as a WHERE clause:
  *  {{{
@@ -55,7 +56,8 @@ package object jdbc {
     /** Appends this criteria as a WHERE clause to the given SQL string. */
     def appendTo(baseSql: String): String = s"$baseSql WHERE ${criteria.value}"
 
-    /** Sets this criteria as the WHERE clause on a PreparedStatement query.
+    /**
+     * Sets this criteria as the WHERE clause on a PreparedStatement query.
      *  Returns a PreparedStatement ready for execution.
      */
     def prepareOn(statement: PreparedStatement, baseSql: String): PreparedStatement = {

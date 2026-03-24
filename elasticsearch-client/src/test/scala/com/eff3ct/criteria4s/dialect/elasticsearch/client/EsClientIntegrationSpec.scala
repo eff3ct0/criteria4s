@@ -25,7 +25,7 @@
 package com.eff3ct.criteria4s.dialect.elasticsearch.client
 
 import com.eff3ct.criteria4s.core.*
-import com.eff3ct.criteria4s.dialect.elasticsearch.{given, *}
+import com.eff3ct.criteria4s.dialect.elasticsearch.{*, given}
 import com.eff3ct.criteria4s.functions as F
 import co.elastic.clients.elasticsearch._types.query_dsl.Query
 

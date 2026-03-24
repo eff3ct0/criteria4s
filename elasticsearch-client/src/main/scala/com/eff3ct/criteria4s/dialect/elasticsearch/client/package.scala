@@ -29,7 +29,8 @@ import co.elastic.clients.elasticsearch._types.query_dsl.Query
 import co.elastic.clients.elasticsearch._types.query_dsl.WrapperQuery
 import java.util.Base64
 
-/** Elasticsearch Java client integration.
+/**
+ * Elasticsearch Java client integration.
  *
  *  Import this package to use `Criteria[Elasticsearch]` directly as an ES Query:
  *  {{{
@@ -41,7 +42,8 @@ import java.util.Base64
  */
 package object client {
 
-  /** Converts a Criteria[Elasticsearch] to an Elasticsearch Query using WrapperQuery.
+  /**
+   * Converts a Criteria[Elasticsearch] to an Elasticsearch Query using WrapperQuery.
    *  WrapperQuery accepts a base64-encoded JSON query string.
    */
   given criteriaToQuery[T <: Elasticsearch]: Conversion[Criteria[T], Query] =
@@ -54,9 +56,9 @@ package object client {
   }
 
   private def buildQuery[T <: Elasticsearch](criteria: Criteria[T]): Query = {
-    val jsonBytes  = criteria.value.getBytes("UTF-8")
-    val base64     = Base64.getEncoder.encodeToString(jsonBytes)
-    val wrapper    = WrapperQuery.of(w => w.query(base64))
+    val jsonBytes = criteria.value.getBytes("UTF-8")
+    val base64    = Base64.getEncoder.encodeToString(jsonBytes)
+    val wrapper   = WrapperQuery.of(w => w.query(base64))
     wrapper._toQuery()
   }
 }

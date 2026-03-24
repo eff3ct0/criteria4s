@@ -25,7 +25,7 @@
 package com.eff3ct.criteria4s.dialect.sql.jdbc
 
 import com.eff3ct.criteria4s.core.*
-import com.eff3ct.criteria4s.dialect.sql.{given, *}
+import com.eff3ct.criteria4s.dialect.sql.{*, given}
 import com.eff3ct.criteria4s.functions as F
 
 class JdbcIntegrationSpec extends munit.FunSuite {
@@ -46,8 +46,8 @@ class JdbcIntegrationSpec extends munit.FunSuite {
   }
 
   test("given Conversion[Criteria[SQL], String] works") {
-    val criteria: Criteria[SQL]  = F.===[SQL, Column, Int](F.col("id"), F.lit(1))
-    val sqlString: String        = criteria
+    val criteria: Criteria[SQL] = F.===[SQL, Column, Int](F.col("id"), F.lit(1))
+    val sqlString: String       = criteria
     assertEquals(sqlString, "id = 1")
   }
 

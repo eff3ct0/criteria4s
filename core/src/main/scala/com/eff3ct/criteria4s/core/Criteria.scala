@@ -32,7 +32,8 @@ trait Criteria[T <: CriteriaTag] {
 
 object Criteria {
 
-  /** Constructs a Criteria from a raw string. Package-private to prevent
+  /**
+   * Constructs a Criteria from a raw string. Package-private to prevent
    *  arbitrary string injection from user code — criteria should only be
    *  built through predicates, conjunctions, and the provided DSL.
    */

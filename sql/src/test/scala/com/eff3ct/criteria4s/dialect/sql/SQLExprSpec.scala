@@ -335,21 +335,26 @@ class SQLExprSpec extends munit.FunSuite {
   // -- CASE WHEN --
 
   test("CASE WHEN with single branch") {
-    val result = F.caseWhen[SQL, Int](
-      F.col[SQL]("status") === F.lit[SQL, String]("active"),
-      F.lit[SQL, Int](1)
-    ).otherwise(F.lit[SQL, Int](0))
+    val result = F
+      .caseWhen[SQL, Int](
+        F.col[SQL]("status") === F.lit[SQL, String]("active"),
+        F.lit[SQL, Int](1)
+      )
+      .otherwise(F.lit[SQL, Int](0))
     assertEquals(result.asString, "CASE WHEN status = 'active' THEN 1 ELSE 0 END")
   }
 
   test("CASE WHEN with multiple branches") {
-    val result = F.caseWhen[SQL, String](
-      F.col[SQL]("score") gt F.lit[SQL, Int](90),
-      F.lit[SQL, String]("A")
-    ).when(
-      F.col[SQL]("score") gt F.lit[SQL, Int](80),
-      F.lit[SQL, String]("B")
-    ).otherwise(F.lit[SQL, String]("C"))
+    val result = F
+      .caseWhen[SQL, String](
+        F.col[SQL]("score") gt F.lit[SQL, Int](90),
+        F.lit[SQL, String]("A")
+      )
+      .when(
+        F.col[SQL]("score") gt F.lit[SQL, Int](80),
+        F.lit[SQL, String]("B")
+      )
+      .otherwise(F.lit[SQL, String]("C"))
     assertEquals(
       result.asString,
       "CASE WHEN score > 90 THEN 'A' WHEN score > 80 THEN 'B' ELSE 'C' END"
@@ -359,7 +364,8 @@ class SQLExprSpec extends munit.FunSuite {
   // -- Composed expressions --
 
   test("complex composed expression renders correctly") {
-    val expr = F.col[SQL]("age")
+    val expr = F
+      .col[SQL]("age")
       .gt(F.lit[SQL, Int](18))
       .and(F.col[SQL]("name").like(F.lit[SQL, String]("A%")))
       .or(F.col[SQL]("active").===(F.lit[SQL, Boolean](true)))

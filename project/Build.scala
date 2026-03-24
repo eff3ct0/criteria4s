@@ -42,7 +42,7 @@ object Build extends AutoPlugin {
       ThisBuild / Test / fork := true,
       headerLicense           := Some(headerIOLicense),
       ThisBuild / scalacOptions ++= Vector(
-        "-release:8",
+        "-release:11",
         "-deprecation",
         "-feature",
         "-encoding", "UTF-8",

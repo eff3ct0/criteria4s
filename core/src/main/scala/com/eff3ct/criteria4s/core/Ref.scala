@@ -53,7 +53,7 @@ object Ref {
 
   private[criteria4s] def bool[D <: CriteriaTag](v: Boolean): Bool[D] =
     new Bool[D] {
-      override def value: String                                     = v.toString
+      override def value: String                                  = v.toString
       override def asString(using show: Show[Boolean, D]): String = v.toString
     }
 

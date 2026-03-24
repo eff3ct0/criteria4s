@@ -47,7 +47,7 @@ object MongoDB {
     }
 
   private val likeExpr: (String, String) => String =
-    (value, regex) => predExpr("regex")(value, s"\\$regex\\")
+    (value, pattern) => predExpr("regex")(value, pattern)
 
   private val isNullExpr: String => String =
     ref => s"{$ref: null}"

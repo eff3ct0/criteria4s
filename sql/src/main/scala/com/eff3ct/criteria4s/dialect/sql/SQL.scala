@@ -46,6 +46,12 @@ object SQL {
   implicit val showColumn: Show[Column, SQL] =
     Show.create(col => s"'${col.colName}'")
 
+  implicit def showSeq[V](implicit show: Show[V, SQL]): Show[Seq[V], SQL] =
+    Show.create(_.map(show.show).mkString("(", ", ", ")"))
+
+  implicit def showTuple[V](implicit show: Show[V, SQL]): Show[(V, V), SQL] =
+    Show.create { case (l, r) => s"${show.show(l)} AND ${show.show(r)}" }
+
   trait SQLExpr[T <: SQL] {
 
     protected def conjExpr(symbol: String): (String, String) => String =

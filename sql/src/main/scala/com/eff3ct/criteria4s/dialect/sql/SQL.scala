@@ -44,7 +44,7 @@ object SQL {
     s"$value $symbol"
 
   implicit val showColumn: Show[Column, SQL] =
-    Show.create(col => s"'${col.colName}'")
+    Show.create(col => col.colName)
 
   implicit def showSeq[V](implicit show: Show[V, SQL]): Show[Seq[V], SQL] =
     Show.create(_.map(show.show).mkString("(", ", ", ")"))

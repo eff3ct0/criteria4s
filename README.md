@@ -1,102 +1,156 @@
-[![Release](https://github.com/eff3ct0/criteria4s/actions/workflows/releases.yml/badge.svg)](https://github.com/eff3ct0/criteria4s/actions/workflows/releases.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/eff3ct0/criteria4s/actions/workflows/ci.yml/badge.svg)](https://github.com/eff3ct0/criteria4s/actions/workflows/ci.yml) [![Release](https://github.com/eff3ct0/criteria4s/actions/workflows/releases.yml/badge.svg)](https://github.com/eff3ct0/criteria4s/actions/workflows/releases.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # Criteria4s
 
-Criteria4s is a straightforward domain-specific language (DSL) designed to define criteria and predicate expressions for any data store using Scala's type class mechanisms in a type-safe manner. Its core is designed to be agnostic to any specific data store, making it extensible and capable of supporting a variety of data storage systems.
+Criteria4s is a type-safe, data-store-agnostic DSL for defining criteria and predicate expressions in Scala 3. It uses a tagless-final / type-class pattern so that a single polymorphic criteria definition can be evaluated against multiple backends.
 
 ## Getting Started
 
-To utilize the Criteria4s DSL in your project, add the following dependencies to your build configuration:
-
-### Sonatype Repository
-
-- **Core library**: [criteria4s-core](https://central.sonatype.com/artifact/com.eff3ct/criteria4s-core_2.13)
-- **SQL implementation**: [criteria4s-sql](https://central.sonatype.com/artifact/com.eff3ct/criteria4s-sql_2.13)
-- **MongoDB implementation**: [criteria4s-mongodb](https://central.sonatype.com/artifact/com.eff3ct/criteria4s-mongodb_2.13)
-
-### SBT
-
-Add these to your `build.sbt`:
+Add the dependencies you need to your `build.sbt`:
 
 ```scala
-libraryDependencies += "com.eff3ct" %% "criteria4s-core" % "<version>" // Core library
-libraryDependencies += "com.eff3ct" %% "criteria4s-sql" % "<version>" // SQL implementation
-libraryDependencies += "com.eff3ct" %% "criteria4s-mongodb" % "<version>" // MongoDB implementation
+// Core library (required)
+libraryDependencies += "com.eff3ct" %% "criteria4s-core" % "<version>"
+
+// Pick one or more dialect implementations
+libraryDependencies += "com.eff3ct" %% "criteria4s-sql"           % "<version>" // Base SQL
+libraryDependencies += "com.eff3ct" %% "criteria4s-postgresql"    % "<version>" // PostgreSQL
+libraryDependencies += "com.eff3ct" %% "criteria4s-sparksql"      % "<version>" // Spark SQL
+libraryDependencies += "com.eff3ct" %% "criteria4s-mongodb"       % "<version>" // MongoDB
+libraryDependencies += "com.eff3ct" %% "criteria4s-elasticsearch" % "<version>" // Elasticsearch
 ```
 
-> [!IMPORTANT]  
-> Criteria4s is currently a work in progress and not ready for production use. It is available exclusively for Scala 2.13.
+**Requires Scala 3.6+**
 
-## Dialects Supported
+## Supported Dialects
 
-Criteria4s is extensible, supporting various types of data stores. Presently, it supports the following dialects:
+| Dialect         | Module                    | Column Quoting | Extends    |
+|-----------------|---------------------------|----------------|------------|
+| SQL (base)      | `criteria4s-sql`          | `'col'`        | —          |
+| PostgreSQL      | `criteria4s-postgresql`   | `"col"`        | SQL        |
+| Spark SQL       | `criteria4s-sparksql`     | `` `col` ``    | SQL        |
+| MongoDB         | `criteria4s-mongodb`      | `"col"`        | CriteriaTag |
+| Elasticsearch   | `criteria4s-elasticsearch`| `"col"`        | CriteriaTag |
 
-| Dialect     | Package                                                                                    |
-|-------------|:-------------------------------------------------------------------------------------------|
-| SQL         | [sql](./sql/src/main/scala/io/github/rafafrdz/criteria4s/dialect/sql)                      | 
-| MongoDB     | [mongodb](./mongodb/src/main/scala/io/github/rafafrdz/criteria4s/dialect/mongodb)          | 
-| PostgresSQL | [postgresql](./postgresql/src/main/scala/io/github/rafafrdz/criteria4s/dialect/postgresql) |
+## Supported Operations
+
+| Predicate | Function | Extension | Symbol |
+|-----------|----------|-----------|--------|
+| EQ        | `===`    | `.===`, `.eqv` | — |
+| NEQ       | `=!=`, `neq` | `.=!=`, `.neq` | — |
+| GT        | `gt`     | `.gt`     | `:>`   |
+| LT        | `lt`     | `.lt`     | `:<`   |
+| GEQ       | `geq`    | `.geq`    | `:>=`  |
+| LEQ       | `leq`    | `.leq`    | `:<=`  |
+| LIKE      | `like`   | `.like`   | —      |
+| IN        | `in`     | `.in`     | —      |
+| NOT IN    | `notIn`  | `.notIn`  | —      |
+| IS NULL   | `isNull` | `.isNull` | —      |
+| IS NOT NULL | `isNotNull` | `.isNotNull` | — |
+| BETWEEN   | `between`| `.between`| —      |
+| NOT BETWEEN | `notBetween` | `.notBetween` | — |
+| STARTS WITH | `startsWith` | `.startsWith` | — |
+| ENDS WITH | `endsWith` | `.endsWith` | — |
+| CONTAINS  | `contains` | `.contains` | — |
+| IS TRUE   | `isTrue` | `.isTrue` | —      |
+| IS FALSE  | `isFalse`| `.isFalse`| —      |
+| AND       | `and`    | `.and`    | `&&`, `:&` |
+| OR        | `or`     | `.or`     | `\|\|`, `:\|` |
+| NOT       | `not`, `!!` | `.not` | —      |
+
+## Quick Example
+
+```scala
+import com.eff3ct.criteria4s.core.*
+import com.eff3ct.criteria4s.extensions.*
+import com.eff3ct.criteria4s.functions.*
+
+// Define a polymorphic criteria expression
+def activeAdults[T <: CriteriaTag: GEQ: EQ: AND](implicit
+    sc: Show[Column, T]
+): Criteria[T] =
+  (col[T]("age") geq lit(18)) and (col[T]("active") === lit(true))
+```
+
+Evaluate against different backends:
+
+```scala
+import com.eff3ct.criteria4s.dialect.sql.*
+import com.eff3ct.criteria4s.dialect.mongodb.*
+import com.eff3ct.criteria4s.dialect.elasticsearch.*
+
+activeAdults[SQL]
+// ('age' >= 18) AND ('active' = true)
+
+activeAdults[MongoDB]
+// {$and: [{"age": {$gte: 18}}, {"active": {$eq: true}}]}
+
+activeAdults[Elasticsearch]
+// {"bool": {"must": [{"range": {"age": {"gte": 18}}}, {"term": {"active": true}}]}}
+```
+
+### Function-Style API
+
+```scala
+val filter = and(
+  gt(col("age"), lit(18)),
+  or(
+    isNull(col("email")),
+    like(col("name"), lit("%Smith%"))
+  )
+)
+```
+
+### Extension / Infix Style
+
+```scala
+val filter =
+  (col[SQL]("age") :> lit(18))
+    .and(col[SQL]("email").isNull)
+    .or(col[SQL]("name") like lit("%Smith%"))
+```
+
+## Creating a Custom Dialect
+
+Extend `CriteriaTag` and provide implicit instances for each predicate:
+
+```scala
+import com.eff3ct.criteria4s.core.*
+import com.eff3ct.criteria4s.instances.*
+
+trait MyDialect extends CriteriaTag
+
+object MyDialect {
+  implicit val showColumn: Show[Column, MyDialect] =
+    Show.create(col => s"[${col.colName}]")
+
+  implicit val eqPred: EQ[MyDialect] =
+    build[MyDialect, EQ]((l, r) => s"$l equals $r")
+
+  // ... add more predicates as needed
+}
+```
 
 ## Examples
 
-Here are examples demonstrating how to use the Criteria DSL. More samples are available in the [`criteria4s-examples`](./examples/src/main/scala/io/github/rafafrdz/criteria4s/examples) module.
+See the [`criteria4s-examples`](./examples/src/main/scala/com/eff3ct/criteria4s/examples) module for complete examples:
 
-### Imports
+- [`FunctionStyleExample`](./examples/src/main/scala/com/eff3ct/criteria4s/examples/FunctionStyleExample.scala) — all predicates via function API
+- [`ExtensionStyleExample`](./examples/src/main/scala/com/eff3ct/criteria4s/examples/ExtensionStyleExample.scala) — all predicates via infix syntax
+- [`PolymorphicExample`](./examples/src/main/scala/com/eff3ct/criteria4s/examples/PolymorphicExample.scala) — tagless-final across all backends
 
-Start by importing the Criteria4s DSL and the SQL dialect:
+## Module Structure
 
-```scala
-import com.eff3ct.criteria4s.core._
-import com.eff3ct.criteria4s.examples.datastores._
-import com.eff3ct.criteria4s.extensions._
-import com.eff3ct.criteria4s.functions._
-```
+| Module                  | Published | Dependencies |
+|-------------------------|-----------|--------------|
+| `criteria4s-core`       | Yes       | —            |
+| `criteria4s-sql`        | Yes       | core         |
+| `criteria4s-postgresql`  | Yes       | sql          |
+| `criteria4s-sparksql`   | Yes       | sql          |
+| `criteria4s-mongodb`    | Yes       | core         |
+| `criteria4s-elasticsearch` | Yes    | core         |
+| `criteria4s-examples`   | No        | all          |
 
-### Defining Criteria Expressions
+## License
 
-Define criteria expressions in a polymorphic way using the Criteria DSL. Additional examples are provided in the [`Defining Criteria Expressions`](./doc/defining-criteria-expressions.md) document.
-
-```scala
-def expr[T <: CriteriaTag : LEQ : EQ : AND : OR : Show[Column, *]]: Criteria[T] =
-  (col[T]("field1") leq lit(3)) and (col[T]("field2") leq lit(4)) or (col[T]("field3") === lit("c"))
-```
-
-#### Use Cases
-
-The following code snippets demonstrate how to use the defined criteria expressions:
-
-```scala
-def ageCriteria[T <: CriteriaTag : GT : LT : AND : Show[Column, *]]: Criteria[T] =
-  (col[T]("age") gt lit(18)) and (col[T]("age") lt lit(65))
-
-def refCriteria[T <: CriteriaTag : EQ : Show[Column, *]](fieldName: String, id: UUID): Criteria[T] =
-  col[T](fieldName) === lit(id.toString)
-```
-
-### Evaluating Criteria Expressions
-
-Utilize these expressions to generate criteria for different data stores by importing the corresponding dialects. Evaluation examples for various dialects are available in the following documents:
-
-- [PostgreSQL Dialect](./doc/postgresql-dialect-evaluating.md): Evaluate criteria expressions for PostgreSQL data stores.
-- [MongoDB Dialect](./doc/mongodb-dialect-evaluating.md): Evaluate criteria expressions for MongoDB data stores.
-- [MySQL Dialect](./doc/mysql-dialect-evaluating.md): Evaluate criteria expressions for MySQL data stores.
-- [Custom Dialect](./doc/custom-dialect-evaluating.md): Evaluate criteria expressions for custom data stores.
-
-### Inline Criteria DSL
-
-Leverage the Criteria DSL in an inline manner:
-
-```scala
-(col[PostgreSQL]("field1") leq lit(3)) and (col[PostgreSQL]("field2") leq lit(4)) or (col[PostgreSQL]("field3") === lit("c"))
-// res: (('field1' <= 3) AND ('field2' <= 4)) OR ('field3' = c)
-```
-
-```scala
-(col[MongoDB]("field1") leq lit(3)) and (col[MongoDB]("field2") leq lit(4)) or (col[MongoDB]("field3") === lit("c"))
-// res: {$or: [{$and: [{"field1": {$lte: 3}}, {"field2": {$lte: 4}}]}, {"field3": {$eq: c}}]}
-```
-
-```scala
-(col[WeirdDatastore]("field1") leq lit(3)) and (col[WeirdDatastore]("field2") leq lit(4)) or (col[WeirdDatastore]("field3") === lit("c"))
-// res: {left: {left: {left: field1, opt: <=, right: 3 }, opt: AND, right: {left: field2, opt: <=, right: 4 } }, opt: OR, right: {left: field3, opt: =, right: c } }
-```
+[MIT License](./LICENSE)

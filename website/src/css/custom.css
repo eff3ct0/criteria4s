@@ -261,14 +261,9 @@ article h3 {
   text-decoration-color: var(--ifm-color-primary);
 }
 
-/* ─── Code blocks — dark in both modes ───────────────────────────────────── */
+/* ─── Code blocks ────────────────────────────────────────────────────────── */
 
-/* Force dark background for code blocks in light mode, preserving token colors */
-:root .prism-code,
-:root pre[class*='language-'] {
-  background: #0e0e10 !important;
-}
-
+/* Light mode: let Prism github theme render naturally */
 .theme-code-block {
   border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: 8px;
@@ -281,10 +276,14 @@ article h3 {
 }
 
 .theme-code-block-highlighted-line {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(0, 0, 0, 0.06);
   display: block;
   margin: 0 -1rem;
   padding: 0 1rem;
+}
+
+[data-theme='dark'] .theme-code-block-highlighted-line {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 /* Inline code */

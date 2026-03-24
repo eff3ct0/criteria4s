@@ -146,6 +146,12 @@ class SQLExprSpec extends munit.FunSuite {
     assertEquals(result.value, "NOT ('a' = 1)")
   }
 
+  test("eq() alias works the same as ===") {
+    val eqFn  = com.eff3ct.criteria4s.functions.predicates.eq[SQL, Column, Int]
+    val result = eqFn(col("x"), lit(1))
+    assertEquals(result.value, "'x' = 1")
+  }
+
   test("eqv() alias works the same as ===") {
     val result = eqv[SQL, Column, Int](col("x"), lit(1))
     assertEquals(result.value, "'x' = 1")
@@ -154,6 +160,11 @@ class SQLExprSpec extends munit.FunSuite {
   test("extension .eqv delegates to EQ") {
     val result = col[SQL]("x").eqv(lit[SQL, Int](1))
     assertEquals(result.value, "'x' = 1")
+  }
+
+  test("neq() alias works the same as =!=") {
+    val result = neq[SQL, Column, Int](col("x"), lit(1))
+    assertEquals(result.value, "'x' != 1")
   }
 
   // -- Show instances --

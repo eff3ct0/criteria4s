@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Rafael Fernandez
+ * Copyright (c) 2024-2026 Rafael Fernandez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,48 +27,48 @@ package com.eff3ct.criteria4s.examples
 import com.eff3ct.criteria4s.core.*
 import com.eff3ct.criteria4s.examples.datastores.Postgres
 import com.eff3ct.criteria4s.extensions.*
-import com.eff3ct.criteria4s.functions.*
+import com.eff3ct.criteria4s.functions as F
 
 /** Demonstrates the extension/infix syntax for building criteria expressions. */
 object ExtensionStyleExample extends App {
 
   // Comparisons using infix operators
-  val ageAtLeast18: Criteria[Postgres]  = col[Postgres]("age") geq lit(18)
-  val scoreUnder100: Criteria[Postgres] = col[Postgres]("score") lt lit(100)
-  val nameEquals: Criteria[Postgres]    = col[Postgres]("name") === lit("Alice")
-  val nameNotEquals: Criteria[Postgres] = col[Postgres]("name") =!= lit("Bob")
-  val nameLike: Criteria[Postgres]      = col[Postgres]("name") like lit("%Smith%")
-  val salaryAtMost: Criteria[Postgres]  = col[Postgres]("salary") leq lit(50000)
-  val ratingAbove: Criteria[Postgres]   = col[Postgres]("rating") gt lit(4)
-  val nameEqualsEqv: Criteria[Postgres] = col[Postgres]("name") eqv lit("Alice")
+  val ageAtLeast18: Criteria[Postgres]  = F.col[Postgres]("age") geq F.lit(18)
+  val scoreUnder100: Criteria[Postgres] = F.col[Postgres]("score") lt F.lit(100)
+  val nameEquals: Criteria[Postgres]    = F.col[Postgres]("name") === F.lit("Alice")
+  val nameNotEquals: Criteria[Postgres] = F.col[Postgres]("name") =!= F.lit("Bob")
+  val nameLike: Criteria[Postgres]      = F.col[Postgres]("name") like F.lit("%Smith%")
+  val salaryAtMost: Criteria[Postgres]  = F.col[Postgres]("salary") leq F.lit(50000)
+  val ratingAbove: Criteria[Postgres]   = F.col[Postgres]("rating") gt F.lit(4)
+  val nameEqualsEqv: Criteria[Postgres] = F.col[Postgres]("name") eqv F.lit("Alice")
 
   // Null checks
-  val deletedIsNull: Criteria[Postgres]   = col[Postgres]("deleted_at").isNull
-  val verifiedNotNull: Criteria[Postgres] = col[Postgres]("verified_at").isNotNull
+  val deletedIsNull: Criteria[Postgres]   = F.col[Postgres]("deleted_at").isNull
+  val verifiedNotNull: Criteria[Postgres] = F.col[Postgres]("verified_at").isNotNull
 
   // Collections and ranges
   val statusInSet: Criteria[Postgres] =
-    col[Postgres]("status") in array[Postgres, String]("active", "pending")
+    F.col[Postgres]("status") in F.array[Postgres, String]("active", "pending")
   val statusNotInSet: Criteria[Postgres] =
-    col[Postgres]("status") notIn array[Postgres, String]("banned", "deleted")
+    F.col[Postgres]("status") notIn F.array[Postgres, String]("banned", "deleted")
   val ageInRange: Criteria[Postgres] =
-    col[Postgres]("age") between range[Postgres, Int](18, 65)
+    F.col[Postgres]("age") between F.range[Postgres, Int](18, 65)
   val ageOutOfRange: Criteria[Postgres] =
-    col[Postgres]("age") notBetween range[Postgres, Int](0, 17)
+    F.col[Postgres]("age") notBetween F.range[Postgres, Int](0, 17)
 
   // Composing with infix conjunctions
   val activeAdult: Criteria[Postgres] =
-    (col[Postgres]("age") geq lit(18)) and (col[Postgres]("active") === lit(true))
+    (F.col[Postgres]("age") geq F.lit(18)) and (F.col[Postgres]("active") === F.lit(true))
 
   // Chained expression
   val complexFilter: Criteria[Postgres] =
-    (col[Postgres]("age") geq lit(18))
-      .and(col[Postgres]("role") === lit("admin"))
-      .or(col[Postgres]("superuser") === lit(true))
+    (F.col[Postgres]("age") geq F.lit(18))
+      .and(F.col[Postgres]("role") === F.lit("admin"))
+      .or(F.col[Postgres]("superuser") === F.lit(true))
 
   // Negation via extension
   val notBanned: Criteria[Postgres] =
-    (col[Postgres]("status") === lit("banned")).not
+    (F.col[Postgres]("status") === F.lit("banned")).not
 
   println("=== Extension/Infix Style ===")
   println(s"ageAtLeast18:    $ageAtLeast18")

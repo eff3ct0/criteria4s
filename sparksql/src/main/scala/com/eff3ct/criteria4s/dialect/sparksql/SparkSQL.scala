@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Rafael Fernandez
+ * Copyright (c) 2024-2026 Rafael Fernandez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,12 +33,12 @@ trait SparkSQL extends SQL
 object SparkSQL extends SQL.SQLExpr[SparkSQL] {
 
   /** Spark SQL uses backtick-quoted column identifiers. */
-  implicit val showColumn: Show[Column, SparkSQL] =
+  given showColumn: Show[Column, SparkSQL] =
     Show.create(col => s"`${col.colName}`")
 
-  implicit def showSeq[V](implicit show: Show[V, SparkSQL]): Show[Seq[V], SparkSQL] =
+  given showSeq[V](using show: Show[V, SparkSQL]): Show[Seq[V], SparkSQL] =
     Show.create(_.map(show.show).mkString("(", ", ", ")"))
 
-  implicit def showTuple[V](implicit show: Show[V, SparkSQL]): Show[(V, V), SparkSQL] =
+  given showTuple[V](using show: Show[V, SparkSQL]): Show[(V, V), SparkSQL] =
     Show.create { case (l, r) => s"${show.show(l)} AND ${show.show(r)}" }
 }

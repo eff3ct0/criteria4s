@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Rafael Fernandez
+ * Copyright (c) 2024-2026 Rafael Fernandez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,11 +30,11 @@ import com.eff3ct.criteria4s.instances.builder.{BuilderBinary, BuilderUnary}
 sealed trait Predicate[T <: CriteriaTag]
 
 trait PredicateUnary[T <: CriteriaTag] extends Predicate[T] {
-  def eval[V](ref: Ref[T, V])(implicit show: Show[V, T]): Criteria[T]
+  def eval[V](ref: Ref[T, V])(using show: Show[V, T]): Criteria[T]
 }
 
 trait PredicateBinary[T <: CriteriaTag] extends Predicate[T] {
-  def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+  def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T]
@@ -49,33 +49,33 @@ object PredicateUnary {
 
   trait ISFALSE[T <: CriteriaTag] extends PredicateUnary[T]
 
-  implicit val isNullBuilder: BuilderUnary[ISNULL] = new BuilderUnary[ISNULL] {
+  given isNullBuilder: BuilderUnary[ISNULL] = new BuilderUnary[ISNULL] {
     override def build[T <: CriteriaTag](F: String => String): ISNULL[T] = new ISNULL[T] {
-      override def eval[V](ref: Ref[T, V])(implicit show: Show[V, T]): Criteria[T] = pure(
+      override def eval[V](ref: Ref[T, V])(using show: Show[V, T]): Criteria[T] = pure(
         F(ref.asString)
       )
     }
   }
 
-  implicit val isNotNullBuilder: BuilderUnary[ISNOTNULL] = new BuilderUnary[ISNOTNULL] {
+  given isNotNullBuilder: BuilderUnary[ISNOTNULL] = new BuilderUnary[ISNOTNULL] {
     override def build[T <: CriteriaTag](F: String => String): ISNOTNULL[T] = new ISNOTNULL[T] {
-      override def eval[V](ref: Ref[T, V])(implicit show: Show[V, T]): Criteria[T] = pure(
+      override def eval[V](ref: Ref[T, V])(using show: Show[V, T]): Criteria[T] = pure(
         F(ref.asString)
       )
     }
   }
 
-  implicit val isTrueBuilder: BuilderUnary[ISTRUE] = new BuilderUnary[ISTRUE] {
+  given isTrueBuilder: BuilderUnary[ISTRUE] = new BuilderUnary[ISTRUE] {
     override def build[T <: CriteriaTag](F: String => String): ISTRUE[T] = new ISTRUE[T] {
-      override def eval[V](ref: Ref[T, V])(implicit show: Show[V, T]): Criteria[T] = pure(
+      override def eval[V](ref: Ref[T, V])(using show: Show[V, T]): Criteria[T] = pure(
         F(ref.asString)
       )
     }
   }
 
-  implicit val isFalseBuilder: BuilderUnary[ISFALSE] = new BuilderUnary[ISFALSE] {
+  given isFalseBuilder: BuilderUnary[ISFALSE] = new BuilderUnary[ISFALSE] {
     override def build[T <: CriteriaTag](F: String => String): ISFALSE[T] = new ISFALSE[T] {
-      override def eval[V](ref: Ref[T, V])(implicit show: Show[V, T]): Criteria[T] = pure(
+      override def eval[V](ref: Ref[T, V])(using show: Show[V, T]): Criteria[T] = pure(
         F(ref.asString)
       )
     }
@@ -118,134 +118,134 @@ object PredicateBinary {
 
   trait CONTAINS[T <: CriteriaTag] extends PredicateBinary[T]
 
-  implicit val gtBuilder: BuilderBinary[GT] = new BuilderBinary[GT] {
+  given gtBuilder: BuilderBinary[GT] = new BuilderBinary[GT] {
     override def build[T <: CriteriaTag](
         F: (String, String) => String
     ): GT[T] = new GT[T] {
-      override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+      override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
           showL: Show[L, T],
           showR: Show[R, T]
       ): Criteria[T] = pure(F(cr1.asString, cr2.asString))
     }
   }
 
-  implicit val ltBuilder: BuilderBinary[LT] = new BuilderBinary[LT] {
+  given ltBuilder: BuilderBinary[LT] = new BuilderBinary[LT] {
     override def build[T <: CriteriaTag](F: (String, String) => String): LT[T] = new LT[T] {
-      override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+      override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
           showL: Show[L, T],
           showR: Show[R, T]
       ): Criteria[T] = pure(F(cr1.asString, cr2.asString))
     }
   }
 
-  implicit val eqBuilder: BuilderBinary[EQ] = new BuilderBinary[EQ] {
+  given eqBuilder: BuilderBinary[EQ] = new BuilderBinary[EQ] {
     override def build[T <: CriteriaTag](F: (String, String) => String): EQ[T] = new EQ[T] {
-      override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+      override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
           showL: Show[L, T],
           showR: Show[R, T]
       ): Criteria[T] = pure(F(cr1.asString, cr2.asString))
     }
   }
 
-  implicit val neqBuilder: BuilderBinary[NEQ] = new BuilderBinary[NEQ] {
+  given neqBuilder: BuilderBinary[NEQ] = new BuilderBinary[NEQ] {
     override def build[T <: CriteriaTag](F: (String, String) => String): NEQ[T] = new NEQ[T] {
-      override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+      override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
           showL: Show[L, T],
           showR: Show[R, T]
       ): Criteria[T] = pure(F(cr1.asString, cr2.asString))
     }
   }
 
-  implicit val geqBuilder: BuilderBinary[GEQ] = new BuilderBinary[GEQ] {
+  given geqBuilder: BuilderBinary[GEQ] = new BuilderBinary[GEQ] {
     override def build[T <: CriteriaTag](F: (String, String) => String): GEQ[T] = new GEQ[T] {
-      override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+      override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
           showL: Show[L, T],
           showR: Show[R, T]
       ): Criteria[T] = pure(F(cr1.asString, cr2.asString))
     }
   }
 
-  implicit val leqBuilder: BuilderBinary[LEQ] = new BuilderBinary[LEQ] {
+  given leqBuilder: BuilderBinary[LEQ] = new BuilderBinary[LEQ] {
     override def build[T <: CriteriaTag](F: (String, String) => String): LEQ[T] = new LEQ[T] {
-      override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+      override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
           showL: Show[L, T],
           showR: Show[R, T]
       ): Criteria[T] = pure(F(cr1.asString, cr2.asString))
     }
   }
 
-  implicit val likeBuilder: BuilderBinary[LIKE] = new BuilderBinary[LIKE] {
+  given likeBuilder: BuilderBinary[LIKE] = new BuilderBinary[LIKE] {
     override def build[T <: CriteriaTag](F: (String, String) => String): LIKE[T] = new LIKE[T] {
-      override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+      override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
           showL: Show[L, T],
           showR: Show[R, T]
       ): Criteria[T] = pure(F(cr1.asString, cr2.asString))
     }
   }
 
-  implicit val inBuilder: BuilderBinary[IN] = new BuilderBinary[IN] {
+  given inBuilder: BuilderBinary[IN] = new BuilderBinary[IN] {
     override def build[T <: CriteriaTag](F: (String, String) => String): IN[T] = new IN[T] {
-      override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+      override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
           showL: Show[L, T],
           showR: Show[R, T]
       ): Criteria[T] = pure(F(cr1.asString, cr2.asString))
     }
   }
 
-  implicit val notinBuilder: BuilderBinary[NOTIN] = new BuilderBinary[NOTIN] {
+  given notinBuilder: BuilderBinary[NOTIN] = new BuilderBinary[NOTIN] {
     override def build[T <: CriteriaTag](F: (String, String) => String): NOTIN[T] =
       new NOTIN[T] {
-        override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+        override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
             showL: Show[L, T],
             showR: Show[R, T]
         ): Criteria[T] = pure(F(cr1.asString, cr2.asString))
       }
   }
 
-  implicit val betweenBuilder: BuilderBinary[BETWEEN] = new BuilderBinary[BETWEEN] {
+  given betweenBuilder: BuilderBinary[BETWEEN] = new BuilderBinary[BETWEEN] {
     override def build[T <: CriteriaTag](F: (String, String) => String): BETWEEN[T] =
       new BETWEEN[T] {
-        override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+        override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
             showL: Show[L, T],
             showR: Show[R, T]
         ): Criteria[T] = pure(F(cr1.asString, cr2.asString))
       }
   }
 
-  implicit val notbetweenBuilder: BuilderBinary[NOTBETWEEN] = new BuilderBinary[NOTBETWEEN] {
+  given notbetweenBuilder: BuilderBinary[NOTBETWEEN] = new BuilderBinary[NOTBETWEEN] {
     override def build[T <: CriteriaTag](F: (String, String) => String): NOTBETWEEN[T] =
       new NOTBETWEEN[T] {
-        override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+        override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
             showL: Show[L, T],
             showR: Show[R, T]
         ): Criteria[T] = pure(F(cr1.asString, cr2.asString))
       }
   }
 
-  implicit val startswithBuilder: BuilderBinary[STARTSWITH] = new BuilderBinary[STARTSWITH] {
+  given startswithBuilder: BuilderBinary[STARTSWITH] = new BuilderBinary[STARTSWITH] {
     override def build[T <: CriteriaTag](F: (String, String) => String): STARTSWITH[T] =
       new STARTSWITH[T] {
-        override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+        override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
             showL: Show[L, T],
             showR: Show[R, T]
         ): Criteria[T] = pure(F(cr1.asString, cr2.asString))
       }
   }
 
-  implicit val endswithBuilder: BuilderBinary[ENDSWITH] = new BuilderBinary[ENDSWITH] {
+  given endswithBuilder: BuilderBinary[ENDSWITH] = new BuilderBinary[ENDSWITH] {
     override def build[T <: CriteriaTag](F: (String, String) => String): ENDSWITH[T] =
       new ENDSWITH[T] {
-        override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+        override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
             showL: Show[L, T],
             showR: Show[R, T]
         ): Criteria[T] = pure(F(cr1.asString, cr2.asString))
       }
   }
 
-  implicit val containsBuilder: BuilderBinary[CONTAINS] = new BuilderBinary[CONTAINS] {
+  given containsBuilder: BuilderBinary[CONTAINS] = new BuilderBinary[CONTAINS] {
     override def build[T <: CriteriaTag](F: (String, String) => String): CONTAINS[T] =
       new CONTAINS[T] {
-        override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+        override def eval[L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
             showL: Show[L, T],
             showR: Show[R, T]
         ): Criteria[T] = pure(F(cr1.asString, cr2.asString))

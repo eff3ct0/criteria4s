@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Rafael Fernandez
+ * Copyright (c) 2024-2026 Rafael Fernandez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,197 +26,197 @@ package com.eff3ct.criteria4s.dialect.sql
 
 import com.eff3ct.criteria4s.core.*
 import com.eff3ct.criteria4s.extensions.*
-import com.eff3ct.criteria4s.functions.*
+import com.eff3ct.criteria4s.functions as F
 
 class SQLExprSpec extends munit.FunSuite {
 
   // -- Predicates (function-style API) --
 
   test("SQL EQ renders correctly") {
-    val result = ===[SQL, Column, Int](col("age"), lit(30))
+    val result = F.===[SQL, Column, Int](F.col("age"), F.lit(30))
     assertEquals(result.value, "age = 30")
   }
 
   test("SQL NEQ renders correctly") {
-    val result = =!=[SQL, Column, Int](col("age"), lit(30))
+    val result = F.=!=[SQL, Column, Int](F.col("age"), F.lit(30))
     assertEquals(result.value, "age != 30")
   }
 
   test("SQL GT renders correctly") {
-    val result = gt[SQL, Column, Int](col("age"), lit(18))
+    val result = F.gt[SQL, Column, Int](F.col("age"), F.lit(18))
     assertEquals(result.value, "age > 18")
   }
 
   test("SQL LT renders correctly") {
-    val result = lt[SQL, Column, Int](col("age"), lit(65))
+    val result = F.lt[SQL, Column, Int](F.col("age"), F.lit(65))
     assertEquals(result.value, "age < 65")
   }
 
   test("SQL GEQ renders correctly") {
-    val result = geq[SQL, Column, Int](col("age"), lit(21))
+    val result = F.geq[SQL, Column, Int](F.col("age"), F.lit(21))
     assertEquals(result.value, "age >= 21")
   }
 
   test("SQL LEQ renders correctly") {
-    val result = leq[SQL, Column, Int](col("age"), lit(99))
+    val result = F.leq[SQL, Column, Int](F.col("age"), F.lit(99))
     assertEquals(result.value, "age <= 99")
   }
 
   test("SQL LIKE renders correctly") {
-    val result = like[SQL, Column, String](col("name"), lit("%John%"))
+    val result = F.like[SQL, Column, String](F.col("name"), F.lit("%John%"))
     assertEquals(result.value, "name LIKE '%John%'")
   }
 
   test("SQL IN renders correctly") {
-    val result = in[SQL, Column, Seq[Int]](col("id"), array[SQL, Int](1, 2, 3))
+    val result = F.in[SQL, Column, Seq[Int]](F.col("id"), F.array[SQL, Int](1, 2, 3))
     assertEquals(result.value, "id IN (1, 2, 3)")
   }
 
   test("SQL NOTIN renders correctly") {
-    val result = notIn[SQL, Column, Seq[Int]](col("id"), array[SQL, Int](4, 5))
+    val result = F.notIn[SQL, Column, Seq[Int]](F.col("id"), F.array[SQL, Int](4, 5))
     assertEquals(result.value, "id NOT IN (4, 5)")
   }
 
   test("SQL ISNULL renders correctly") {
-    val result = isNull[SQL, Column](col("email"))
+    val result = F.isNull[SQL, Column](F.col("email"))
     assertEquals(result.value, "email IS NULL")
   }
 
   test("SQL ISNOTNULL renders correctly") {
-    val result = isNotNull[SQL, Column](col("email"))
+    val result = F.isNotNull[SQL, Column](F.col("email"))
     assertEquals(result.value, "email IS NOT NULL")
   }
 
   test("SQL BETWEEN renders correctly") {
-    val result = between[SQL, Column, (Int, Int)](col("age"), range[SQL, Int](18, 65))
+    val result = F.between[SQL, Column, (Int, Int)](F.col("age"), F.range[SQL, Int](18, 65))
     assertEquals(result.value, "age BETWEEN 18 AND 65")
   }
 
   test("SQL NOTBETWEEN renders correctly") {
-    val result = notBetween[SQL, Column, (Int, Int)](col("age"), range[SQL, Int](0, 17))
+    val result = F.notBetween[SQL, Column, (Int, Int)](F.col("age"), F.range[SQL, Int](0, 17))
     assertEquals(result.value, "age NOT BETWEEN 0 AND 17")
   }
 
   // -- Conjunctions --
 
   test("SQL AND renders correctly") {
-    val left   = ===[SQL, Column, Int](col("a"), lit(1))
-    val right  = ===[SQL, Column, Int](col("b"), lit(2))
-    val result = and[SQL](left, right)
+    val left   = F.===[SQL, Column, Int](F.col("a"), F.lit(1))
+    val right  = F.===[SQL, Column, Int](F.col("b"), F.lit(2))
+    val result = F.and[SQL](left, right)
     assertEquals(result.value, "(a = 1) AND (b = 2)")
   }
 
   test("SQL OR renders correctly") {
-    val left   = ===[SQL, Column, Int](col("a"), lit(1))
-    val right  = ===[SQL, Column, Int](col("b"), lit(2))
-    val result = or[SQL](left, right)
+    val left   = F.===[SQL, Column, Int](F.col("a"), F.lit(1))
+    val right  = F.===[SQL, Column, Int](F.col("b"), F.lit(2))
+    val result = F.or[SQL](left, right)
     assertEquals(result.value, "(a = 1) OR (b = 2)")
   }
 
   test("SQL NOT renders correctly") {
-    val expr   = ===[SQL, Column, Int](col("a"), lit(1))
-    val result = not[SQL](expr)
+    val expr   = F.===[SQL, Column, Int](F.col("a"), F.lit(1))
+    val result = F.not[SQL](expr)
     assertEquals(result.value, "NOT (a = 1)")
   }
 
   // -- Extension syntax --
 
   test("extension .=== delegates to EQ") {
-    val result = col[SQL]("x").===(lit[SQL, Int](5))
+    val result = F.col[SQL]("x").===(F.lit[SQL, Int](5))
     assertEquals(result.value, "x = 5")
   }
 
   test("extension .and delegates to AND") {
-    val a      = ===[SQL, Column, Int](col("a"), lit(1))
-    val b      = ===[SQL, Column, Int](col("b"), lit(2))
+    val a      = F.===[SQL, Column, Int](F.col("a"), F.lit(1))
+    val b      = F.===[SQL, Column, Int](F.col("b"), F.lit(2))
     val result = a.and(b)
     assertEquals(result.value, "(a = 1) AND (b = 2)")
   }
 
   test("extension .or delegates to OR") {
-    val a      = ===[SQL, Column, Int](col("a"), lit(1))
-    val b      = ===[SQL, Column, Int](col("b"), lit(2))
+    val a      = F.===[SQL, Column, Int](F.col("a"), F.lit(1))
+    val b      = F.===[SQL, Column, Int](F.col("b"), F.lit(2))
     val result = a.or(b)
     assertEquals(result.value, "(a = 1) OR (b = 2)")
   }
 
   test("extension .not delegates to NOT") {
-    val expr   = ===[SQL, Column, Int](col("a"), lit(1))
+    val expr   = F.===[SQL, Column, Int](F.col("a"), F.lit(1))
     val result = expr.not
     assertEquals(result.value, "NOT (a = 1)")
   }
 
   test("eqv() alias works the same as ===") {
-    val result = eqv[SQL, Column, Int](col("x"), lit(1))
+    val result = F.eqv[SQL, Column, Int](F.col("x"), F.lit(1))
     assertEquals(result.value, "x = 1")
   }
 
   test("extension .eqv delegates to EQ") {
-    val result = col[SQL]("x").eqv(lit[SQL, Int](1))
+    val result = F.col[SQL]("x").eqv(F.lit[SQL, Int](1))
     assertEquals(result.value, "x = 1")
   }
 
   // -- Show instances --
 
   test("Show[Column, SQL] renders unquoted identifier") {
-    val show = implicitly[Show[Column, SQL]]
+    val show = summon[Show[Column, SQL]]
     assertEquals(show.show(Column("name")), "name")
   }
 
   test("Show[String, SQL] escapes single quotes") {
-    val show = implicitly[Show[String, SQL]]
+    val show = summon[Show[String, SQL]]
     assertEquals(show.show("O'Brien"), "'O''Brien'")
   }
 
   test("Show[Seq[Int], SQL] renders as parenthesized list") {
-    val show = implicitly[Show[Seq[Int], SQL]]
+    val show = summon[Show[Seq[Int], SQL]]
     assertEquals(show.show(Seq(1, 2, 3)), "(1, 2, 3)")
   }
 
   test("Show[(Int,Int), SQL] renders with AND separator") {
-    val show = implicitly[Show[(Int, Int), SQL]]
+    val show = summon[Show[(Int, Int), SQL]]
     assertEquals(show.show((10, 20)), "10 AND 20")
   }
 
   // -- Bool --
 
   test("bool creates a criteria with string value") {
-    val b = bool[SQL](true)
+    val b = F.bool[SQL](true)
     assertEquals(b.value, "true")
   }
 
   // -- Symbol extensions --
 
   test("extension .:< delegates to LT") {
-    val result = col[SQL]("x") :< lit[SQL, Int](5)
+    val result = F.col[SQL]("x") :< F.lit[SQL, Int](5)
     assertEquals(result.value, "x < 5")
   }
 
   test("extension .:> delegates to GT") {
-    val result = col[SQL]("x") :> lit[SQL, Int](5)
+    val result = F.col[SQL]("x") :> F.lit[SQL, Int](5)
     assertEquals(result.value, "x > 5")
   }
 
   test("extension .:<= delegates to LEQ") {
-    val result = col[SQL]("x") :<= lit[SQL, Int](5)
+    val result = F.col[SQL]("x") :<= F.lit[SQL, Int](5)
     assertEquals(result.value, "x <= 5")
   }
 
   test("extension .:>= delegates to GEQ") {
-    val result = col[SQL]("x") :>= lit[SQL, Int](5)
+    val result = F.col[SQL]("x") :>= F.lit[SQL, Int](5)
     assertEquals(result.value, "x >= 5")
   }
 
   test("extension .:& delegates to AND") {
-    val a      = ===[SQL, Column, Int](col("a"), lit(1))
-    val b      = ===[SQL, Column, Int](col("b"), lit(2))
+    val a      = F.===[SQL, Column, Int](F.col("a"), F.lit(1))
+    val b      = F.===[SQL, Column, Int](F.col("b"), F.lit(2))
     val result = a :& b
     assertEquals(result.value, "(a = 1) AND (b = 2)")
   }
 
   test("extension .:| delegates to OR") {
-    val a      = ===[SQL, Column, Int](col("a"), lit(1))
-    val b      = ===[SQL, Column, Int](col("b"), lit(2))
+    val a      = F.===[SQL, Column, Int](F.col("a"), F.lit(1))
+    val b      = F.===[SQL, Column, Int](F.col("b"), F.lit(2))
     val result = a :| b
     assertEquals(result.value, "(a = 1) OR (b = 2)")
   }
@@ -224,132 +224,132 @@ class SQLExprSpec extends munit.FunSuite {
   // -- New predicates (issue #7) --
 
   test("SQL STARTSWITH renders as LIKE") {
-    val result = startsWith[SQL, Column, String](col("name"), lit("A%"))
+    val result = F.startsWith[SQL, Column, String](F.col("name"), F.lit("A%"))
     assertEquals(result.value, "name LIKE 'A%'")
   }
 
   test("SQL ENDSWITH renders as LIKE") {
-    val result = endsWith[SQL, Column, String](col("name"), lit("%z"))
+    val result = F.endsWith[SQL, Column, String](F.col("name"), F.lit("%z"))
     assertEquals(result.value, "name LIKE '%z'")
   }
 
   test("SQL CONTAINS renders as LIKE") {
-    val result = contains[SQL, Column, String](col("name"), lit("%mid%"))
+    val result = F.contains[SQL, Column, String](F.col("name"), F.lit("%mid%"))
     assertEquals(result.value, "name LIKE '%mid%'")
   }
 
   test("SQL ISTRUE renders correctly") {
-    val result = isTrue[SQL, Column](col("active"))
+    val result = F.isTrue[SQL, Column](F.col("active"))
     assertEquals(result.value, "active IS TRUE")
   }
 
   test("SQL ISFALSE renders correctly") {
-    val result = isFalse[SQL, Column](col("active"))
+    val result = F.isFalse[SQL, Column](F.col("active"))
     assertEquals(result.value, "active IS FALSE")
   }
 
   test("extension .startsWith delegates to STARTSWITH") {
-    val result = col[SQL]("name").startsWith(lit[SQL, String]("A%"))
+    val result = F.col[SQL]("name").startsWith(F.lit[SQL, String]("A%"))
     assertEquals(result.value, "name LIKE 'A%'")
   }
 
   test("extension .isTrue delegates to ISTRUE") {
-    val result = col[SQL]("active").isTrue
+    val result = F.col[SQL]("active").isTrue
     assertEquals(result.value, "active IS TRUE")
   }
 
   test("extension .isFalse delegates to ISFALSE") {
-    val result = col[SQL]("active").isFalse
+    val result = F.col[SQL]("active").isFalse
     assertEquals(result.value, "active IS FALSE")
   }
 
   // -- Transform functions --
 
   test("upper() wraps ref in UPPER function") {
-    val result = upper[SQL, Column](col("name")) === lit[SQL, String]("JOHN")
+    val result = F.upper[SQL, Column](F.col("name")) === F.lit[SQL, String]("JOHN")
     assertEquals(result.value, "UPPER(name) = 'JOHN'")
   }
 
   test("lower() wraps ref in LOWER function") {
-    val result = lower[SQL, Column](col("name")) === lit[SQL, String]("john")
+    val result = F.lower[SQL, Column](F.col("name")) === F.lit[SQL, String]("john")
     assertEquals(result.value, "LOWER(name) = 'john'")
   }
 
   test("trim() wraps ref in TRIM function") {
-    val ref    = trim[SQL, Column](col("name"))
-    val result = ref === lit[SQL, String]("John")
+    val ref    = F.trim[SQL, Column](F.col("name"))
+    val result = ref === F.lit[SQL, String]("John")
     assertEquals(result.value, "TRIM(name) = 'John'")
   }
 
   test("coalesce() wraps two refs in COALESCE function") {
-    val ref    = coalesce[SQL, Column](col("nickname"), col("name"))
-    val result = ref === lit[SQL, String]("John")
+    val ref    = F.coalesce[SQL, Column](F.col("nickname"), F.col("name"))
+    val result = ref === F.lit[SQL, String]("John")
     assertEquals(result.value, "COALESCE(nickname, name) = 'John'")
   }
 
   test("concat() wraps two refs in CONCAT function") {
-    val ref    = concat[SQL, String](lit("Hello"), lit(" World"))
-    val result = ref === lit[SQL, String]("Hello World")
+    val ref    = F.concat[SQL, String](F.lit("Hello"), F.lit(" World"))
+    val result = ref === F.lit[SQL, String]("Hello World")
     assertEquals(result.value, "CONCAT('Hello', ' World') = 'Hello World'")
   }
 
   test("extension .upper delegates to UPPER") {
-    val result = col[SQL]("name").upper === lit[SQL, String]("JOHN")
+    val result = F.col[SQL]("name").upper === F.lit[SQL, String]("JOHN")
     assertEquals(result.value, "UPPER(name) = 'JOHN'")
   }
 
   // -- Ordering --
 
   test("asc() renders ASC ordering") {
-    val result = asc[SQL, Column](col("name"))
+    val result = F.asc[SQL, Column](F.col("name"))
     assertEquals(result.value, "name ASC")
   }
 
   test("desc() renders DESC ordering") {
-    val result = desc[SQL, Column](col("age"))
+    val result = F.desc[SQL, Column](F.col("age"))
     assertEquals(result.value, "age DESC")
   }
 
   test("extension .asc delegates to OrderAsc") {
-    val result = col[SQL]("name").asc
+    val result = F.col[SQL]("name").asc
     assertEquals(result.value, "name ASC")
   }
 
   test("extension .desc delegates to OrderDesc") {
-    val result = col[SQL]("age").desc
+    val result = F.col[SQL]("age").desc
     assertEquals(result.value, "age DESC")
   }
 
   // -- LIMIT / OFFSET --
 
   test("limit() renders LIMIT clause") {
-    val result = limit[SQL](10)
+    val result = F.limit[SQL](10)
     assertEquals(result.value, "LIMIT 10")
   }
 
   test("offset() renders OFFSET clause") {
-    val result = offset[SQL](20)
+    val result = F.offset[SQL](20)
     assertEquals(result.value, "OFFSET 20")
   }
 
   // -- CASE WHEN --
 
   test("CASE WHEN with single branch") {
-    val result = caseWhen[SQL, Int](
-      col[SQL]("status") === lit[SQL, String]("active"),
-      lit[SQL, Int](1)
-    ).otherwise(lit[SQL, Int](0))
+    val result = F.caseWhen[SQL, Int](
+      F.col[SQL]("status") === F.lit[SQL, String]("active"),
+      F.lit[SQL, Int](1)
+    ).otherwise(F.lit[SQL, Int](0))
     assertEquals(result.asString, "CASE WHEN status = 'active' THEN 1 ELSE 0 END")
   }
 
   test("CASE WHEN with multiple branches") {
-    val result = caseWhen[SQL, String](
-      col[SQL]("score") gt lit[SQL, Int](90),
-      lit[SQL, String]("A")
+    val result = F.caseWhen[SQL, String](
+      F.col[SQL]("score") gt F.lit[SQL, Int](90),
+      F.lit[SQL, String]("A")
     ).when(
-      col[SQL]("score") gt lit[SQL, Int](80),
-      lit[SQL, String]("B")
-    ).otherwise(lit[SQL, String]("C"))
+      F.col[SQL]("score") gt F.lit[SQL, Int](80),
+      F.lit[SQL, String]("B")
+    ).otherwise(F.lit[SQL, String]("C"))
     assertEquals(
       result.asString,
       "CASE WHEN score > 90 THEN 'A' WHEN score > 80 THEN 'B' ELSE 'C' END"
@@ -359,10 +359,10 @@ class SQLExprSpec extends munit.FunSuite {
   // -- Composed expressions --
 
   test("complex composed expression renders correctly") {
-    val expr = col[SQL]("age")
-      .gt(lit[SQL, Int](18))
-      .and(col[SQL]("name").like(lit[SQL, String]("A%")))
-      .or(col[SQL]("active").===(lit[SQL, Boolean](true)))
+    val expr = F.col[SQL]("age")
+      .gt(F.lit[SQL, Int](18))
+      .and(F.col[SQL]("name").like(F.lit[SQL, String]("A%")))
+      .or(F.col[SQL]("active").===(F.lit[SQL, Boolean](true)))
     assertEquals(
       expr.value,
       "((age > 18) AND (name LIKE 'A%')) OR (active = true)"

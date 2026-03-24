@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Rafael Fernandez
+ * Copyright (c) 2024-2026 Rafael Fernandez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,62 +26,62 @@ package com.eff3ct.criteria4s.dialect.sparksql
 
 import com.eff3ct.criteria4s.core.*
 import com.eff3ct.criteria4s.extensions.*
-import com.eff3ct.criteria4s.functions.*
+import com.eff3ct.criteria4s.functions as F
 
 class SparkSQLExprSpec extends munit.FunSuite {
 
   test("SparkSQL uses backtick-quoted column identifiers") {
-    val show = implicitly[Show[Column, SparkSQL]]
+    val show = summon[Show[Column, SparkSQL]]
     assertEquals(show.show(Column("name")), "`name`")
   }
 
   test("SparkSQL EQ renders with backtick-quoted columns") {
-    val result = ===[SparkSQL, Column, Int](col("age"), lit(30))
+    val result = F.===[SparkSQL, Column, Int](F.col("age"), F.lit(30))
     assertEquals(result.value, "`age` = 30")
   }
 
   test("SparkSQL GT renders correctly") {
-    val result = gt[SparkSQL, Column, Int](col("age"), lit(18))
+    val result = F.gt[SparkSQL, Column, Int](F.col("age"), F.lit(18))
     assertEquals(result.value, "`age` > 18")
   }
 
   test("SparkSQL AND renders correctly") {
-    val left   = ===[SparkSQL, Column, Int](col("a"), lit(1))
-    val right  = ===[SparkSQL, Column, Int](col("b"), lit(2))
-    val result = and[SparkSQL](left, right)
+    val left   = F.===[SparkSQL, Column, Int](F.col("a"), F.lit(1))
+    val right  = F.===[SparkSQL, Column, Int](F.col("b"), F.lit(2))
+    val result = F.and[SparkSQL](left, right)
     assertEquals(result.value, "(`a` = 1) AND (`b` = 2)")
   }
 
   test("SparkSQL IN renders correctly") {
-    val result = in[SparkSQL, Column, Seq[Int]](col("id"), array[SparkSQL, Int](1, 2, 3))
+    val result = F.in[SparkSQL, Column, Seq[Int]](F.col("id"), F.array[SparkSQL, Int](1, 2, 3))
     assertEquals(result.value, "`id` IN (1, 2, 3)")
   }
 
   test("SparkSQL BETWEEN renders correctly") {
     val result =
-      between[SparkSQL, Column, (Int, Int)](col("age"), range[SparkSQL, Int](18, 65))
+      F.between[SparkSQL, Column, (Int, Int)](F.col("age"), F.range[SparkSQL, Int](18, 65))
     assertEquals(result.value, "`age` BETWEEN 18 AND 65")
   }
 
   test("SparkSQL ISNULL renders correctly") {
-    val result = isNull[SparkSQL, Column](col("email"))
+    val result = F.isNull[SparkSQL, Column](F.col("email"))
     assertEquals(result.value, "`email` IS NULL")
   }
 
   test("SparkSQL ISTRUE renders correctly") {
-    val result = isTrue[SparkSQL, Column](col("active"))
+    val result = F.isTrue[SparkSQL, Column](F.col("active"))
     assertEquals(result.value, "`active` IS TRUE")
   }
 
   test("SparkSQL NOT renders correctly") {
-    val expr   = ===[SparkSQL, Column, Int](col("x"), lit(1))
-    val result = not[SparkSQL](expr)
+    val expr   = F.===[SparkSQL, Column, Int](F.col("x"), F.lit(1))
+    val result = F.not[SparkSQL](expr)
     assertEquals(result.value, "NOT (`x` = 1)")
   }
 
   test("extension syntax works with SparkSQL") {
-    val result = (col[SparkSQL]("age") geq lit(18))
-      .and(col[SparkSQL]("active") === lit(true))
+    val result = (F.col[SparkSQL]("age") geq F.lit(18))
+      .and(F.col[SparkSQL]("active") === F.lit(true))
     assertEquals(result.value, "(`age` >= 18) AND (`active` = true)")
   }
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Rafael Fernandez
+ * Copyright (c) 2024-2026 Rafael Fernandez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@
 package com.eff3ct.criteria4s.core
 
 sealed trait Ref[D <: CriteriaTag, V] {
-  def asString(implicit show: Show[V, D]): String
+  def asString(using show: Show[V, D]): String
 }
 
 object Ref {
@@ -38,56 +38,56 @@ object Ref {
 
   private[criteria4s] def nothing[T <: CriteriaTag]: Value[T, Nothing] =
     new Value[T, Nothing] {
-      def asString(implicit show: Show[Nothing, T]): String = ""
+      def asString(using show: Show[Nothing, T]): String = ""
     }
 
   private[criteria4s] def value[V, D <: CriteriaTag](v: V): Value[D, V] =
     new Value[D, V] {
-      def asString(implicit show: Show[V, D]): String = show.show(v)
+      def asString(using show: Show[V, D]): String = show.show(v)
     }
 
   private[criteria4s] def col[D <: CriteriaTag](v: Column): Col[D] =
     new Col[D] {
-      def asString(implicit show: Show[Column, D]): String = show.show(v)
+      def asString(using show: Show[Column, D]): String = show.show(v)
     }
 
   private[criteria4s] def bool[D <: CriteriaTag](v: Boolean): Bool[D] =
     new Bool[D] {
       override def value: String                                     = v.toString
-      override def asString(implicit show: Show[Boolean, D]): String = v.toString
+      override def asString(using show: Show[Boolean, D]): String = v.toString
     }
 
   private[criteria4s] def array[V, D <: CriteriaTag](vs: V*): Collection[D, V] =
     new Collection[D, V] {
-      def asString(implicit show: Show[Seq[V], D]): String = show.show(vs)
+      def asString(using show: Show[Seq[V], D]): String = show.show(vs)
     }
 
   private[criteria4s] def range[V, D <: CriteriaTag](left: V, right: V): Range[D, V] =
     new Range[D, V] {
-      def asString(implicit show: Show[(V, V), D]): String = show.show((left, right))
+      def asString(using show: Show[(V, V), D]): String = show.show((left, right))
     }
 
   private[criteria4s] def raw[V, D <: CriteriaTag](expr: String): Value[D, V] =
     new Value[D, V] {
-      def asString(implicit show: Show[V, D]): String = expr
+      def asString(using show: Show[V, D]): String = expr
     }
 
   private[criteria4s] def transformed[D <: CriteriaTag, V](
       ref: Ref[D, V],
       transform: TransformUnary[D]
-  )(implicit show: Show[V, D]): Ref[D, V] =
+  )(using show: Show[V, D]): Ref[D, V] =
     new Value[D, V] {
-      def asString(implicit s: Show[V, D]): String = transform(ref.asString(show))
+      def asString(using s: Show[V, D]): String = transform(ref.asString(using show))
     }
 
   private[criteria4s] def transformed2[D <: CriteriaTag, V](
       ref1: Ref[D, V],
       ref2: Ref[D, V],
       transform: TransformBinary[D]
-  )(implicit show: Show[V, D]): Ref[D, V] =
+  )(using show: Show[V, D]): Ref[D, V] =
     new Value[D, V] {
-      def asString(implicit s: Show[V, D]): String =
-        transform(ref1.asString(show), ref2.asString(show))
+      def asString(using s: Show[V, D]): String =
+        transform(ref1.asString(using show), ref2.asString(using show))
     }
 
 }

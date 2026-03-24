@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Rafael Fernandez
+ * Copyright (c) 2024-2026 Rafael Fernandez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,62 +26,62 @@ package com.eff3ct.criteria4s.dialect.postgresql
 
 import com.eff3ct.criteria4s.core.*
 import com.eff3ct.criteria4s.extensions.*
-import com.eff3ct.criteria4s.functions.*
+import com.eff3ct.criteria4s.functions as F
 
 class PostgreSQLExprSpec extends munit.FunSuite {
 
   test("PostgreSQL uses double-quoted column identifiers") {
-    val show = implicitly[Show[Column, PostgreSQL]]
+    val show = summon[Show[Column, PostgreSQL]]
     assertEquals(show.show(Column("name")), "\"name\"")
   }
 
   test("PostgreSQL EQ renders with double-quoted columns") {
-    val result = ===[PostgreSQL, Column, Int](col("age"), lit(30))
+    val result = F.===[PostgreSQL, Column, Int](F.col("age"), F.lit(30))
     assertEquals(result.value, "\"age\" = 30")
   }
 
   test("PostgreSQL GT renders correctly") {
-    val result = gt[PostgreSQL, Column, Int](col("age"), lit(18))
+    val result = F.gt[PostgreSQL, Column, Int](F.col("age"), F.lit(18))
     assertEquals(result.value, "\"age\" > 18")
   }
 
   test("PostgreSQL AND renders correctly") {
-    val left   = ===[PostgreSQL, Column, Int](col("a"), lit(1))
-    val right  = ===[PostgreSQL, Column, Int](col("b"), lit(2))
-    val result = and[PostgreSQL](left, right)
+    val left   = F.===[PostgreSQL, Column, Int](F.col("a"), F.lit(1))
+    val right  = F.===[PostgreSQL, Column, Int](F.col("b"), F.lit(2))
+    val result = F.and[PostgreSQL](left, right)
     assertEquals(result.value, "(\"a\" = 1) AND (\"b\" = 2)")
   }
 
   test("PostgreSQL IN renders correctly") {
-    val result = in[PostgreSQL, Column, Seq[Int]](col("id"), array[PostgreSQL, Int](1, 2, 3))
+    val result = F.in[PostgreSQL, Column, Seq[Int]](F.col("id"), F.array[PostgreSQL, Int](1, 2, 3))
     assertEquals(result.value, "\"id\" IN (1, 2, 3)")
   }
 
   test("PostgreSQL BETWEEN renders with AND separator") {
     val result =
-      between[PostgreSQL, Column, (Int, Int)](col("age"), range[PostgreSQL, Int](18, 65))
+      F.between[PostgreSQL, Column, (Int, Int)](F.col("age"), F.range[PostgreSQL, Int](18, 65))
     assertEquals(result.value, "\"age\" BETWEEN 18 AND 65")
   }
 
   test("PostgreSQL ISNULL renders correctly") {
-    val result = isNull[PostgreSQL, Column](col("email"))
+    val result = F.isNull[PostgreSQL, Column](F.col("email"))
     assertEquals(result.value, "\"email\" IS NULL")
   }
 
   test("PostgreSQL ISTRUE renders correctly") {
-    val result = isTrue[PostgreSQL, Column](col("active"))
+    val result = F.isTrue[PostgreSQL, Column](F.col("active"))
     assertEquals(result.value, "\"active\" IS TRUE")
   }
 
   test("PostgreSQL NOT renders correctly") {
-    val expr   = ===[PostgreSQL, Column, Int](col("x"), lit(1))
-    val result = not[PostgreSQL](expr)
+    val expr   = F.===[PostgreSQL, Column, Int](F.col("x"), F.lit(1))
+    val result = F.not[PostgreSQL](expr)
     assertEquals(result.value, "NOT (\"x\" = 1)")
   }
 
   test("extension syntax works with PostgreSQL") {
-    val result = (col[PostgreSQL]("age") geq lit(18))
-      .and(col[PostgreSQL]("active") === lit(true))
+    val result = (F.col[PostgreSQL]("age") geq F.lit(18))
+      .and(F.col[PostgreSQL]("active") === F.lit(true))
     assertEquals(result.value, "(\"age\" >= 18) AND (\"active\" = true)")
   }
 }

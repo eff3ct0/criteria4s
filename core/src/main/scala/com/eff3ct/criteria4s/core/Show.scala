@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Rafael Fernandez
+ * Copyright (c) 2024-2026 Rafael Fernandez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,6 @@ trait Show[-V, D <: CriteriaTag] {
 object Show {
   def create[V, D <: CriteriaTag](f: V => String): Show[V, D] = (v: V) => f(v)
 
-  implicit def defaultStringShow[D <: CriteriaTag]: Show[String, D]      = create(s => s)
-  implicit def defaultIntShow[V <: AnyVal, D <: CriteriaTag]: Show[V, D] = create(_.toString)
+  given defaultStringShow[D <: CriteriaTag]: Show[String, D]      = create(s => s)
+  given defaultIntShow[V <: AnyVal, D <: CriteriaTag]: Show[V, D] = create(_.toString)
 }

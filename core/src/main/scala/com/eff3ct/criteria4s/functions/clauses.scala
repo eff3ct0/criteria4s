@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Rafael Fernandez
+ * Copyright (c) 2024-2026 Rafael Fernandez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,25 +28,25 @@ import com.eff3ct.criteria4s.core.*
 
 private[functions] trait clauses {
 
-  def asc[T <: CriteriaTag, V](ref: Ref[T, V])(implicit
+  def asc[T <: CriteriaTag, V](ref: Ref[T, V])(using
       H: OrderAsc[T],
       show: Show[V, T]
   ): Order[T] =
     Order(H.eval(ref.asString))
 
-  def desc[T <: CriteriaTag, V](ref: Ref[T, V])(implicit
+  def desc[T <: CriteriaTag, V](ref: Ref[T, V])(using
       H: OrderDesc[T],
       show: Show[V, T]
   ): Order[T] =
     Order(H.eval(ref.asString))
 
-  def limit[T <: CriteriaTag](n: Int)(implicit H: LimitBuilder[T]): LimitExpr[T] =
+  def limit[T <: CriteriaTag](n: Int)(using H: LimitBuilder[T]): LimitExpr[T] =
     LimitExpr(H.eval(n))
 
-  def offset[T <: CriteriaTag](n: Int)(implicit H: OffsetBuilder[T]): OffsetExpr[T] =
+  def offset[T <: CriteriaTag](n: Int)(using H: OffsetBuilder[T]): OffsetExpr[T] =
     OffsetExpr(H.eval(n))
 
-  def caseWhen[T <: CriteriaTag, V](condition: Criteria[T], result: Ref[T, V])(implicit
+  def caseWhen[T <: CriteriaTag, V](condition: Criteria[T], result: Ref[T, V])(using
       show: Show[V, T]
   ): CaseExpr.WhenBuilder[T] =
     CaseExpr.when(condition, result)

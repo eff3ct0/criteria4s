@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Rafael Fernandez
+ * Copyright (c) 2024-2026 Rafael Fernandez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -157,17 +157,17 @@ class ElasticsearchExprSpec extends munit.FunSuite {
   // -- Show instances --
 
   test("Show[Column, Elasticsearch] renders with double quotes") {
-    val show = implicitly[Show[Column, Elasticsearch]]
+    val show = summon[Show[Column, Elasticsearch]]
     assertEquals(show.show(Column("name")), "\"name\"")
   }
 
   test("Show[Seq[Int], Elasticsearch] renders as bracketed list") {
-    val show = implicitly[Show[Seq[Int], Elasticsearch]]
+    val show = summon[Show[Seq[Int], Elasticsearch]]
     assertEquals(show.show(Seq(1, 2, 3)), "[1, 2, 3]")
   }
 
   test("Show[(Int,Int), Elasticsearch] renders as gte/lt range") {
-    val show = implicitly[Show[(Int, Int), Elasticsearch]]
+    val show = summon[Show[(Int, Int), Elasticsearch]]
     assertEquals(show.show((10, 20)), """{"gte": 10, "lt": 20}""")
   }
 }

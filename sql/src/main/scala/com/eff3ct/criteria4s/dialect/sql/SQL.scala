@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Rafael Fernandez
+ * Copyright (c) 2024-2026 Rafael Fernandez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,16 +43,16 @@ object SQL {
   private def predExpr1(symbol: String)(value: String): String =
     s"$value $symbol"
 
-  implicit val showColumn: Show[Column, SQL] =
+  given showColumn: Show[Column, SQL] =
     Show.create(col => col.colName)
 
-  implicit val showString: Show[String, SQL] =
+  given showString: Show[String, SQL] =
     Show.create(s => s"'${s.replace("'", "''")}'")
 
-  implicit def showSeq[V](implicit show: Show[V, SQL]): Show[Seq[V], SQL] =
+  given showSeq[V](using show: Show[V, SQL]): Show[Seq[V], SQL] =
     Show.create(_.map(show.show).mkString("(", ", ", ")"))
 
-  implicit def showTuple[V](implicit show: Show[V, SQL]): Show[(V, V), SQL] =
+  given showTuple[V](using show: Show[V, SQL]): Show[(V, V), SQL] =
     Show.create { case (l, r) => s"${show.show(l)} AND ${show.show(r)}" }
 
   private def transformExpr(fn: String): String => String =
@@ -75,58 +75,58 @@ object SQL {
     protected def predExpr1(symbol: String): String => String = (value: String) =>
       SQL.predExpr1(symbol)(value)
 
-    implicit val andConj: AND[T]               = build[T, AND](conjExpr("AND"))
-    implicit val orConj: OR[T]                 = build[T, OR](conjExpr("OR"))
-    implicit val notConj: NOT[T]               = build[T, NOT](conjExpr1("NOT"))
-    implicit val eqPred: EQ[T]                 = build[T, EQ](predExpr("="))
-    implicit val neqPred: NEQ[T]               = build[T, NEQ](predExpr("!="))
-    implicit val gtPred: GT[T]                 = build[T, GT](predExpr(">"))
-    implicit val geqPred: GEQ[T]               = build[T, GEQ](predExpr(">="))
-    implicit val ltPred: LT[T]                 = build[T, LT](predExpr("<"))
-    implicit val leqPred: LEQ[T]               = build[T, LEQ](predExpr("<="))
-    implicit val inPred: IN[T]                 = build[T, IN](predExpr("IN"))
-    implicit val notinPred: NOTIN[T]           = build[T, NOTIN](predExpr("NOT IN"))
-    implicit val likePred: LIKE[T]             = build[T, LIKE](predExpr("LIKE"))
-    implicit val isnullPred: ISNULL[T]         = build[T, ISNULL](predExpr1("IS NULL"))
-    implicit val isnotnullPred: ISNOTNULL[T]   = build[T, ISNOTNULL](predExpr1("IS NOT NULL"))
-    implicit val betweenPred: BETWEEN[T]       = build[T, BETWEEN](predExpr("BETWEEN"))
-    implicit val notbetweenPred: NOTBETWEEN[T] = build[T, NOTBETWEEN](predExpr("NOT BETWEEN"))
-    implicit val startswithPred: STARTSWITH[T] = build[T, STARTSWITH](predExpr("LIKE"))
-    implicit val endswithPred: ENDSWITH[T]     = build[T, ENDSWITH](predExpr("LIKE"))
-    implicit val containsPred: CONTAINS[T]     = build[T, CONTAINS](predExpr("LIKE"))
-    implicit val istruePred: ISTRUE[T]         = build[T, ISTRUE](predExpr1("IS TRUE"))
-    implicit val isfalsePred: ISFALSE[T]       = build[T, ISFALSE](predExpr1("IS FALSE"))
+    given andConj: AND[T]               = build[T, AND](conjExpr("AND"))
+    given orConj: OR[T]                 = build[T, OR](conjExpr("OR"))
+    given notConj: NOT[T]               = build[T, NOT](conjExpr1("NOT"))
+    given eqPred: EQ[T]                 = build[T, EQ](predExpr("="))
+    given neqPred: NEQ[T]               = build[T, NEQ](predExpr("!="))
+    given gtPred: GT[T]                 = build[T, GT](predExpr(">"))
+    given geqPred: GEQ[T]               = build[T, GEQ](predExpr(">="))
+    given ltPred: LT[T]                 = build[T, LT](predExpr("<"))
+    given leqPred: LEQ[T]               = build[T, LEQ](predExpr("<="))
+    given inPred: IN[T]                 = build[T, IN](predExpr("IN"))
+    given notinPred: NOTIN[T]           = build[T, NOTIN](predExpr("NOT IN"))
+    given likePred: LIKE[T]             = build[T, LIKE](predExpr("LIKE"))
+    given isnullPred: ISNULL[T]         = build[T, ISNULL](predExpr1("IS NULL"))
+    given isnotnullPred: ISNOTNULL[T]   = build[T, ISNOTNULL](predExpr1("IS NOT NULL"))
+    given betweenPred: BETWEEN[T]       = build[T, BETWEEN](predExpr("BETWEEN"))
+    given notbetweenPred: NOTBETWEEN[T] = build[T, NOTBETWEEN](predExpr("NOT BETWEEN"))
+    given startswithPred: STARTSWITH[T] = build[T, STARTSWITH](predExpr("LIKE"))
+    given endswithPred: ENDSWITH[T]     = build[T, ENDSWITH](predExpr("LIKE"))
+    given containsPred: CONTAINS[T]     = build[T, CONTAINS](predExpr("LIKE"))
+    given istruePred: ISTRUE[T]         = build[T, ISTRUE](predExpr1("IS TRUE"))
+    given isfalsePred: ISFALSE[T]       = build[T, ISFALSE](predExpr1("IS FALSE"))
 
-    implicit val upperTransform: UPPER[T] = new UPPER[T] {
+    given upperTransform: UPPER[T] = new UPPER[T] {
       def apply(value: String): String = transformExpr("UPPER")(value)
     }
-    implicit val lowerTransform: LOWER[T] = new LOWER[T] {
+    given lowerTransform: LOWER[T] = new LOWER[T] {
       def apply(value: String): String = transformExpr("LOWER")(value)
     }
-    implicit val trimTransform: TRIM[T] = new TRIM[T] {
+    given trimTransform: TRIM[T] = new TRIM[T] {
       def apply(value: String): String = transformExpr("TRIM")(value)
     }
-    implicit val coalesceTransform: COALESCE[T] = new COALESCE[T] {
+    given coalesceTransform: COALESCE[T] = new COALESCE[T] {
       def apply(left: String, right: String): String = transformExpr2("COALESCE")(left, right)
     }
-    implicit val concatTransform: CONCAT[T] = new CONCAT[T] {
+    given concatTransform: CONCAT[T] = new CONCAT[T] {
       def apply(left: String, right: String): String = transformExpr2("CONCAT")(left, right)
     }
 
-    implicit val orderAsc: OrderAsc[T] = new OrderAsc[T] {
+    given orderAsc: OrderAsc[T] = new OrderAsc[T] {
       def eval(ref: String): String = s"$ref ASC"
     }
-    implicit val orderDesc: OrderDesc[T] = new OrderDesc[T] {
+    given orderDesc: OrderDesc[T] = new OrderDesc[T] {
       def eval(ref: String): String = s"$ref DESC"
     }
-    implicit val limitBuilder: LimitBuilder[T] = new LimitBuilder[T] {
+    given limitBuilder: LimitBuilder[T] = new LimitBuilder[T] {
       def eval(n: Int): String = s"LIMIT $n"
     }
-    implicit val offsetBuilder: OffsetBuilder[T] = new OffsetBuilder[T] {
+    given offsetBuilder: OffsetBuilder[T] = new OffsetBuilder[T] {
       def eval(n: Int): String = s"OFFSET $n"
     }
 
-    implicit val caseBuilder: CaseBuilder[T] = new CaseBuilder[T] {
+    given caseBuilder: CaseBuilder[T] = new CaseBuilder[T] {
       def build(branches: Seq[(String, String)], otherwise: String): String = {
         val whenClauses = branches.map { case (cond, value) => s"WHEN $cond THEN $value" }
         s"CASE ${whenClauses.mkString(" ")} ELSE $otherwise END"

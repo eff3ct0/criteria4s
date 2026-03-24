@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Rafael Fernandez
+ * Copyright (c) 2024-2026 Rafael Fernandez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +24,21 @@
 
 package com.eff3ct.criteria4s.examples.datastores
 
-import com.eff3ct.criteria4s.core.PredicateBinary.*
 import com.eff3ct.criteria4s.core.{Column, Show}
-import com.eff3ct.criteria4s.instances.*
 import com.eff3ct.criteria4s.dialect.sql.*
 
+/** MySQL example dialect — customizes column quoting to use backticks. */
 trait MySQL extends SQL
 
 object MySQL extends SQLExpr[MySQL] {
 
-  /**
-   * That's not the right symbol for MySQL but it's just an example of how to override the default
-   * implementation
-   */
-  implicit val showColumn: Show[Column, MySQL] = Show.create(_.colName)
+  given showColumn: Show[Column, MySQL] =
+    Show.create(col => s"`${col.colName}`")
 
-  implicit override val leqPred: LEQ[MySQL] = build[MySQL, LEQ](predExpr("<<<"))
+  given showSeq[V](using show: Show[V, MySQL]): Show[Seq[V], MySQL] =
+    Show.create(_.map(show.show).mkString("(", ", ", ")"))
+
+  given showTuple[V](using show: Show[V, MySQL]): Show[(V, V), MySQL] =
+    Show.create { case (l, r) => s"${show.show(l)} AND ${show.show(r)}" }
 
 }

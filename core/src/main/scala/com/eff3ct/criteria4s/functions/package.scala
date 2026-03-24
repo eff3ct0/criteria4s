@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Rafael Fernandez
+ * Copyright (c) 2024-2026 Rafael Fernandez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,25 +28,25 @@ import com.eff3ct.criteria4s.core.*
 
 package object functions extends predicates with conjunctions with transforms with clauses {
 
-  def pred[T <: CriteriaTag, H <: PredicateBinary[T], L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+  def pred[T <: CriteriaTag, H <: PredicateBinary[T], L, R](cr1: Ref[T, L], cr2: Ref[T, R])(using
       H: H,
       showL: Show[L, T],
       showR: Show[R, T]
   ): Criteria[T] =
     H.eval(cr1, cr2)
 
-  def pred[T <: CriteriaTag, H <: PredicateUnary[T], V](ref: Ref[T, V])(implicit
+  def pred[T <: CriteriaTag, H <: PredicateUnary[T], V](ref: Ref[T, V])(using
       H: H,
       show: Show[V, T]
   ): Criteria[T] =
     H.eval(ref)
 
-  def cond[T <: CriteriaTag, H <: ConjunctionBinary[T]](cr1: Criteria[T], cr2: Criteria[T])(implicit
+  def cond[T <: CriteriaTag, H <: ConjunctionBinary[T]](cr1: Criteria[T], cr2: Criteria[T])(using
       H: H
   ): Criteria[T] =
     H.eval(cr1, cr2)
 
-  def cond[T <: CriteriaTag, H <: ConjunctionUnary[T]](cr: Criteria[T])(implicit
+  def cond[T <: CriteriaTag, H <: ConjunctionUnary[T]](cr: Criteria[T])(using
       H: H
   ): Criteria[T] =
     H.eval(cr)

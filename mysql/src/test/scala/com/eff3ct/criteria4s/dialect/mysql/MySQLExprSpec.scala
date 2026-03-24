@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Rafael Fernandez
+ * Copyright (c) 2024-2026 Rafael Fernandez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,62 +26,62 @@ package com.eff3ct.criteria4s.dialect.mysql
 
 import com.eff3ct.criteria4s.core.*
 import com.eff3ct.criteria4s.extensions.*
-import com.eff3ct.criteria4s.functions.*
+import com.eff3ct.criteria4s.functions as F
 
 class MySQLExprSpec extends munit.FunSuite {
 
   test("MySQL uses backtick-quoted column identifiers") {
-    val show = implicitly[Show[Column, MySQL]]
+    val show = summon[Show[Column, MySQL]]
     assertEquals(show.show(Column("name")), "`name`")
   }
 
   test("MySQL EQ renders with backtick-quoted columns") {
-    val result = ===[MySQL, Column, Int](col("age"), lit(30))
+    val result = F.===[MySQL, Column, Int](F.col("age"), F.lit(30))
     assertEquals(result.value, "`age` = 30")
   }
 
   test("MySQL GT renders correctly") {
-    val result = gt[MySQL, Column, Int](col("age"), lit(18))
+    val result = F.gt[MySQL, Column, Int](F.col("age"), F.lit(18))
     assertEquals(result.value, "`age` > 18")
   }
 
   test("MySQL AND renders correctly") {
-    val left   = ===[MySQL, Column, Int](col("a"), lit(1))
-    val right  = ===[MySQL, Column, Int](col("b"), lit(2))
-    val result = and[MySQL](left, right)
+    val left   = F.===[MySQL, Column, Int](F.col("a"), F.lit(1))
+    val right  = F.===[MySQL, Column, Int](F.col("b"), F.lit(2))
+    val result = F.and[MySQL](left, right)
     assertEquals(result.value, "(`a` = 1) AND (`b` = 2)")
   }
 
   test("MySQL IN renders correctly") {
-    val result = in[MySQL, Column, Seq[Int]](col("id"), array[MySQL, Int](1, 2, 3))
+    val result = F.in[MySQL, Column, Seq[Int]](F.col("id"), F.array[MySQL, Int](1, 2, 3))
     assertEquals(result.value, "`id` IN (1, 2, 3)")
   }
 
   test("MySQL BETWEEN renders correctly") {
     val result =
-      between[MySQL, Column, (Int, Int)](col("age"), range[MySQL, Int](18, 65))
+      F.between[MySQL, Column, (Int, Int)](F.col("age"), F.range[MySQL, Int](18, 65))
     assertEquals(result.value, "`age` BETWEEN 18 AND 65")
   }
 
   test("MySQL ISNULL renders correctly") {
-    val result = isNull[MySQL, Column](col("email"))
+    val result = F.isNull[MySQL, Column](F.col("email"))
     assertEquals(result.value, "`email` IS NULL")
   }
 
   test("MySQL ISTRUE renders correctly") {
-    val result = isTrue[MySQL, Column](col("active"))
+    val result = F.isTrue[MySQL, Column](F.col("active"))
     assertEquals(result.value, "`active` IS TRUE")
   }
 
   test("MySQL NOT renders correctly") {
-    val expr   = ===[MySQL, Column, Int](col("x"), lit(1))
-    val result = not[MySQL](expr)
+    val expr   = F.===[MySQL, Column, Int](F.col("x"), F.lit(1))
+    val result = F.not[MySQL](expr)
     assertEquals(result.value, "NOT (`x` = 1)")
   }
 
   test("extension syntax works with MySQL") {
-    val result = (col[MySQL]("age") geq lit(18))
-      .and(col[MySQL]("active") === lit(true))
+    val result = (F.col[MySQL]("age") geq F.lit(18))
+      .and(F.col[MySQL]("active") === F.lit(true))
     assertEquals(result.value, "(`age` >= 18) AND (`active` = true)")
   }
 }

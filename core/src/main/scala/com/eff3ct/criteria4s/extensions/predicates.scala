@@ -99,6 +99,25 @@ trait predicates {
         other: Ref.Range[T, R]
     )(implicit H: NOTBETWEEN[T], showL: Show[L, T], showR: Show[(R, R), T]): Criteria[T] =
       F.notBetween(c, other)
+
+    def startsWith[R](
+        other: Ref[T, R]
+    )(implicit H: STARTSWITH[T], showL: Show[L, T], showR: Show[R, T]): Criteria[T] =
+      F.startsWith(c, other)
+
+    def endsWith[R](
+        other: Ref[T, R]
+    )(implicit H: ENDSWITH[T], showL: Show[L, T], showR: Show[R, T]): Criteria[T] =
+      F.endsWith(c, other)
+
+    def contains[R](
+        other: Ref[T, R]
+    )(implicit H: CONTAINS[T], showL: Show[L, T], showR: Show[R, T]): Criteria[T] =
+      F.contains(c, other)
+
+    def isTrue(implicit H: ISTRUE[T], show: Show[L, T]): Criteria[T] = F.isTrue(c)
+
+    def isFalse(implicit H: ISFALSE[T], show: Show[L, T]): Criteria[T] = F.isFalse(c)
   }
 
 }

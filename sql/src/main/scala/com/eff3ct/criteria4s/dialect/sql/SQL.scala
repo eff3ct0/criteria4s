@@ -82,6 +82,11 @@ object SQL {
     implicit val isnotnullPred: ISNOTNULL[T]   = build[T, ISNOTNULL](predExpr1("IS NOT NULL"))
     implicit val betweenPred: BETWEEN[T]       = build[T, BETWEEN](predExpr("BETWEEN"))
     implicit val notbetweenPred: NOTBETWEEN[T] = build[T, NOTBETWEEN](predExpr("NOT BETWEEN"))
+    implicit val startswithPred: STARTSWITH[T] = build[T, STARTSWITH](predExpr("LIKE"))
+    implicit val endswithPred: ENDSWITH[T]     = build[T, ENDSWITH](predExpr("LIKE"))
+    implicit val containsPred: CONTAINS[T]     = build[T, CONTAINS](predExpr("LIKE"))
+    implicit val istruePred: ISTRUE[T]         = build[T, ISTRUE](predExpr1("IS TRUE"))
+    implicit val isfalsePred: ISFALSE[T]       = build[T, ISFALSE](predExpr1("IS FALSE"))
   }
 
 }

@@ -1,19 +1,23 @@
 /**
- * Custom CSS for Criteria4s — Vercel-inspired dark/light design.
- * Clean neutrals, Inter font, subtle borders, no gradients.
+ * Custom CSS for Criteria4s.
+ * Palette: Tailwind zinc scale — matches rafaelfernandez.dev (main.css @theme).
+ *
+ * zinc-950 #09090b  zinc-900 #18181b  zinc-800 #27272a  zinc-700 #3f3f46
+ * zinc-600 #52525b  zinc-500 #71717a  zinc-400 #a1a1aa  zinc-300 #d4d4d8
+ * zinc-200 #e4e4e7  zinc-100 #f4f4f5  zinc-50  #fafafa
  */
 
 /* ─── Light mode ─────────────────────────────────────────────────────────── */
 
 :root {
-  /* Primary: near-black in light mode — rafaelfernandez.dev palette */
-  --ifm-color-primary: #121212;
-  --ifm-color-primary-dark: #0a0a0a;
-  --ifm-color-primary-darker: #040404;
+  /* Primary — zinc-950 */
+  --ifm-color-primary: #09090b;
+  --ifm-color-primary-dark: #09090b;
+  --ifm-color-primary-darker: #09090b;
   --ifm-color-primary-darkest: #000000;
-  --ifm-color-primary-light: #444444;
-  --ifm-color-primary-lighter: #6b7280;
-  --ifm-color-primary-lightest: #717171;
+  --ifm-color-primary-light: #52525b;
+  --ifm-color-primary-lighter: #71717a;
+  --ifm-color-primary-lightest: #a1a1aa;
 
   /* Typography */
   --ifm-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -24,31 +28,31 @@
 
   /* Layout */
   --ifm-navbar-height: 56px;
-  --ifm-toc-border-color: #e5e5e5;
-  --ifm-hr-border-color: #e5e5e5;
+  --ifm-toc-border-color: #e4e4e7;
+  --ifm-hr-border-color: #e4e4e7;
 
   /* Backgrounds */
   --ifm-background-color: #ffffff;
-  --ifm-background-surface-color: #f6f6f6;
+  --ifm-background-surface-color: #f4f4f5;
   --ifm-navbar-background-color: rgba(255, 255, 255, 0.85);
-  --ifm-footer-background-color: #f6f6f6;
-  --ifm-sidebar-background-color: #f6f6f6;
+  --ifm-footer-background-color: #f4f4f5;
+  --ifm-sidebar-background-color: #f4f4f5;
 
-  /* Borders */
-  --ifm-color-emphasis-100: #f6f6f6;
-  --ifm-color-emphasis-200: #eaeaea;
-  --ifm-color-emphasis-300: #d4d4d4;
-  --ifm-color-emphasis-400: #a3a3a3;
-  --ifm-color-emphasis-500: #717171;
-  --ifm-color-emphasis-600: #6b7280;
-  --ifm-color-emphasis-700: #444444;
-  --ifm-color-emphasis-800: #121212;
-  --ifm-color-emphasis-900: #040404;
+  /* Borders — zinc scale */
+  --ifm-color-emphasis-100: #f4f4f5;
+  --ifm-color-emphasis-200: #e4e4e7;
+  --ifm-color-emphasis-300: #d4d4d8;
+  --ifm-color-emphasis-400: #a1a1aa;
+  --ifm-color-emphasis-500: #71717a;
+  --ifm-color-emphasis-600: #52525b;
+  --ifm-color-emphasis-700: #3f3f46;
+  --ifm-color-emphasis-800: #27272a;
+  --ifm-color-emphasis-900: #09090b;
   --ifm-navbar-shadow: none;
 
   /* Cards and code */
   --ifm-card-background-color: #ffffff;
-  --ifm-code-background: #f6f6f6;
+  --ifm-code-background: #f4f4f5;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.06);
 
   /* Buttons */
@@ -57,16 +61,19 @@
   --ifm-button-padding-vertical: 7px;
 
   /* Links */
-  --ifm-link-color: #121212;
-  --ifm-link-hover-color: #6b7280;
+  --ifm-link-color: #09090b;
+  --ifm-link-hover-color: #52525b;
+
+  /* Text */
+  --ifm-font-color-base: #52525b;
 
   /* Spacing */
   --ifm-global-radius: 6px;
 
   /* Menu */
-  --ifm-menu-color-active: #121212;
-  --ifm-menu-color-background-active: #f6f6f6;
-  --ifm-menu-color-background-hover: #f6f6f6;
+  --ifm-menu-color-active: #09090b;
+  --ifm-menu-color-background-active: #f4f4f5;
+  --ifm-menu-color-background-hover: #f4f4f5;
 
   /* Admonitions */
   --ifm-color-info-dark: #0369a1;
@@ -79,54 +86,54 @@
 /* ─── Dark mode ──────────────────────────────────────────────────────────── */
 
 [data-theme='dark'] {
-  /* Primary: white in dark mode — rafaelfernandez.dev palette */
-  --ifm-color-primary: #ffffff;
-  --ifm-color-primary-dark: #B4AFB6;
-  --ifm-color-primary-darker: #9ca3af;
-  --ifm-color-primary-darkest: #6b7280;
-  --ifm-color-primary-light: #ffffff;
-  --ifm-color-primary-lighter: #ffffff;
+  /* Primary — zinc-50/fafafa */
+  --ifm-color-primary: #fafafa;
+  --ifm-color-primary-dark: #a1a1aa;
+  --ifm-color-primary-darker: #71717a;
+  --ifm-color-primary-darkest: #52525b;
+  --ifm-color-primary-light: #fafafa;
+  --ifm-color-primary-lighter: #fafafa;
   --ifm-color-primary-lightest: #ffffff;
 
-  /* Backgrounds */
-  --ifm-background-color: #1c1c1c;
-  --ifm-background-surface-color: #222222;
-  --ifm-navbar-background-color: rgba(28, 28, 28, 0.85);
-  --ifm-footer-background-color: #222222;
-  --ifm-sidebar-background-color: #1c1c1c;
+  /* Backgrounds — zinc-950 / zinc-900 */
+  --ifm-background-color: #09090b;
+  --ifm-background-surface-color: #18181b;
+  --ifm-navbar-background-color: rgba(9, 9, 11, 0.85);
+  --ifm-footer-background-color: #18181b;
+  --ifm-sidebar-background-color: #09090b;
 
-  /* Borders */
-  --ifm-color-emphasis-100: #222222;
-  --ifm-color-emphasis-200: #3E3E3E;
-  --ifm-color-emphasis-300: #525252;
-  --ifm-color-emphasis-400: #6b7280;
-  --ifm-color-emphasis-500: #9ca3af;
-  --ifm-color-emphasis-600: #B4AFB6;
-  --ifm-color-emphasis-700: #d4d4d4;
-  --ifm-color-emphasis-800: #f0f0f0;
-  --ifm-color-emphasis-900: #ffffff;
-  --ifm-toc-border-color: #3E3E3E;
-  --ifm-hr-border-color: #3E3E3E;
+  /* Borders — zinc scale */
+  --ifm-color-emphasis-100: #18181b;
+  --ifm-color-emphasis-200: #27272a;
+  --ifm-color-emphasis-300: #3f3f46;
+  --ifm-color-emphasis-400: #52525b;
+  --ifm-color-emphasis-500: #71717a;
+  --ifm-color-emphasis-600: #a1a1aa;
+  --ifm-color-emphasis-700: #d4d4d8;
+  --ifm-color-emphasis-800: #e4e4e7;
+  --ifm-color-emphasis-900: #fafafa;
+  --ifm-toc-border-color: #27272a;
+  --ifm-hr-border-color: #27272a;
   --ifm-navbar-shadow: none;
 
   /* Cards and code */
-  --ifm-card-background-color: #222222;
-  --ifm-code-background: #2a2a2a;
+  --ifm-card-background-color: #18181b;
+  --ifm-code-background: #18181b;
   --docusaurus-highlighted-code-line-bg: rgba(255, 255, 255, 0.06);
 
   /* Text */
-  --ifm-font-color-base: #B4AFB6;
-  --ifm-font-color-secondary: #9ca3af;
+  --ifm-font-color-base: #a1a1aa;
+  --ifm-font-color-secondary: #71717a;
 
   /* Links */
-  --ifm-link-color: #ffffff;
-  --ifm-link-hover-color: #9ca3af;
+  --ifm-link-color: #fafafa;
+  --ifm-link-hover-color: #a1a1aa;
 
   /* Menu */
-  --ifm-menu-color: #B4AFB6;
-  --ifm-menu-color-active: #ffffff;
-  --ifm-menu-color-background-active: #2a2a2a;
-  --ifm-menu-color-background-hover: #222222;
+  --ifm-menu-color: #a1a1aa;
+  --ifm-menu-color-active: #fafafa;
+  --ifm-menu-color-background-active: #27272a;
+  --ifm-menu-color-background-hover: #18181b;
 }
 
 /* ─── Navbar ──────────────────────────────────────────────────────────────── */
@@ -275,21 +282,20 @@ article h3 {
 .token.punctuation                     { color: #24292f; }
 .token.plain                           { color: #24292f; }
 
-/* GitHub-style token colors — dark mode */
-[data-theme='dark'] .token.keyword                      { color: #ff7b72; }
+/* VS Dark-style token colors — dark mode */
+[data-theme='dark'] .token.keyword                      { color: #569cd6; }
 [data-theme='dark'] .token.string,
-[data-theme='dark'] .token.char                         { color: #a5d6ff; }
-[data-theme='dark'] .token.number                       { color: #79c0ff; }
-[data-theme='dark'] .token.boolean                      { color: #79c0ff; }
-[data-theme='dark'] .token.comment                      { color: #8b949e; font-style: italic; }
+[data-theme='dark'] .token.char                         { color: #ce9178; }
+[data-theme='dark'] .token.number                       { color: #b5cea8; }
+[data-theme='dark'] .token.boolean                      { color: #569cd6; }
+[data-theme='dark'] .token.comment                      { color: #6a9955; font-style: italic; }
 [data-theme='dark'] .token.class-name,
-[data-theme='dark'] .token.namespace                    { color: #ffa657; }
-[data-theme='dark'] .token.function                     { color: #d2a8ff; }
-[data-theme='dark'] .token.operator                     { color: #ff7b72; }
-[data-theme='dark'] .token.punctuation                  { color: #c9d1d9; }
-[data-theme='dark'] .token.plain                        { color: #c9d1d9; }
+[data-theme='dark'] .token.namespace                    { color: #4ec9b0; }
+[data-theme='dark'] .token.function                     { color: #dcdcaa; }
+[data-theme='dark'] .token.operator                     { color: #d4d4d4; }
+[data-theme='dark'] .token.punctuation                  { color: #d4d4d4; }
+[data-theme='dark'] .token.plain                        { color: #d4d4d4; }
 
-/* Light mode: let Prism github theme render naturally */
 .theme-code-block {
   border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: 8px;
@@ -297,10 +303,18 @@ article h3 {
   box-shadow: none;
 }
 
+/* Dark mode: code block background matches zinc-900 */
 [data-theme='dark'] .theme-code-block {
-  border-color: #3E3E3E;
+  border-color: #27272a;
+  background-color: #18181b;
 }
 
+[data-theme='dark'] pre[class*="language-"],
+[data-theme='dark'] code[class*="language-"] {
+  background-color: #18181b;
+}
+
+/* Highlighted line */
 .theme-code-block-highlighted-line {
   background-color: rgba(0, 0, 0, 0.06);
   display: block;
@@ -314,18 +328,18 @@ article h3 {
 
 /* Inline code */
 code:not([class]) {
-  background: var(--ifm-code-background);
-  border: 1px solid var(--ifm-color-emphasis-200);
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
   border-radius: 4px;
   padding: 0.1em 0.35em;
   font-size: 87.5%;
-  color: var(--ifm-color-primary);
+  color: #09090b;
 }
 
 [data-theme='dark'] code:not([class]) {
-  background: #2a2a2a;
-  border-color: #3E3E3E;
-  color: #B4AFB6;
+  background: #18181b;
+  border-color: #27272a;
+  color: #a1a1aa;
 }
 
 /* ─── Tables ─────────────────────────────────────────────────────────────── */
@@ -470,11 +484,11 @@ tr:last-child td {
 }
 
 [data-theme='dark'] ::-webkit-scrollbar-thumb {
-  background: #3E3E3E;
+  background: #27272a;
 }
 
 [data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
-  background: #525252;
+  background: #3f3f46;
 }
 
 /* ─── Breadcrumbs ────────────────────────────────────────────────────────── */
@@ -501,8 +515,6 @@ tr:last-child td {
 
 /* ─── Diagrams — dark mode inversion ────────────────────────────────────── */
 
-/* SVG diagrams are designed for light mode; invert them in dark mode so
-   they remain readable without needing separate dark variants. */
 [data-theme='dark'] .theme-doc-markdown p > img {
   filter: invert(1);
   border-radius: 6px;

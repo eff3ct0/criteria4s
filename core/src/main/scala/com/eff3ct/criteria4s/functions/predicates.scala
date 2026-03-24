@@ -63,6 +63,12 @@ private[functions] trait predicates {
   ): Criteria[T] =
     pred[T, EQ[T], L, R](cr1, cr2)
 
+  def eqv[T <: CriteriaTag: EQ, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
+      showL: Show[L, T],
+      showR: Show[R, T]
+  ): Criteria[T] =
+    pred[T, EQ[T], L, R](cr1, cr2)
+
   def =!=[T <: CriteriaTag: NEQ, L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
       showL: Show[L, T],
       showR: Show[R, T]

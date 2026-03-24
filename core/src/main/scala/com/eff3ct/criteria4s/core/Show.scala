@@ -31,6 +31,6 @@ trait Show[-V, D <: CriteriaTag] {
 object Show {
   def create[V, D <: CriteriaTag](f: V => String): Show[V, D] = (v: V) => f(v)
 
-  implicit def defaultStringShow[D <: CriteriaTag]: Show[String, D]      = create(s => s)
-  implicit def defaultIntShow[V <: AnyVal, D <: CriteriaTag]: Show[V, D] = create(_.toString)
+  given defaultStringShow[D <: CriteriaTag]: Show[String, D]      = create(s => s)
+  given defaultIntShow[V <: AnyVal, D <: CriteriaTag]: Show[V, D] = create(_.toString)
 }

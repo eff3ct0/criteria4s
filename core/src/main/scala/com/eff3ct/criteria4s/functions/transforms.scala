@@ -28,31 +28,31 @@ import com.eff3ct.criteria4s.core.*
 
 private[functions] trait transforms {
 
-  def upper[T <: CriteriaTag, V](ref: Ref[T, V])(implicit
+  def upper[T <: CriteriaTag, V](ref: Ref[T, V])(using
       H: UPPER[T],
       show: Show[V, T]
   ): Ref[T, V] =
     Ref.transformed(ref, H)
 
-  def lower[T <: CriteriaTag, V](ref: Ref[T, V])(implicit
+  def lower[T <: CriteriaTag, V](ref: Ref[T, V])(using
       H: LOWER[T],
       show: Show[V, T]
   ): Ref[T, V] =
     Ref.transformed(ref, H)
 
-  def trim[T <: CriteriaTag, V](ref: Ref[T, V])(implicit
+  def trim[T <: CriteriaTag, V](ref: Ref[T, V])(using
       H: TRIM[T],
       show: Show[V, T]
   ): Ref[T, V] =
     Ref.transformed(ref, H)
 
-  def coalesce[T <: CriteriaTag, V](ref1: Ref[T, V], ref2: Ref[T, V])(implicit
+  def coalesce[T <: CriteriaTag, V](ref1: Ref[T, V], ref2: Ref[T, V])(using
       H: COALESCE[T],
       show: Show[V, T]
   ): Ref[T, V] =
     Ref.transformed2(ref1, ref2, H)
 
-  def concat[T <: CriteriaTag, V](ref1: Ref[T, V], ref2: Ref[T, V])(implicit
+  def concat[T <: CriteriaTag, V](ref1: Ref[T, V], ref2: Ref[T, V])(using
       H: CONCAT[T],
       show: Show[V, T]
   ): Ref[T, V] =

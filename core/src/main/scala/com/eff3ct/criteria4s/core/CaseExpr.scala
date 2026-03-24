@@ -36,10 +36,10 @@ object CaseExpr {
       branches: Vector[(Criteria[T], String)]
   ) {
 
-    def when[V](condition: Criteria[T], result: Ref[T, V])(implicit show: Show[V, T]): WhenBuilder[T] =
+    def when[V](condition: Criteria[T], result: Ref[T, V])(using show: Show[V, T]): WhenBuilder[T] =
       new WhenBuilder(branches :+ (condition, result.asString))
 
-    def otherwise[V](result: Ref[T, V])(implicit
+    def otherwise[V](result: Ref[T, V])(using
         show: Show[V, T],
         builder: CaseBuilder[T]
     ): Ref[T, String] = {
@@ -49,7 +49,7 @@ object CaseExpr {
     }
   }
 
-  def when[T <: CriteriaTag, V](condition: Criteria[T], result: Ref[T, V])(implicit
+  def when[T <: CriteriaTag, V](condition: Criteria[T], result: Ref[T, V])(using
       show: Show[V, T]
   ): WhenBuilder[T] =
     new WhenBuilder[T](Vector((condition, result.asString)))

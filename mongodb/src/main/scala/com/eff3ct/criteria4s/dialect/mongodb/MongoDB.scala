@@ -67,36 +67,36 @@ object MongoDB {
   private val isFalseExpr: String => String =
     ref => s"{$ref: false}"
 
-  implicit val showColumn: Show[Column, MongoDB] =
+  given showColumn: Show[Column, MongoDB] =
     Show.create(col => s"\"${col.colName}\"")
 
-  implicit def showSeq[T](implicit show: Show[T, MongoDB]): Show[Seq[T], MongoDB] =
+  given showSeq[T](using show: Show[T, MongoDB]): Show[Seq[T], MongoDB] =
     Show.create(_.map(show.show).mkString("[", ", ", "]"))
 
-  implicit def betweenShow[T](implicit show: Show[T, MongoDB]): Show[(T, T), MongoDB] =
+  given betweenShow[T](using show: Show[T, MongoDB]): Show[(T, T), MongoDB] =
     Show.create { case (l, r) => s"{ $$gte: ${show.show(l)}, $$lt: ${show.show(r)} }" }
 
   trait MongoDBExpr[T <: MongoDB] {
-    implicit val andConj: AND[T]               = build[T, AND](conjExpr("and"))
-    implicit val orConj: OR[T]                 = build[T, OR](conjExpr("or"))
-    implicit val notConj: NOT[T]               = build[T, NOT](notExpr)
-    implicit val eqPred: EQ[T]                 = build[T, EQ](predExpr("eq"))
-    implicit val neqPred: NEQ[T]               = build[T, NEQ](predExpr("ne"))
-    implicit val gtPred: GT[T]                 = build[T, GT](predExpr("gt"))
-    implicit val geqPred: GEQ[T]               = build[T, GEQ](predExpr("gte"))
-    implicit val ltPred: LT[T]                 = build[T, LT](predExpr("lt"))
-    implicit val leqPred: LEQ[T]               = build[T, LEQ](predExpr("lte"))
-    implicit val inPred: IN[T]                 = build[T, IN](predExpr("in"))
-    implicit val notInPred: NOTIN[T]           = build[T, NOTIN](predExpr("nin"))
-    implicit val likePred: LIKE[T]             = build[T, LIKE](likeExpr)
-    implicit val isNullPred: ISNULL[T]         = build[T, ISNULL](isNullExpr)
-    implicit val isNotNullPred: ISNOTNULL[T]   = build[T, ISNOTNULL](isNotNullExpr)
-    implicit val betweenPred: BETWEEN[T]       = build[T, BETWEEN](betweenExpr)
-    implicit val notbetweenPred: NOTBETWEEN[T] = build[T, NOTBETWEEN](notBetweenExpr)
-    implicit val startswithPred: STARTSWITH[T] = build[T, STARTSWITH](predExpr("regex"))
-    implicit val endswithPred: ENDSWITH[T]     = build[T, ENDSWITH](predExpr("regex"))
-    implicit val containsPred: CONTAINS[T]     = build[T, CONTAINS](predExpr("regex"))
-    implicit val istruePred: ISTRUE[T]         = build[T, ISTRUE](isTrueExpr)
-    implicit val isfalsePred: ISFALSE[T]       = build[T, ISFALSE](isFalseExpr)
+    given andConj: AND[T]               = build[T, AND](conjExpr("and"))
+    given orConj: OR[T]                 = build[T, OR](conjExpr("or"))
+    given notConj: NOT[T]               = build[T, NOT](notExpr)
+    given eqPred: EQ[T]                 = build[T, EQ](predExpr("eq"))
+    given neqPred: NEQ[T]               = build[T, NEQ](predExpr("ne"))
+    given gtPred: GT[T]                 = build[T, GT](predExpr("gt"))
+    given geqPred: GEQ[T]               = build[T, GEQ](predExpr("gte"))
+    given ltPred: LT[T]                 = build[T, LT](predExpr("lt"))
+    given leqPred: LEQ[T]               = build[T, LEQ](predExpr("lte"))
+    given inPred: IN[T]                 = build[T, IN](predExpr("in"))
+    given notInPred: NOTIN[T]           = build[T, NOTIN](predExpr("nin"))
+    given likePred: LIKE[T]             = build[T, LIKE](likeExpr)
+    given isNullPred: ISNULL[T]         = build[T, ISNULL](isNullExpr)
+    given isNotNullPred: ISNOTNULL[T]   = build[T, ISNOTNULL](isNotNullExpr)
+    given betweenPred: BETWEEN[T]       = build[T, BETWEEN](betweenExpr)
+    given notbetweenPred: NOTBETWEEN[T] = build[T, NOTBETWEEN](notBetweenExpr)
+    given startswithPred: STARTSWITH[T] = build[T, STARTSWITH](predExpr("regex"))
+    given endswithPred: ENDSWITH[T]     = build[T, ENDSWITH](predExpr("regex"))
+    given containsPred: CONTAINS[T]     = build[T, CONTAINS](predExpr("regex"))
+    given istruePred: ISTRUE[T]         = build[T, ISTRUE](isTrueExpr)
+    given isfalsePred: ISFALSE[T]       = build[T, ISFALSE](isFalseExpr)
   }
 }

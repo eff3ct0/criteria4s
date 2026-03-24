@@ -37,23 +37,23 @@ class CriteriaSpec extends munit.FunSuite {
   }
 
   test("Show.defaultStringShow is identity") {
-    val show = implicitly[Show[String, CriteriaTag]]
+    val show = summon[Show[String, CriteriaTag]]
     assertEquals(show.show("hello"), "hello")
   }
 
   test("Show.defaultIntShow renders AnyVal as toString") {
-    val show = implicitly[Show[Int, CriteriaTag]]
+    val show = summon[Show[Int, CriteriaTag]]
     assertEquals(show.show(42), "42")
   }
 
   test("Ref.value asString uses Show") {
-    implicit val showInt: Show[Int, CriteriaTag] = Show.create(_.toString)
+    given showInt: Show[Int, CriteriaTag] = Show.create(_.toString)
     val ref                                      = Ref.value[Int, CriteriaTag](42)
     assertEquals(ref.asString, "42")
   }
 
   test("Ref.col asString uses Show[Column, D]") {
-    implicit val showCol: Show[Column, CriteriaTag] = Show.create(c => s"[${c.colName}]")
+    given showCol: Show[Column, CriteriaTag] = Show.create(c => s"[${c.colName}]")
     val ref                                         = Ref.col[CriteriaTag](Column("age"))
     assertEquals(ref.asString, "[age]")
   }
@@ -64,14 +64,14 @@ class CriteriaSpec extends munit.FunSuite {
   }
 
   test("Ref.array asString uses Show[Seq[V], D]") {
-    implicit val showSeq: Show[Seq[Int], CriteriaTag] =
+    given showSeq: Show[Seq[Int], CriteriaTag] =
       Show.create(_.mkString("[", ",", "]"))
     val ref = Ref.array[Int, CriteriaTag](1, 2, 3)
     assertEquals(ref.asString, "[1,2,3]")
   }
 
   test("Ref.range asString uses Show[(V,V), D]") {
-    implicit val showTuple: Show[(Int, Int), CriteriaTag] =
+    given showTuple: Show[(Int, Int), CriteriaTag] =
       Show.create { case (l, r) => s"$l..$r" }
     val ref = Ref.range[Int, CriteriaTag](1, 10)
     assertEquals(ref.asString, "1..10")

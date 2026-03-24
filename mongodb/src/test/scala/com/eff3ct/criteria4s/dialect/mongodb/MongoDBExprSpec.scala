@@ -111,17 +111,17 @@ class MongoDBExprSpec extends munit.FunSuite {
   // -- Show instances --
 
   test("Show[Column, MongoDB] renders with double quotes") {
-    val show = implicitly[Show[Column, MongoDB]]
+    val show = summon[Show[Column, MongoDB]]
     assertEquals(show.show(Column("name")), "\"name\"")
   }
 
   test("Show[Seq[Int], MongoDB] renders as bracketed list") {
-    val show = implicitly[Show[Seq[Int], MongoDB]]
+    val show = summon[Show[Seq[Int], MongoDB]]
     assertEquals(show.show(Seq(1, 2, 3)), "[1, 2, 3]")
   }
 
   test("Show[(Int,Int), MongoDB] renders as $gte/$lt range") {
-    val show = implicitly[Show[(Int, Int), MongoDB]]
+    val show = summon[Show[(Int, Int), MongoDB]]
     assertEquals(show.show((10, 20)), "{ $gte: 10, $lt: 20 }")
   }
 

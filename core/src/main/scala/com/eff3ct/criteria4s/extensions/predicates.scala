@@ -51,6 +51,10 @@ trait predicates {
         other: Ref[T, R]
     )(implicit H: EQ[T], showL: Show[L, T], showR: Show[R, T]): Criteria[T] = F.===(c, other)
 
+    def eqv[R](
+        other: Ref[T, R]
+    )(implicit H: EQ[T], showL: Show[L, T], showR: Show[R, T]): Criteria[T] = F.===(c, other)
+
     def =!=[R](
         other: Ref[T, R]
     )(implicit H: NEQ[T], showL: Show[L, T], showR: Show[R, T]): Criteria[T] = F.=!=(c, other)

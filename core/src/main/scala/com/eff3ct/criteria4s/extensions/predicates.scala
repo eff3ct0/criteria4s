@@ -28,6 +28,7 @@ import com.eff3ct.criteria4s.functions as F
 import com.eff3ct.criteria4s.core.{Criteria, CriteriaTag, Ref, Show}
 import com.eff3ct.criteria4s.core.PredicateBinary.*
 import com.eff3ct.criteria4s.core.PredicateUnary.*
+import com.eff3ct.criteria4s.core.TransformUnary.*
 import com.eff3ct.criteria4s.core.Ref.Collection
 
 trait predicates {
@@ -118,6 +119,10 @@ trait predicates {
     def isTrue(implicit H: ISTRUE[T], show: Show[L, T]): Criteria[T] = F.isTrue(c)
 
     def isFalse(implicit H: ISFALSE[T], show: Show[L, T]): Criteria[T] = F.isFalse(c)
+
+    def upper(implicit H: UPPER[T], show: Show[L, T]): Ref[T, L]      = F.upper(c)(using H, show)
+    def lower(implicit H: LOWER[T], show: Show[L, T]): Ref[T, L]      = F.lower(c)(using H, show)
+    def trim(implicit H: TRIM[T], show: Show[L, T]): Ref[T, L]        = F.trim(c)(using H, show)
   }
 
 }

@@ -70,4 +70,14 @@ package object core {
 
   type ISFALSE[T <: CriteriaTag] = PredicateUnary.ISFALSE[T]
 
+  type UPPER[T <: CriteriaTag] = TransformUnary.UPPER[T]
+
+  type LOWER[T <: CriteriaTag] = TransformUnary.LOWER[T]
+
+  type TRIM[T <: CriteriaTag] = TransformUnary.TRIM[T]
+
+  type COALESCE[T <: CriteriaTag] = TransformBinary.COALESCE[T]
+
+  type CONCAT[T <: CriteriaTag] = TransformBinary.CONCAT[T]
+
 }

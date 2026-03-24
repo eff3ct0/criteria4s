@@ -22,33 +22,32 @@
  * SOFTWARE.
  */
 
-package com.eff3ct.criteria4s
+package com.eff3ct.criteria4s.core
 
-import com.eff3ct.criteria4s.core.*
+/** A transform wraps a Ref value with a function (e.g. UPPER, LOWER, TRIM).
+ *  The result is a new Ref that can be used in predicates.
+ */
+trait TransformUnary[T <: CriteriaTag] {
+  def apply(value: String): String
+}
 
-package object functions extends predicates with conjunctions with transforms {
+object TransformUnary {
 
-  def pred[T <: CriteriaTag, H <: PredicateBinary[T], L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
-      H: H,
-      showL: Show[L, T],
-      showR: Show[R, T]
-  ): Criteria[T] =
-    H.eval(cr1, cr2)
+  trait UPPER[T <: CriteriaTag] extends TransformUnary[T]
 
-  def pred[T <: CriteriaTag, H <: PredicateUnary[T], V](ref: Ref[T, V])(implicit
-      H: H,
-      show: Show[V, T]
-  ): Criteria[T] =
-    H.eval(ref)
+  trait LOWER[T <: CriteriaTag] extends TransformUnary[T]
 
-  def cond[T <: CriteriaTag, H <: ConjunctionBinary[T]](cr1: Criteria[T], cr2: Criteria[T])(implicit
-      H: H
-  ): Criteria[T] =
-    H.eval(cr1, cr2)
+  trait TRIM[T <: CriteriaTag] extends TransformUnary[T]
+}
 
-  def cond[T <: CriteriaTag, H <: ConjunctionUnary[T]](cr: Criteria[T])(implicit
-      H: H
-  ): Criteria[T] =
-    H.eval(cr)
+/** A binary transform wraps two values (e.g. COALESCE, CONCAT). */
+trait TransformBinary[T <: CriteriaTag] {
+  def apply(left: String, right: String): String
+}
 
+object TransformBinary {
+
+  trait COALESCE[T <: CriteriaTag] extends TransformBinary[T]
+
+  trait CONCAT[T <: CriteriaTag] extends TransformBinary[T]
 }

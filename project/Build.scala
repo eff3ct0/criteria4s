@@ -24,10 +24,7 @@ object Build extends AutoPlugin {
       "-Xmx384M",
       "-XX:MaxMetaspaceSize=150M",
       "-XX:+PrintCommandLineFlags",
-      "-XX:+CMSClassUnloadingEnabled",
-      "-Duser.timezone=GMT",
-      "-XX:+PrintCommandLineFlags",
-      "-XX:+CMSClassUnloadingEnabled"
+      "-Duser.timezone=GMT"
     )
 
   override def projectSettings: Seq[Setting[_]] =

@@ -60,4 +60,14 @@ package object core {
 
   type NOTBETWEEN[T <: CriteriaTag] = PredicateBinary.NOTBETWEEN[T]
 
+  type STARTSWITH[T <: CriteriaTag] = PredicateBinary.STARTSWITH[T]
+
+  type ENDSWITH[T <: CriteriaTag] = PredicateBinary.ENDSWITH[T]
+
+  type CONTAINS[T <: CriteriaTag] = PredicateBinary.CONTAINS[T]
+
+  type ISTRUE[T <: CriteriaTag] = PredicateUnary.ISTRUE[T]
+
+  type ISFALSE[T <: CriteriaTag] = PredicateUnary.ISFALSE[T]
+
 }

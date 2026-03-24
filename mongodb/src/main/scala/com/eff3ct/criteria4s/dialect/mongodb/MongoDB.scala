@@ -61,6 +61,12 @@ object MongoDB {
   private val notBetweenExpr: (String, String) => String =
     (ref, range) => s"{$ref: {$$not: $range}}"
 
+  private val isTrueExpr: String => String =
+    ref => s"{$ref: true}"
+
+  private val isFalseExpr: String => String =
+    ref => s"{$ref: false}"
+
   implicit val showColumn: Show[Column, MongoDB] =
     Show.create(col => s"\"${col.colName}\"")
 
@@ -87,5 +93,10 @@ object MongoDB {
     implicit val isNotNullPred: ISNOTNULL[T]   = build[T, ISNOTNULL](isNotNullExpr)
     implicit val betweenPred: BETWEEN[T]       = build[T, BETWEEN](betweenExpr)
     implicit val notbetweenPred: NOTBETWEEN[T] = build[T, NOTBETWEEN](notBetweenExpr)
+    implicit val startswithPred: STARTSWITH[T] = build[T, STARTSWITH](predExpr("regex"))
+    implicit val endswithPred: ENDSWITH[T]     = build[T, ENDSWITH](predExpr("regex"))
+    implicit val containsPred: CONTAINS[T]     = build[T, CONTAINS](predExpr("regex"))
+    implicit val istruePred: ISTRUE[T]         = build[T, ISTRUE](isTrueExpr)
+    implicit val isfalsePred: ISFALSE[T]       = build[T, ISFALSE](isFalseExpr)
   }
 }

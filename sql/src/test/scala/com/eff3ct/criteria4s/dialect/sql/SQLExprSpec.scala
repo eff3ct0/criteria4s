@@ -216,6 +216,48 @@ class SQLExprSpec extends munit.FunSuite {
     assertEquals(result.value, "('a' = 1) OR ('b' = 2)")
   }
 
+  // -- New predicates (issue #7) --
+
+  test("SQL STARTSWITH renders as LIKE") {
+    val result = startsWith[SQL, Column, String](col("name"), lit("A%"))
+    assertEquals(result.value, "'name' LIKE A%")
+  }
+
+  test("SQL ENDSWITH renders as LIKE") {
+    val result = endsWith[SQL, Column, String](col("name"), lit("%z"))
+    assertEquals(result.value, "'name' LIKE %z")
+  }
+
+  test("SQL CONTAINS renders as LIKE") {
+    val result = contains[SQL, Column, String](col("name"), lit("%mid%"))
+    assertEquals(result.value, "'name' LIKE %mid%")
+  }
+
+  test("SQL ISTRUE renders correctly") {
+    val result = isTrue[SQL, Column](col("active"))
+    assertEquals(result.value, "'active' IS TRUE")
+  }
+
+  test("SQL ISFALSE renders correctly") {
+    val result = isFalse[SQL, Column](col("active"))
+    assertEquals(result.value, "'active' IS FALSE")
+  }
+
+  test("extension .startsWith delegates to STARTSWITH") {
+    val result = col[SQL]("name").startsWith(lit[SQL, String]("A%"))
+    assertEquals(result.value, "'name' LIKE A%")
+  }
+
+  test("extension .isTrue delegates to ISTRUE") {
+    val result = col[SQL]("active").isTrue
+    assertEquals(result.value, "'active' IS TRUE")
+  }
+
+  test("extension .isFalse delegates to ISFALSE") {
+    val result = col[SQL]("active").isFalse
+    assertEquals(result.value, "'active' IS FALSE")
+  }
+
   // -- Composed expressions --
 
   test("complex composed expression renders correctly") {

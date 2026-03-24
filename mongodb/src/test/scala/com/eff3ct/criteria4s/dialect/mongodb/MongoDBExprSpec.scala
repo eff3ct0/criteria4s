@@ -124,4 +124,21 @@ class MongoDBExprSpec extends munit.FunSuite {
     val show = implicitly[Show[(Int, Int), MongoDB]]
     assertEquals(show.show((10, 20)), "{ $gte: 10, $lt: 20 }")
   }
+
+  // -- New predicates (issue #7) --
+
+  test("MongoDB STARTSWITH renders as $regex") {
+    val result = startsWith[MongoDB, Column, String](col("name"), lit("^A"))
+    assertEquals(result.value, "{\"name\": {$regex: ^A}}")
+  }
+
+  test("MongoDB ISTRUE renders correctly") {
+    val result = isTrue[MongoDB, Column](col("active"))
+    assertEquals(result.value, "{\"active\": true}")
+  }
+
+  test("MongoDB ISFALSE renders correctly") {
+    val result = isFalse[MongoDB, Column](col("active"))
+    assertEquals(result.value, "{\"active\": false}")
+  }
 }

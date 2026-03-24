@@ -24,10 +24,10 @@
 
 package com.eff3ct.criteria4s.examples
 
-import com.eff3ct.criteria4s.core._
+import com.eff3ct.criteria4s.core.*
 import com.eff3ct.criteria4s.examples.datastores.Postgres
-import com.eff3ct.criteria4s.extensions._
-import com.eff3ct.criteria4s.functions._
+import com.eff3ct.criteria4s.extensions.*
+import com.eff3ct.criteria4s.functions.*
 
 /** Demonstrates the extension/infix syntax for building criteria expressions. */
 object ExtensionStyleExample extends App {

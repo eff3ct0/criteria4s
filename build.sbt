@@ -1,4 +1,4 @@
-import Dependencies.{ProjectOps, munit}
+import Dependencies.munit
 
 lazy val criteria4s: Project =
   project
@@ -54,4 +54,3 @@ lazy val examples: Project =
       name := "criteria4s-examples"
     )
     .dependsOn(core, sql, mongodb, postgresql)
-    .withKindProjector

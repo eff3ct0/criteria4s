@@ -24,11 +24,11 @@
 
 package com.eff3ct.criteria4s.examples
 
-import com.eff3ct.criteria4s.core._
-import com.eff3ct.criteria4s.dialect.mongodb.MongoDB
+import com.eff3ct.criteria4s.core.*
+import com.eff3ct.criteria4s.dialect.mongodb.*
 import com.eff3ct.criteria4s.examples.datastores.{Postgres, WeirdDatastore}
-import com.eff3ct.criteria4s.extensions._
-import com.eff3ct.criteria4s.functions._
+import com.eff3ct.criteria4s.extensions.*
+import com.eff3ct.criteria4s.functions.*
 
 /** Demonstrates BETWEEN and NOT BETWEEN with range operations. */
 object BetweenExample extends App {
@@ -38,9 +38,10 @@ object BetweenExample extends App {
   val gradeOutOfRange: Criteria[Postgres] = col[Postgres]("grade").notBetween(range("A", "Z"))
 
   // Polymorphic version
-  def scoreInRange[
-      T <: CriteriaTag: BETWEEN: Show[Column, *]: Show[(Int, Int), *]
-  ]: Criteria[T] =
+  def scoreInRange[T <: CriteriaTag: BETWEEN](implicit
+      sc: Show[Column, T],
+      st: Show[(Int, Int), T]
+  ): Criteria[T] =
     col[T]("score") between range(70, 100)
 
   println("=== Between Examples ===")

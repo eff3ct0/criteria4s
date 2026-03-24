@@ -24,9 +24,9 @@
 
 package com.eff3ct.criteria4s.dialect.postgresql
 
-import com.eff3ct.criteria4s.core._
-import com.eff3ct.criteria4s.extensions._
-import com.eff3ct.criteria4s.functions._
+import com.eff3ct.criteria4s.core.*
+import com.eff3ct.criteria4s.extensions.*
+import com.eff3ct.criteria4s.functions.*
 
 class PostgreSQLExprSpec extends munit.FunSuite {
 

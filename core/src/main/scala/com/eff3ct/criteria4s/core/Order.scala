@@ -22,33 +22,26 @@
  * SOFTWARE.
  */
 
-package com.eff3ct.criteria4s
+package com.eff3ct.criteria4s.core
 
-import com.eff3ct.criteria4s.core.*
+/** An ordering expression (e.g. `name ASC`, `age DESC`). */
+trait Order[T <: CriteriaTag] {
+  def value: String
+  override def toString: String = value
+}
 
-package object functions extends predicates with conjunctions with transforms with clauses {
+object Order {
+  def apply[T <: CriteriaTag](v: String): Order[T] = new Order[T] {
+    override def value: String = v
+  }
+}
 
-  def pred[T <: CriteriaTag, H <: PredicateBinary[T], L, R](cr1: Ref[T, L], cr2: Ref[T, R])(implicit
-      H: H,
-      showL: Show[L, T],
-      showR: Show[R, T]
-  ): Criteria[T] =
-    H.eval(cr1, cr2)
+/** Type class for building ASC ordering. */
+trait OrderAsc[T <: CriteriaTag] {
+  def eval(ref: String): String
+}
 
-  def pred[T <: CriteriaTag, H <: PredicateUnary[T], V](ref: Ref[T, V])(implicit
-      H: H,
-      show: Show[V, T]
-  ): Criteria[T] =
-    H.eval(ref)
-
-  def cond[T <: CriteriaTag, H <: ConjunctionBinary[T]](cr1: Criteria[T], cr2: Criteria[T])(implicit
-      H: H
-  ): Criteria[T] =
-    H.eval(cr1, cr2)
-
-  def cond[T <: CriteriaTag, H <: ConjunctionUnary[T]](cr: Criteria[T])(implicit
-      H: H
-  ): Criteria[T] =
-    H.eval(cr)
-
+/** Type class for building DESC ordering. */
+trait OrderDesc[T <: CriteriaTag] {
+  def eval(ref: String): String
 }

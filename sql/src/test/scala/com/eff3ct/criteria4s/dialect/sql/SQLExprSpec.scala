@@ -298,6 +298,40 @@ class SQLExprSpec extends munit.FunSuite {
     assertEquals(result.value, "UPPER(name) = 'JOHN'")
   }
 
+  // -- Ordering --
+
+  test("asc() renders ASC ordering") {
+    val result = asc[SQL, Column](col("name"))
+    assertEquals(result.value, "name ASC")
+  }
+
+  test("desc() renders DESC ordering") {
+    val result = desc[SQL, Column](col("age"))
+    assertEquals(result.value, "age DESC")
+  }
+
+  test("extension .asc delegates to OrderAsc") {
+    val result = col[SQL]("name").asc
+    assertEquals(result.value, "name ASC")
+  }
+
+  test("extension .desc delegates to OrderDesc") {
+    val result = col[SQL]("age").desc
+    assertEquals(result.value, "age DESC")
+  }
+
+  // -- LIMIT / OFFSET --
+
+  test("limit() renders LIMIT clause") {
+    val result = limit[SQL](10)
+    assertEquals(result.value, "LIMIT 10")
+  }
+
+  test("offset() renders OFFSET clause") {
+    val result = offset[SQL](20)
+    assertEquals(result.value, "OFFSET 20")
+  }
+
   // -- Composed expressions --
 
   test("complex composed expression renders correctly") {
